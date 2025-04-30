@@ -29,6 +29,7 @@
                                 <th class="border px-4 py-2">Tanggal Pinjam</th>
                                 <th class="border px-4 py-2">Tanggal Kembali</th>
                                 <th class="border px-4 py-2">Status</th>
+                                <th class="border px-4 py-2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,12 +44,22 @@
                                             {{ ucfirst($peminjaman->status) }}
                                         </span>
                                     </td>
+                                    <td class="border px-4 py-2">
+                                        @if($peminjaman->status == 'menunggu konfirmasi')
+                                            <form action="{{ route('admin.peminjaman.konfirmasi', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengonfirmasi pengembalian barang ini?')">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700">
+                                                    Konfirmasi Pengembalian
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
 
-                    <!-- Total Peminjaman -->
                     <div class="mt-4">
                         <strong>Total Peminjaman:</strong> {{ $total }}
                     </div>

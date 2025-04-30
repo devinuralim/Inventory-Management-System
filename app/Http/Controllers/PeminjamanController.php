@@ -69,4 +69,34 @@ class PeminjamanController extends Controller
             return redirect(route('admin.peminjaman.index'));
         }
     }
+
+ // Konfirmasi pengembalian oleh admin
+public function konfirmasiPengembalian($id)
+{
+    // Ambil data peminjaman berdasarkan id
+    $peminjaman = Peminjaman::findOrFail($id);
+
+    // Pastikan status peminjaman adalah 'menunggu konfirmasi' sebelum diubah
+    if ($peminjaman->status !== 'menunggu konfirmasi') {
+        return redirect()->route('admin.peminjaman.index')->with('error', 'Status peminjaman tidak valid untuk dikonfirmasi');
+    }
+
+    // Ubah status peminjaman menjadi 'dikembalikan'
+    $peminjaman->status = 'dikembalikan';
+    $peminjaman->status_konfirmasi = 'dikonfirmasi';  // Set status konfirmasi ke 'dikonfirmasi'
+
+    if ($peminjaman->save()) {
+        // Mengurangi stok barang jika sudah dikembalikan
+        $barang = Barang::where('nama_barang', $peminjaman->nama_barang)->first();
+        if ($barang) {
+            $barang->stok += $peminjaman->jumlah;
+            $barang->save();
+        }
+
+        return redirect()->route('admin.peminjaman.index')->with('success', 'Pengembalian barang telah dikonfirmasi');
+    } else {
+        return redirect()->route('admin.peminjaman.index')->with('error', 'Gagal mengonfirmasi pengembalian barang');
+    }
+}
+
 }

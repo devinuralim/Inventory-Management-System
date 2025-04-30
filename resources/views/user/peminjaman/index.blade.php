@@ -21,6 +21,12 @@
                         </div>
                     @endif
 
+                    <!-- Tombol untuk menambah peminjaman -->
+                    <a href="{{ route('user.peminjaman.create') }}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded mb-4">
+                        Tambah Peminjaman
+                    </a>
+
+                    <!-- Tabel Daftar Peminjaman -->
                     <table class="min-w-full mt-6 table-auto border-collapse">
                         <thead>
                             <tr>
@@ -42,6 +48,8 @@
                                     <td class="border px-4 py-2">
                                         @if ($peminjaman->status == 'dipinjam')
                                             <span class="text-red-500">Dipinjam</span>
+                                        @elseif ($peminjaman->status == 'menunggu konfirmasi')
+                                            <span class="text-yellow-500">Menunggu Konfirmasi</span>
                                         @else
                                             <span class="text-green-500">Dikembalikan</span>
                                         @endif

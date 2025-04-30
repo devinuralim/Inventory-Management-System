@@ -66,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Route untuk pengembalian barang oleh user
 Route::get('user/peminjaman/kembalikan/{id}', [UserPeminjamanController::class, 'kembalikan'])->name('user.peminjaman.kembalikan');
-
+Route::patch('/admin/peminjaman/{id}/konfirmasi', [PeminjamanController::class, 'konfirmasiPengembalian'])->name('admin.peminjaman.konfirmasi');
 
 
 });

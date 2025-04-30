@@ -63,23 +63,18 @@ class PeminjamanController extends Controller
     // Mengembalikan barang yang dipinjam
     public function kembalikan($id)
     {
-        // Ambil data peminjaman berdasarkan id
+        // Cari peminjaman berdasarkan ID
         $peminjaman = Peminjaman::findOrFail($id);
 
-        // Cek apakah peminjaman benar milik user yang sedang login
-        if ($peminjaman->nama_peminjam != auth()->user()->name) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk mengembalikan barang ini');
+        // Pastikan status peminjaman adalah 'dipinjam'
+        if ($peminjaman->status == 'dipinjam') {
+            // Ubah status peminjaman menjadi 'menunggu konfirmasi'
+            $peminjaman->status = 'menunggu konfirmasi';
+            $peminjaman->save();
+
+            // Kembali ke halaman daftar peminjaman dengan pesan sukses
+            return redirect()->route('user.peminjaman.index')->with('success', 'Pengembalian barang telah diajukan, menunggu konfirmasi admin.');
         }
-
-        // Update status peminjaman menjadi 'dikembalikan'
-        $peminjaman->status = 'dikembalikan';
-        $peminjaman->save();
-
-        // Tambahkan kembali stok barang yang dikembalikan
-        $barang = Barang::where('nama_barang', $peminjaman->nama_barang)->first();
-        $barang->stok += $peminjaman->jumlah;
-        $barang->save();
-
-        return redirect()->route('user.peminjaman.index')->with('success', 'Barang telah berhasil dikembalikan');
+    
     }
 }
