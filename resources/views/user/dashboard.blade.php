@@ -1,36 +1,47 @@
-<!-- resources/views/user/dashboard.blade.php -->
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Karyawan') }}
-        </h2>
-    </x-slot>
+@extends('layouts.user')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-blue-500 text-white p-6 rounded-lg shadow-md">
-                            <h3 class="font-semibold text-lg">Daftar Barang</h3>
-                            <p class="mt-4">Lihat daftar barang yang tersedia untuk dipinjam.</p>
-                            <a href="{{ route('user.barang.index') }}" class="block mt-4 text-white font-bold text-center">Lihat Barang</a>
-                        </div>
+@section('content')
+<div class="py-10 bg-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-10">
+            <h1 class="text-3xl font-bold text-gray-800">Selamat Datang, {{ Auth::user()->name }} 👋</h1>
+            <p class="text-sm text-gray-600 mt-1">Silakan pilih menu di bawah untuk mengakses fitur aplikasi.</p>
+        </div>
 
-                        <div class="bg-green-500 text-white p-6 rounded-lg shadow-md">
-                            <h3 class="font-semibold text-lg">Daftar Karyawan</h3>
-                            <p class="mt-4">Lihat daftar karyawan yang terdaftar di sistem.</p>
-                            <a href="{{ route('user.karyawan.index') }}" class="block mt-4 text-white font-bold text-center">Lihat Karyawan</a>
-                        </div>
-
-                        <div class="bg-yellow-500 text-white p-6 rounded-lg shadow-md">
-                            <h3 class="font-semibold text-lg">Peminjaman Barang</h3>
-                            <p class="mt-4">Lihat daftar peminjaman dan ajukan peminjaman barang baru.</p>
-                            <a href="{{ route('user.peminjaman.index') }}" class="block mt-4 text-white font-bold text-center">Lihat & Pinjam Barang</a>
-                        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- Menu Barang -->
+            <a href="{{ route('user.barang.index') }}" class="block bg-white hover:bg-blue-50 border border-blue-200 p-6 rounded-xl shadow transition duration-200">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full text-xl">📦</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-blue-700">Daftar Barang</h3>
+                        <p class="text-sm text-gray-600">Lihat barang yang tersedia dan detailnya.</p>
                     </div>
                 </div>
-            </div>
+            </a>
+
+            <!-- Menu Karyawan -->
+            <a href="{{ route('user.karyawan.index') }}" class="block bg-white hover:bg-green-50 border border-green-200 p-6 rounded-xl shadow transition duration-200">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-green-100 text-green-600 p-3 rounded-full text-xl">🧑‍💼</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-green-700">Daftar Karyawan</h3>
+                        <p class="text-sm text-gray-600">Lihat siapa saja yang terdaftar sebagai karyawan.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Menu Peminjaman -->
+            <a href="{{ route('user.peminjaman.index') }}" class="block bg-white hover:bg-yellow-50 border border-yellow-200 p-6 rounded-xl shadow transition duration-200">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full text-xl">📝</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-yellow-700">Peminjaman Barang</h3>
+                        <p class="text-sm text-gray-600">Ajukan atau cek riwayat peminjaman barang.</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

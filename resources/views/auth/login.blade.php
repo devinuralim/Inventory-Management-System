@@ -32,7 +32,7 @@
         .form-group label {
             margin-bottom: 5px;
         }
-        .form-group input[type="email"],
+        .form-group input[type="text"],
         .form-group input[type="password"] {
             padding: 10px;
             border: 1px solid #ccc;
@@ -75,10 +75,11 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
+            <!-- Ganti field email jadi id_pegawai -->
             <div class="form-group">
-                <label for="email">Email</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-                @error('email')
+                <label for="id_pegawai">ID Pegawai</label>
+                <input id="id_pegawai" type="text" name="id_pegawai" value="{{ old('id_pegawai') }}" required autofocus>
+                @error('id_pegawai')
                     <small style="color: red;">{{ $message }}</small>
                 @enderror
             </div>

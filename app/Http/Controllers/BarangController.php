@@ -7,10 +7,21 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    // Tampilkan daftar barang
-    public function index()
+    public function index(Request $request)
     {
-        $barangs = Barang::all();
+        // Ambil nilai dari input search (jika ada)
+        $search = $request->query('search');
+    
+        // Jika ada pencarian, filter data
+        if ($search) {
+            $barangs = Barang::where('nama_barang', 'like', '%' . $search . '%')
+                ->orWhere('jenis_barang', 'like', '%' . $search . '%')
+                ->orWhere('seri', 'like', '%' . $search . '%')
+                ->get();
+        } else {
+            $barangs = Barang::all();
+        }
+    
         return view('admin.barang.index', compact('barangs'));
     }
 

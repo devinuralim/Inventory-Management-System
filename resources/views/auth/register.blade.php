@@ -65,22 +65,24 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
+            <!-- Ganti input name jadi id_pegawai -->
+            <div class="form-group">
+                <label for="id_pegawai">ID Pegawai</label>
+                <input id="id_pegawai" type="text" name="id_pegawai" value="{{ old('id_pegawai') }}" required autofocus>
+                @error('id_pegawai')
+                    <small style="color: red;">{{ $message }}</small>
+                @enderror
+            </div>
+
             <div class="form-group">
                 <label for="name">Name</label>
-                <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+                <input id="name" type="text" name="name" value="{{ old('name') }}" required>
                 @error('name')
                     <small style="color: red;">{{ $message }}</small>
                 @enderror
             </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required>
-                @error('email')
-                    <small style="color: red;">{{ $message }}</small>
-                @enderror
-            </div>
-
+            <!-- Hapus email dan ganti jadi id_pegawai -->
             <div class="form-group">
                 <label for="password">Password</label>
                 <input id="password" type="password" name="password" required>
