@@ -24,9 +24,11 @@ class BarangController extends Controller
     public function save(Request $request)
     {
         $request->validate([
-            'nama_barang' => 'required',
-            'stok' => 'required|integer',
-            'keterangan' => 'nullable',
+        'nama_barang' => 'required',
+        'jenis_barang' => 'required',
+        'stok' => 'required|integer',
+        'seri' => 'required',
+        'keterangan' => 'nullable',
         ]);
 
         Barang::create($request->all());
@@ -45,9 +47,11 @@ class BarangController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_barang' => 'required',
-            'stok' => 'required|integer',
-            'keterangan' => 'nullable',
+        'nama_barang' => 'required',
+        'jenis_barang' => 'required',
+        'stok' => 'required|integer',
+        'seri' => 'required',
+        'keterangan' => 'nullable',
         ]);
 
         $barang = Barang::findOrFail($id);

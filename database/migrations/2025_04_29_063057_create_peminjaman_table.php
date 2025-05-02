@@ -29,6 +29,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('peminjaman');
-        $table->enum('status', ['dipinjam', 'dikembalikan'])->default('dipinjam')->change();
     }
 };

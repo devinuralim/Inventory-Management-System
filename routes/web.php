@@ -11,6 +11,7 @@ use App\Http\Controllers\User\BarangController as UserBarangController;
 use App\Http\Controllers\User\KaryawanController as UserKaryawanController;
 use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -67,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     // Route untuk pengembalian barang oleh user
 Route::get('user/peminjaman/kembalikan/{id}', [UserPeminjamanController::class, 'kembalikan'])->name('user.peminjaman.kembalikan');
 Route::patch('/admin/peminjaman/{id}/konfirmasi', [PeminjamanController::class, 'konfirmasiPengembalian'])->name('admin.peminjaman.konfirmasi');
+Route::delete('admin/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('admin.peminjaman.delete');
 
 
 });

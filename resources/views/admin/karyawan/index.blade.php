@@ -1,19 +1,16 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Karyawan') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h1 class="text-2xl font-bold mb-6">Selamat datang di Dashboard Karyawan</h1>
 
-                    <div class="flex justify-end mb-4">
+                    <div class="flex justify-between mb-4">
+                        <!-- Tombol Tambah Karyawan -->
                         <a href="{{ route('admin.karyawans.create') }}" 
-                           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                           class="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition duration-200">
                             Tambah Karyawan
                         </a>
                     </div>
@@ -31,8 +28,9 @@
                             <thead class="bg-gray-100 border-b border-gray-300">
                                 <tr>
                                     <th class="px-4 py-2 text-left">NO</th>
-                                    <th class="px-4 py-2 text-left">Nama Karyawan</th>
-                                    <th class="px-4 py-2 text-left">Email</th>
+                                    <th class="px-4 py-2 text-left">ID Pegawai</th>
+                                    <th class="px-4 py-2 text-left">Nama Lengkap</th>
+                                    <th class="px-4 py-2 text-left">Tanggal Bergabung</th>
                                     <th class="px-4 py-2 text-left">Jabatan</th>
                                     <th class="px-4 py-2 text-left">Action</th>
                                 </tr>
@@ -41,24 +39,29 @@
                                 @forelse ($karyawans as $karyawan)
                                     <tr class="border-t">
                                         <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                        <td class="px-4 py-2">{{ $karyawan->nama_karyawan }}</td>
-                                        <td class="px-4 py-2">{{ $karyawan->email }}</td>
+                                        <td class="px-4 py-2">{{ $karyawan->id_pegawai }}</td>
+                                        <td class="px-4 py-2">{{ $karyawan->nama_lengkap }}</td>
+                                        <td class="px-4 py-2">{{ $karyawan->tanggal_bergabung }}</td>
                                         <td class="px-4 py-2">{{ $karyawan->jabatan }}</td>
                                         <td class="px-4 py-2 space-x-2">
-                                            <a href="{{ route('admin.karyawans.edit', $karyawan->id) }}" 
-                                               class="inline-block px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500">
+                                            <a href="{{ route('admin.karyawans.edit', $karyawan->id_pegawai) }}" 
+                                               class="inline-block px-3 py-1 bg-yellow-300 text-gray-800 rounded hover:bg-yellow-400">
                                                 Edit
                                             </a>
-                                            <a href="{{ route('admin.karyawans.delete', $karyawan->id) }}" 
-                                               class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                                               onclick="return confirm('Yakin ingin menghapus karyawan ini?')">
-                                                Delete
-                                            </a>
+                                            <form action="{{ route('admin.karyawans.delete', $karyawan->id_pegawai) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button 
+                                                   class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                                                   onclick="return confirm('Yakin ingin menghapus karyawan ini?')">
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-4 py-4 text-center text-gray-500">Tidak ada data karyawan</td>
+                                        <td colspan="6" class="px-4 py-4 text-center text-gray-500">Tidak ada data karyawan</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -68,4 +71,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

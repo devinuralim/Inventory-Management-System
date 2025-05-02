@@ -1,11 +1,6 @@
-<!-- resources/views/admin/peminjaman/index.blade.php -->
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Daftar Peminjaman') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -53,6 +48,14 @@
                                                     Konfirmasi Pengembalian
                                                 </button>
                                             </form>
+                                        @elseif($peminjaman->status == 'dikembalikan')
+                                            <form action="{{ route('admin.peminjaman.delete', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus peminjaman ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700">
+                                                    Hapus
+                                                </button>
+                                            </form>
                                         @endif
                                     </td>
                                 </tr>
@@ -67,4 +70,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

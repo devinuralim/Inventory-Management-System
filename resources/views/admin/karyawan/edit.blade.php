@@ -1,48 +1,45 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Karyawan') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('content')
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow sm:rounded-lg p-6">
                 <h1 class="text-2xl font-bold mb-6">Form Edit Karyawan</h1>
 
-                <form method="POST" action="{{ route('admin.karyawans.update', $karyawan->id) }}">
+                <form method="POST" action="{{ route('admin.karyawans.update', $karyawan->id_pegawai) }}">
                     @csrf
                     @method('PUT')
 
-                    <!-- Nama Karyawan -->
+                    <!-- ID Pegawai (readonly jika tidak boleh diubah) -->
                     <div class="mb-4">
-                        <label for="nama_karyawan" class="block text-sm font-medium text-gray-700">Nama Karyawan</label>
-                        <input type="text" name="nama_karyawan" id="nama_karyawan" 
-                               value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        @error('nama_karyawan')
+                        <label for="id_pegawai" class="block text-sm font-medium text-gray-700">ID Pegawai</label>
+                        <input type="text" name="id_pegawai" id="id_pegawai"
+                               value="{{ old('id_pegawai', $karyawan->id_pegawai) }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                               readonly>
+                        @error('id_pegawai')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Email -->
+                    <!-- Nama Lengkap -->
                     <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" id="email"
-                               value="{{ old('email', $karyawan->email) }}"
+                        <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                        <input type="text" name="nama_lengkap" id="nama_lengkap"
+                               value="{{ old('nama_lengkap', $karyawan->nama_lengkap) }}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        @error('email')
+                        @error('nama_lengkap')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Nomor HP -->
+                    <!-- Tanggal Bergabung -->
                     <div class="mb-4">
-                        <label for="no_hp" class="block text-sm font-medium text-gray-700">Nomor HP</label>
-                        <input type="text" name="no_hp" id="no_hp"
-                               value="{{ old('no_hp', $karyawan->no_hp) }}"
+                        <label for="tanggal_bergabung" class="block text-sm font-medium text-gray-700">Tanggal Bergabung</label>
+                        <input type="date" name="tanggal_bergabung" id="tanggal_bergabung"
+                               value="{{ old('tanggal_bergabung', $karyawan->tanggal_bergabung) }}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        @error('no_hp')
+                        @error('tanggal_bergabung')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -62,11 +59,11 @@
                     <div>
                         <button type="submit"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Update
+                            🔄 Update
                         </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

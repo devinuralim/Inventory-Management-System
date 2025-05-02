@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('karyawans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_karyawan');
-            $table->string('email')->unique(); 
-            $table->string('no_hp');
+            $table->string('id_pegawai');
+            $table->string('nama_lengkap');
+            $table->date('tanggal_bergabung');
             $table->string('jabatan');
             $table->timestamps();
         });

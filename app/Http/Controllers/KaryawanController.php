@@ -24,11 +24,11 @@ class KaryawanController extends Controller
     public function save(Request $request)
     {
         $request->validate([
-            'nama_karyawan' => 'required',
-            'email' => 'required|email|unique:karyawans,email',
-            'no_hp' => 'required',
-            'jabatan' => 'required',
-        ]);
+                    'id_pegawai' => 'required|unique:karyawans,id_pegawai',
+                    'nama_lengkap' => 'required',
+                    'tanggal_bergabung' => 'required|date',
+                    'jabatan' => 'required',
+                     ]);
 
         Karyawan::create($request->all()); // Simpan data karyawan
 
@@ -46,10 +46,10 @@ class KaryawanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_karyawan' => 'required',
-            'email' => 'required|email',
-            'no_hp' => 'required',
-            'jabatan' => 'required',
+        'id_pegawai' => 'required|unique:karyawans,id_pegawai',
+        'nama_lengkap' => 'required',
+        'tanggal_bergabung' => 'required|date',
+        'jabatan' => 'required',
         ]);
 
         $karyawan = Karyawan::findOrFail($id);

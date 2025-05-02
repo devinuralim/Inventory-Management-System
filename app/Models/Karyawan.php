@@ -11,9 +11,9 @@ class Karyawan extends Model
 
     protected $table = 'karyawans';
     protected $fillable = [
-       'nama_karyawan',
-        'email',
-        'no_hp',
+       'id_pegawai',
+        'nama_lengkap',
+        'tanggal_bergabung',
         'jabatan',
     ];
 }

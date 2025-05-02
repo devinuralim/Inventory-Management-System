@@ -13,7 +13,9 @@
                         <thead>
                             <tr>
                                 <th class="border px-4 py-2">Nama Barang</th>
+                                <th class="border px-4 py-2">Jenis Barang</th>
                                 <th class="border px-4 py-2">Stok</th>
+                                <th class="border px-4 py-2">Seri</th>
                                 <th class="border px-4 py-2">Keterangan</th>
                             </tr>
                         </thead>
@@ -21,7 +23,9 @@
                             @foreach ($barangs as $barang)
                                 <tr>
                                     <td class="border px-4 py-2">{{ $barang->nama_barang }}</td>
+                                    <td class="border px-4 py-2">{{ $barang->jenis_barang }}</td>
                                     <td class="border px-4 py-2">{{ $barang->stok }}</td>
+                                    <td class="border px-4 py-2">{{ $barang->seri }}</td>
                                     <td class="border px-4 py-2">{{ $barang->keterangan }}</td>
                                 </tr>
                             @endforeach

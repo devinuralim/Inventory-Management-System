@@ -1,10 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-pink-700 leading-tight">
-            🎀 {{ __('Daftar Barang') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('content')
     <div class="py-12 bg-gradient-to-br from-pink-100 to-purple-100 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white border border-pink-200 shadow-lg rounded-xl p-6">
@@ -28,7 +24,9 @@
                             <tr class="text-center font-semibold text-sm">
                                 <th class="px-4 py-3 border">No</th>
                                 <th class="px-4 py-3 border">Nama Barang</th>
+                                <th class="px-4 py-3 border">Jenis Barang</th>
                                 <th class="px-4 py-3 border">Stok</th>
+                                <th class="px-4 py-3 border">Seri</th>
                                 <th class="px-4 py-3 border">Keterangan</th>
                                 <th class="px-4 py-3 border">Aksi</th>
                             </tr>
@@ -38,7 +36,9 @@
                                 <tr class="text-center hover:bg-pink-100 transition duration-200">
                                     <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2 border">{{ $barang->nama_barang }}</td>
+                                    <td class="px-4 py-2 border">{{ $barang->jenis_barang }}</td>
                                     <td class="px-4 py-2 border">{{ $barang->stok }}</td>
+                                    <td class="px-4 py-2 border">{{ $barang->seri }}</td>
                                     <td class="px-4 py-2 border">{{ $barang->keterangan }}</td>
                                     <td class="px-4 py-2 border space-x-2">
                                         <a href="{{ route('admin.barangs.edit', $barang->id) }}" class="bg-yellow-300 hover:bg-yellow-400 text-gray-800 font-semibold px-3 py-1 rounded-full">
@@ -51,7 +51,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-gray-500 py-6 italic bg-pink-100 rounded-lg">
+                                    <td colspan="7" class="text-center text-gray-500 py-6 italic bg-pink-100 rounded-lg">
                                         😿 Tidak ada barang yang tersedia. Yuk, tambahkan barang dulu!
                                     </td>
                                 </tr>
@@ -62,4 +62,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
