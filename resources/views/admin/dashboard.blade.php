@@ -2,10 +2,8 @@
 
 @section('content')
 
-<!-- Dashboard Overview Section -->
 <div class="py-4">
     <div class="row mb-4">
-        <!-- Card for Barang Count -->
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
                 <div class="card-body" style="background-color: #e3f2fd; color: #0d47a1;">
@@ -17,8 +15,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Card for Karyawan Count -->
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
                 <div class="card-body" style="background-color: #e8f5e9; color: #1b5e20;">
@@ -30,8 +26,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Card for Peminjaman Count -->
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
                 <div class="card-body" style="background-color: #fff8e1; color: #f9a825;">
@@ -44,8 +38,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Latest Barang Section -->
     <div class="card mb-4">
         <div class="card-header fw-bold" style="background-color: #b3e5fc; color: #01579b;">
             <i class="fas fa-box"></i> Data Barang Terbaru

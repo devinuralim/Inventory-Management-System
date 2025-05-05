@@ -118,16 +118,11 @@
 </head>
 <body>
     <div class="container">
-        <!-- LOGO -->
         <div class="logo">
             <img src="{{ asset('k2net.png') }}" alt="K2Net Logo">
         </div>
-
-        <!-- TITLE -->
         <h1>Welcome to Inventory System</h1>
         <p class="subtitle">Please login or register to continue.</p>
-
-        <!-- ERROR MESSAGE -->
         @if(session('status'))
             <div class="error-message">
                 {{ session('status') }}
@@ -144,7 +139,6 @@
             </div>
         @endif
 
-        <!-- LOGIN FORM -->
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="form-group">

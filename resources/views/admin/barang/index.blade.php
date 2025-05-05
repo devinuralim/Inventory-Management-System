@@ -26,11 +26,8 @@
 
 <div class="container py-5">
     <div class="card shadow-sm rounded-lg p-4">
-        <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4 no-print">
             <h1 class="h3 text-dark font-weight-bold">Daftar Barang</h1>
-
-            <!-- Pencarian dan Tambah -->
             <div class="d-flex align-items-center">
                 <form action="{{ route('admin.barangs') }}" method="GET" class="d-flex align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="🔍 Cari barang..." class="form-control form-control-sm w-50" aria-label="Cari Barang" style="border-radius: 20px; border: 1px solid #007bff; box-shadow: none; padding-left: 1rem;">
@@ -43,15 +40,12 @@
                 </a>
             </div>
         </div>
-
-        <!-- Tombol Cetak -->
         <div class="mb-3 no-print">
             <button onclick="window.print()" class="btn btn-outline-secondary">
                 <i class="fas fa-print"></i> Cetak
             </button>
         </div>
 
-        <!-- Success Message -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show no-print" role="alert">
                 {{ session('success') }}
@@ -61,9 +55,7 @@
             </div>
         @endif
 
-        <!-- Table Section -->
         <div id="print-section" class="table-responsive">
-            <!-- Print Header (only on print) -->
             <div class="text-center mb-4 d-none d-print-block">
                 <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 60px; margin-bottom: 10px;">
                 <h2 class="mb-0">Data Barang</h2>

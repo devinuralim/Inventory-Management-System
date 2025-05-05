@@ -106,15 +106,11 @@
 </head>
 <body>
 
-  <!-- Tombol Toggle Sidebar -->
   <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
 
-  <!-- Logo -->
   <div class="logo-fixed" id="logoK2net">
     <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 36px;">
   </div>
-
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="mb-3">
       <p class="mb-1 small">Halo, <strong>{{ Auth::user()->name }}</strong></p> <!-- Perubahan di sini -->
@@ -134,8 +130,6 @@
       </a>
     </nav>
   </div>
-
-  <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <nav class="navbar navbar-expand navbar-light bg-white shadow-sm rounded mb-4">
       <div class="container-fluid">
@@ -157,8 +151,6 @@
         </ul>
       </div>
     </nav>
-
-    <!-- Yield Konten -->
     <div>
       @yield('content')
     </div>

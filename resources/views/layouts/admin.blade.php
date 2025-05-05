@@ -91,7 +91,7 @@
     .dropdown-menu {
       min-width: 160px;
       font-size: 0.95rem;
-      margin-top: 0px !important; /* naikkan dropdown */
+      margin-top: 0px !important;
     }
 
     .dropdown-menu a,
@@ -106,15 +106,11 @@
 </head>
 <body>
 
-  <!-- Tombol Toggle Sidebar -->
   <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
 
-  <!-- Logo -->
   <div class="logo-fixed" id="logoK2net">
     <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 36px;">
   </div>
-
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="mb-3">
       <p class="mb-1 small">Selamat datang, Admin</p>
@@ -136,10 +132,7 @@
     </nav>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content" id="mainContent">
-
-    <!-- Top Navbar -->
     <nav class="navbar navbar-expand navbar-light bg-white shadow-sm rounded mb-4">
       <div class="container-fluid">
         <ul class="navbar-nav ms-auto">
@@ -161,7 +154,6 @@
       </div>
     </nav>
 
-    <!-- Example Card for Content -->
     <div class="card shadow-sm mb-4">
       <div class="card-body">
         <h5 class="card-title">Selamat Datang di Dashboard</h5>
@@ -170,8 +162,6 @@
         <a href="{{ route('admin.karyawans.index') }}" class="btn btn-secondary">Kelola Karyawan</a>
       </div>
     </div>
-
-    <!-- Yield Konten -->
     <div>
       @yield('content')
     </div>

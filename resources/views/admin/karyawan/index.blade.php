@@ -51,7 +51,6 @@
 
             {{-- Daftar Karyawan --}}
             <div id="print-section" class="table-responsive">
-                <!-- Print Header (only on print) -->
                 <div class="text-center mb-4 d-none d-print-block">
                     <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 60px; margin-bottom: 10px;">
                     <h2 class="mb-0">Data Karyawan</h2>
