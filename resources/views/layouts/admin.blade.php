@@ -32,7 +32,7 @@
       height: 100vh;
       background-color: #1d2b3a;
       color: #fff;
-      padding: 60px 15px 15px;
+      padding: 60px 15px 40px;
       position: fixed;
       width: 220px;
       left: 0;
@@ -130,6 +130,10 @@
         <i class="fas fa-handshake"></i> Peminjaman
       </a>
     </nav>
+
+    <div style="position: absolute; bottom: 10px; left: 0; width: 100%;" class="text-white small text-center">
+  &copy; 2025 K2NET
+</div>
   </div>
 
   <div class="main-content" id="mainContent">

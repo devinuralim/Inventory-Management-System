@@ -102,6 +102,16 @@
     .sidebar .mb-3 {
       margin-top: 15px;
     }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
@@ -111,9 +121,10 @@
   <div class="logo-fixed" id="logoK2net">
     <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 36px;">
   </div>
+
   <div class="sidebar" id="sidebar">
     <div class="mb-3">
-      <p class="mb-1 small">Halo, <strong>{{ Auth::user()->name }}</strong></p> <!-- Perubahan di sini -->
+      <p class="mb-1 small">Halo, <strong>{{ Auth::user()->name }}</strong></p>
     </div>
     <nav class="nav flex-column">
       <a href="{{ route('user.dashboard') }}" class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
@@ -129,7 +140,11 @@
         <i class="fas fa-handshake"></i> Peminjaman
       </a>
     </nav>
+    <div class="sidebar-footer">
+      &copy; 2025 K2NET
+    </div>
   </div>
+
   <div class="main-content" id="mainContent">
     <nav class="navbar navbar-expand navbar-light bg-white shadow-sm rounded mb-4">
       <div class="container-fluid">

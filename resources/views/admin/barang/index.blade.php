@@ -46,14 +46,11 @@
             </button>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show no-print" role="alert">
-                {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        @if (session('success'))
+    <div class="alert alert-success" role="alert">
+        {{ session('success') }}
+    </div>
+@endif
 
         <div id="print-section" class="table-responsive">
             <div class="text-center mb-4 d-none d-print-block">

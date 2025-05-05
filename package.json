@@ -18,6 +18,7 @@
         "vite": "^6.3.3"
     },
     "dependencies": {
+        "chart.js": "^4.4.9",
         "select2": "^4.1.0-rc.0"
     }
 }
