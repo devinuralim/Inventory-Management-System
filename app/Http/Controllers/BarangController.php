@@ -9,10 +9,7 @@ class BarangController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil nilai dari input search (jika ada)
         $search = $request->query('search');
-    
-        // Jika ada pencarian, filter data
         if ($search) {
             $barangs = Barang::where('nama_barang', 'like', '%' . $search . '%')
                 ->orWhere('jenis_barang', 'like', '%' . $search . '%')
@@ -25,13 +22,11 @@ class BarangController extends Controller
         return view('admin.barang.index', compact('barangs'));
     }
 
-    // Form tambah barang
     public function create()
     {
         return view('admin.barang.create');
     }
 
-    // Simpan barang baru
     public function save(Request $request)
     {
         $request->validate([
@@ -47,14 +42,12 @@ class BarangController extends Controller
         return redirect()->route('admin.barangs')->with('success', 'Barang berhasil ditambahkan');
     }
 
-    // Form edit barang
     public function edit($id)
     {
         $barang = Barang::findOrFail($id);
         return view('admin.barang.edit', compact('barang'));
     }
 
-    // Update barang
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -71,7 +64,6 @@ class BarangController extends Controller
         return redirect()->route('admin.barangs')->with('success', 'Barang berhasil diperbarui');
     }
 
-    // Hapus barang
     public function delete($id)
     {
         $barang = Barang::findOrFail($id);

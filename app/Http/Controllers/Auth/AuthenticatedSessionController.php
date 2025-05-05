@@ -10,32 +10,23 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Tampilkan halaman login.
-     */
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Proses login pakai ID Pegawai.
-     */
     public function store(Request $request): RedirectResponse
     {
-        // Validasi input
         $request->validate([
             'id_pegawai' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // Ambil data login dari input
         $credentials = [
             'id_pegawai' => $request->id_pegawai,
             'password' => $request->password,
         ];
 
-        // Coba login
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
             return back()->withErrors([
                 'id_pegawai' => 'ID Pegawai atau password salah.',
@@ -44,7 +35,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Arahkan berdasarkan role
         if ($request->user()->usertype == 'admin') {
             return redirect('admin/dashboard');
         } elseif ($request->user()->usertype == 'user') {
@@ -54,9 +44,7 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
-    /**
-     * Logout user.
-     */
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

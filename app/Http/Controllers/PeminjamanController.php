@@ -9,7 +9,6 @@ use App\Models\Karyawan;
 
 class PeminjamanController extends Controller
 {
-    // Menampilkan semua peminjaman
     public function index()
     {
         $peminjamans = Peminjaman::orderBy('id', 'desc')->get();
@@ -17,15 +16,13 @@ class PeminjamanController extends Controller
         return view('admin.peminjaman.index', compact(['peminjamans', 'total']));
     }
 
-    // Menampilkan form untuk menambah peminjaman
     public function create()
     {
-        $barangs = Barang::all();  // Ambil semua barang
-        $karyawans = Karyawan::all();  // Ambil semua karyawan
+        $barangs = Barang::all(); 
+        $karyawans = Karyawan::all();
         return view('admin.peminjaman.create', compact('barangs', 'karyawans'));
     }
 
-    // Menyimpan peminjaman baru
     public function save(Request $request)
     {
         $validation = $request->validate([
@@ -36,14 +33,13 @@ class PeminjamanController extends Controller
             'tanggal_kembali' => 'required|date',
         ]);
 
-        // Tambahkan status default 'dipinjam' saat membuat data
         $data = Peminjaman::create([
             'nama_peminjam' => $request->nama_peminjam,
             'nama_barang' => $request->nama_barang,
             'jumlah' => $request->jumlah,
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_kembali' => $request->tanggal_kembali,
-            'status' => 'dipinjam', // status dipinjam saat pertama kali
+            'status' => 'dipinjam', 
         ]);
 
         if ($data) {
@@ -55,13 +51,10 @@ class PeminjamanController extends Controller
         }
     }
 
-    // Menghapus peminjaman dengan destroy
     public function destroy($id)
     {
-        // Temukan peminjaman berdasarkan ID
         $peminjaman = Peminjaman::findOrFail($id);
         
-        // Cek jika peminjaman berhasil dihapus
         if ($peminjaman->delete()) {
             session()->flash('success', 'Peminjaman berhasil dihapus');
         } else {
@@ -71,22 +64,17 @@ class PeminjamanController extends Controller
         return redirect(route('admin.peminjaman.index'));
     }
 
-    // Konfirmasi pengembalian oleh admin
     public function konfirmasiPengembalian($id)
     {
-        // Ambil data peminjaman berdasarkan id
         $peminjaman = Peminjaman::findOrFail($id);
 
-        // Pastikan status peminjaman adalah 'menunggu konfirmasi' sebelum diubah
         if ($peminjaman->status !== 'menunggu konfirmasi') {
             return redirect()->route('admin.peminjaman.index')->with('error', 'Status peminjaman tidak valid untuk dikonfirmasi');
         }
 
-        // Ubah status peminjaman menjadi 'dikembalikan'
         $peminjaman->status = 'dikembalikan';
 
         if ($peminjaman->save()) {
-            // Mengurangi stok barang jika sudah dikembalikan
             $barang = Barang::where('nama_barang', $peminjaman->nama_barang)->first();
             if ($barang) {
                 $barang->stok += $peminjaman->jumlah;

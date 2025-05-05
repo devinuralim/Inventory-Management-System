@@ -7,20 +7,17 @@ use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
 {
-    // Tampilkan daftar karyawan
     public function index()
     {
-        $karyawans = Karyawan::all(); // Ambil semua data karyawan
+        $karyawans = Karyawan::all(); 
         return view('admin.karyawan.index', compact('karyawans'));
     }
 
-    // Form tambah karyawan
     public function create()
     {
         return view('admin.karyawan.create');
     }
 
-    // Simpan karyawan baru
     public function save(Request $request)
     {
         $request->validate([
@@ -30,7 +27,7 @@ class KaryawanController extends Controller
                     'jabatan' => 'required',
                      ]);
 
-        Karyawan::create($request->all()); // Simpan data karyawan
+        Karyawan::create($request->all()); 
 
         return redirect()->route('admin.karyawans.index')->with('success', 'Karyawan berhasil ditambahkan');
     }

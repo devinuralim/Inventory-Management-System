@@ -9,7 +9,10 @@
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
                 <div class="card-body" style="background-color: #e3f2fd; color: #0d47a1;">
-                    <h5 class="card-title">Daftar Barang</h5>
+                    <div class="mb-2">
+                        <i class="fas fa-box fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Total Barang</h5>
                     <h2 class="card-text">{{ $barangCount }}</h2>
                 </div>
             </div>
@@ -19,7 +22,10 @@
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
                 <div class="card-body" style="background-color: #e8f5e9; color: #1b5e20;">
-                    <h5 class="card-title">Daftar Karyawan</h5>
+                    <div class="mb-2">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Total Karyawan</h5>
                     <h2 class="card-text">{{ $karyawanCount }}</h2>
                 </div>
             </div>
@@ -29,7 +35,10 @@
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
                 <div class="card-body" style="background-color: #fff8e1; color: #f9a825;">
-                    <h5 class="card-title">Daftar Peminjaman</h5>
+                    <div class="mb-2">
+                        <i class="fas fa-arrow-circle-up fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Total Peminjaman</h5>
                     <h2 class="card-text">{{ $peminjamanCount }}</h2>
                 </div>
             </div>

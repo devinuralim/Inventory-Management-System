@@ -10,7 +10,7 @@ class KaryawanController extends Controller
 {
     public function index()
     {
-        $karyawans = Karyawan::all(); // Ambil semua data karyawan
+        $karyawans = Karyawan::all(); 
         return view('user.karyawan.index', compact('karyawans'));
     }
 }
