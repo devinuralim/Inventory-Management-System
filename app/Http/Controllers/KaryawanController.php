@@ -35,35 +35,32 @@ class KaryawanController extends Controller
         return redirect()->route('admin.karyawans.index')->with('success', 'Karyawan berhasil ditambahkan');
     }
 
-    // Form edit karyawan
-    public function edit($id)
+    public function edit($id_pegawai)
     {
-        $karyawan = Karyawan::findOrFail($id);
+        $karyawan = Karyawan::where('id_pegawai', $id_pegawai)->firstOrFail();
         return view('admin.karyawan.edit', compact('karyawan'));
     }
-
-    // Update data karyawan
-    public function update(Request $request, $id)
+    
+    public function update(Request $request, $id_pegawai)
     {
         $request->validate([
-        'id_pegawai' => 'required|unique:karyawans,id_pegawai',
-        'nama_lengkap' => 'required',
-        'tanggal_bergabung' => 'required|date',
-        'jabatan' => 'required',
+            'id_pegawai' => 'required|unique:karyawans,id_pegawai,' . $id_pegawai . ',id_pegawai',
+            'nama_lengkap' => 'required',
+            'tanggal_bergabung' => 'required|date',
+            'jabatan' => 'required',
         ]);
-
-        $karyawan = Karyawan::findOrFail($id);
-        $karyawan->update($request->all()); // Update data karyawan
-
+    
+        $karyawan = Karyawan::where('id_pegawai', $id_pegawai)->firstOrFail();
+        $karyawan->update($request->all());
+    
         return redirect()->route('admin.karyawans.index')->with('success', 'Karyawan berhasil diperbarui');
     }
-
-    // Hapus data karyawan
-    public function delete($id)
+    
+    public function delete($id_pegawai)
     {
-        $karyawan = Karyawan::findOrFail($id);
-        $karyawan->delete(); // Hapus data karyawan
-
+        $karyawan = Karyawan::where('id_pegawai', $id_pegawai)->firstOrFail();
+        $karyawan->delete();
+    
         return redirect()->route('admin.karyawans.index')->with('success', 'Karyawan berhasil dihapus');
     }
 }

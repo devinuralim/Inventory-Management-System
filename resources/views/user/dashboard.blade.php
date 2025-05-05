@@ -1,47 +1,34 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="py-10 bg-gray-100 min-h-screen">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-white py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Welcome Section -->
         <div class="mb-10">
-            <h1 class="text-3xl font-bold text-gray-800">Selamat Datang, {{ Auth::user()->name }} 👋</h1>
-            <p class="text-sm text-gray-600 mt-1">Silakan pilih menu di bawah untuk mengakses fitur aplikasi.</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-1">Halo, {{ Auth::user()->name }} 👋</h1>
+            <p class="text-gray-500 text-sm">Senang melihatmu kembali. Yuk, cek apa yang bisa kamu lakukan hari ini.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <!-- Info Stats Section -->
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-12">
             <!-- Menu Barang -->
-            <a href="{{ route('user.barang.index') }}" class="block bg-white hover:bg-blue-50 border border-blue-200 p-6 rounded-xl shadow transition duration-200">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full text-xl">📦</div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-blue-700">Daftar Barang</h3>
-                        <p class="text-sm text-gray-600">Lihat barang yang tersedia dan detailnya.</p>
-                    </div>
+            <div class="col">
+                <div class="card h-100 bg-light rounded-xl p-4 shadow-sm">
+                    <div class="text-primary text-3xl mb-2">📦</div>
+                    <h2 class="h5 font-semibold text-primary">Barang</h2>
+                    <p class="text-muted">Lihat semua daftar barang yang tersedia.</p>
+                    <a href="{{ route('user.barang.index') }}" class="btn btn-outline-primary mt-3">Lihat Barang →</a>
                 </div>
-            </a>
-
-            <!-- Menu Karyawan -->
-            <a href="{{ route('user.karyawan.index') }}" class="block bg-white hover:bg-green-50 border border-green-200 p-6 rounded-xl shadow transition duration-200">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-green-100 text-green-600 p-3 rounded-full text-xl">🧑‍💼</div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-green-700">Daftar Karyawan</h3>
-                        <p class="text-sm text-gray-600">Lihat siapa saja yang terdaftar sebagai karyawan.</p>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Menu Peminjaman -->
-            <a href="{{ route('user.peminjaman.index') }}" class="block bg-white hover:bg-yellow-50 border border-yellow-200 p-6 rounded-xl shadow transition duration-200">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full text-xl">📝</div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-yellow-700">Peminjaman Barang</h3>
-                        <p class="text-sm text-gray-600">Ajukan atau cek riwayat peminjaman barang.</p>
-                    </div>
-                </div>
-            </a>
+            </div>
         </div>
+
+        <!-- Friendly Reminder / Tips Section -->
+        <div class="card bg-light border-light p-4 rounded-lg shadow-sm">
+            <h3 class="h6 font-semibold text-dark mb-2">Tips Hari Ini 💡</h3>
+            <p class="text-muted">Pastikan barang yang kamu pinjam dikembalikan tepat waktu, ya! Kamu bisa cek status peminjaman kapan saja dari menu "Peminjaman Barang".</p>
+        </div>
+
     </div>
 </div>
 @endsection

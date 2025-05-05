@@ -24,41 +24,39 @@ class PeminjamanController extends Controller
         $barangs = Barang::all();  // Ambil semua barang
         return view('user.peminjaman.create', compact('barangs'));
     }
+// Menyimpan peminjaman barang
+public function store(Request $request)
+{
+    // Validasi input dari form
+    $validation = $request->validate([
+        'nama_barang' => 'required',
+        'jumlah' => 'required|integer|min:1',
+        'tanggal_pinjam' => 'required|date',
+        'tanggal_kembali' => 'required|date',
+    ]);
 
-    // Menyimpan peminjaman barang
-    public function store(Request $request)
-    {
-        // Validasi input dari form
-        $validation = $request->validate([
-            'nama_peminjam' => 'required',
-            'nama_barang' => 'required',
-            'jumlah' => 'required|integer|min:1',
-            'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'required|date',
-        ]);
-
-        // Cek apakah stok barang cukup
-        $barang = Barang::where('nama_barang', $request->nama_barang)->first();
-        if ($barang->stok < $request->jumlah) {
-            return back()->with('error', 'Stok barang tidak cukup');
-        }
-
-        // Kurangi stok barang
-        $barang->stok -= $request->jumlah;
-        $barang->save();
-
-        // Simpan data peminjaman
-        Peminjaman::create([
-            'nama_peminjam' => $request->nama_peminjam,
-            'nama_barang' => $request->nama_barang,
-            'jumlah' => $request->jumlah,
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
-            'status' => 'dipinjam',
-        ]);
-
-        return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil');
+    // Cek apakah stok barang cukup
+    $barang = Barang::where('nama_barang', $request->nama_barang)->first();
+    if ($barang->stok < $request->jumlah) {
+        return back()->with('error', 'Stok barang tidak cukup');
     }
+
+    // Kurangi stok barang
+    $barang->stok -= $request->jumlah;
+    $barang->save();
+
+    // Simpan data peminjaman
+    $peminjaman = Peminjaman::create([
+        'nama_peminjam' => auth()->user()->name,
+        'nama_barang' => $request->nama_barang,
+        'jumlah' => $request->jumlah,
+        'tanggal_pinjam' => $request->tanggal_pinjam,
+        'tanggal_kembali' => $request->tanggal_kembali,
+        'status' => 'dipinjam',
+    ]);
+
+    return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil');
+}
 
     // Mengembalikan barang yang dipinjam
     public function kembalikan($id)

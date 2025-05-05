@@ -2,62 +2,62 @@
 
 @section('content')
 <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="container mx-auto sm:px-6 lg:px-8">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Daftar Peminjaman Anda</h2>
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
+        <div class="card shadow-sm">
+            <div class="card-body text-gray-900">
                 @if(session('success'))
-                    <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
+                    <div class="alert alert-success mb-4">
                         {{ session('success') }}
                     </div>
                 @endif
                 @if(session('error'))
-                    <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+                    <div class="alert alert-danger mb-4">
                         {{ session('error') }}
                     </div>
                 @endif
 
                 <!-- Tombol untuk menambah peminjaman -->
-                <a href="{{ route('user.peminjaman.create') }}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded mb-4">
+                <a href="{{ route('user.peminjaman.create') }}" class="btn btn-primary mb-4">
                     Tambah Peminjaman
                 </a>
 
                 <!-- Tabel Daftar Peminjaman -->
-                <table class="min-w-full mt-6 table-auto border-collapse">
-                    <thead>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
                         <tr>
-                            <th class="border px-4 py-2">Nama Barang</th>
-                            <th class="border px-4 py-2">Jumlah</th>
-                            <th class="border px-4 py-2">Tanggal Pinjam</th>
-                            <th class="border px-4 py-2">Tanggal Kembali</th>
-                            <th class="border px-4 py-2">Status</th>
-                            <th class="border px-4 py-2">Aksi</th>
+                            <th>Nama Barang</th>
+                            <th>Jumlah</th>
+                            <th>Tanggal Pinjam</th>
+                            <th>Tanggal Kembali</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($peminjamans as $peminjaman)
                             <tr>
-                                <td class="border px-4 py-2">{{ $peminjaman->nama_barang }}</td>
-                                <td class="border px-4 py-2">{{ $peminjaman->jumlah }}</td>
-                                <td class="border px-4 py-2">{{ $peminjaman->tanggal_pinjam }}</td>
-                                <td class="border px-4 py-2">{{ $peminjaman->tanggal_kembali }}</td>
-                                <td class="border px-4 py-2">
+                                <td>{{ $peminjaman->nama_barang }}</td>
+                                <td>{{ $peminjaman->jumlah }}</td>
+                                <td>{{ $peminjaman->tanggal_pinjam }}</td>
+                                <td>{{ $peminjaman->tanggal_kembali }}</td>
+                                <td>
                                     @if ($peminjaman->status == 'dipinjam')
-                                        <span class="text-red-500">Dipinjam</span>
+                                        <span class="badge bg-danger">Dipinjam</span>
                                     @elseif ($peminjaman->status == 'menunggu konfirmasi')
-                                        <span class="text-yellow-500">Menunggu Konfirmasi</span>
+                                        <span class="badge bg-warning text-dark">Menunggu Konfirmasi</span>
                                     @else
-                                        <span class="text-green-500">Dikembalikan</span>
+                                        <span class="badge bg-success">Dikembalikan</span>
                                     @endif
                                 </td>
-                                <td class="border px-4 py-2">
+                                <td>
                                     @if ($peminjaman->status == 'dipinjam')
-                                        <a href="{{ route('user.peminjaman.kembalikan', $peminjaman->id) }}" class="text-green-600 no-underline hover:text-green-700 font-medium">
+                                        <a href="{{ route('user.peminjaman.kembalikan', $peminjaman->id) }}" class="btn btn-success btn-sm">
                                             Kembalikan Barang
                                         </a>
                                     @else
-                                        <span class="text-gray-500">Barang Sudah Dikembalikan</span>
+                                        <span class="text-muted">Barang Sudah Dikembalikan</span>
                                     @endif
                                 </td>
                             </tr>

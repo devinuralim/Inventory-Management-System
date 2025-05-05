@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm rounded-lg p-6">
+    <div class="container py-5">
+        <div class="card shadow-sm rounded-lg">
+            <div class="card-body">
 
                 {{-- Header --}}
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-6">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">
                     Tambah Barang
                 </h2>
 
@@ -14,58 +14,64 @@
                 <form method="POST" action="{{ route('admin.barangs.save') }}">
                     @csrf
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Nama Barang</label>
+                    <div class="mb-3">
+                        <label for="nama_barang" class="form-label">Nama Barang</label>
                         <input
                             type="text"
                             name="nama_barang"
-                            class="form-input w-full"
+                            id="nama_barang"
+                            class="form-control"
                             required
                         >
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Jenis Barang</label>
+                    <div class="mb-3">
+                        <label for="jenis_barang" class="form-label">Jenis Barang</label>
                         <input
                             type="text"
                             name="jenis_barang"
-                            class="form-input w-full"
+                            id="jenis_barang"
+                            class="form-control"
                             required
                         >
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Stok</label>
+                    <div class="mb-3">
+                        <label for="stok" class="form-label">Stok</label>
                         <input
                             type="number"
                             name="stok"
-                            class="form-input w-full"
+                            id="stok"
+                            class="form-control"
                             required
                         >
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Seri</label>
+                    <div class="mb-3">
+                        <label for="seri" class="form-label">Seri</label>
                         <input
                             type="text"
                             name="seri"
-                            class="form-input w-full"
+                            id="seri"
+                            class="form-control"
                             required
                         >
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Keterangan</label>
+                    <div class="mb-3">
+                        <label for="keterangan" class="form-label">Keterangan</label>
                         <textarea
                             name="keterangan"
-                            class="form-textarea w-full"
+                            id="keterangan"
+                            class="form-control"
+                            rows="3"
                         ></textarea>
                     </div>
 
-                    <div class="flex justify-end">
+                    <div class="d-flex justify-content-end">
                         <button
                             type="submit"
-                            class="bg-blue-500 text-white py-2 px-4 rounded-md"
+                            class="btn btn-primary"
                         >
                             Simpan
                         </button>

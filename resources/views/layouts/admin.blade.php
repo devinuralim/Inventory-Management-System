@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Admin</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -23,10 +24,6 @@
       transition: transform 0.3s ease;
     }
 
-    .logo-fixed span {
-      color: #00c0ff;
-    }
-
     .logo-fixed.hidden {
       transform: translateX(-200%);
     }
@@ -35,9 +32,9 @@
       height: 100vh;
       background-color: #1d2b3a;
       color: #fff;
-      padding: 80px 20px 20px;
+      padding: 60px 15px 15px;
       position: fixed;
-      width: 240px;
+      width: 220px;
       left: 0;
       top: 0;
       transition: transform 0.3s ease;
@@ -50,17 +47,22 @@
 
     .sidebar .nav-link {
       color: #fff;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      padding: 8px 10px;
     }
 
     .sidebar .nav-link.active,
     .sidebar .nav-link:hover {
       background-color: #0d6efd;
-      border-radius: 8px;
+      border-radius: 6px;
     }
 
     .main-content {
-      margin-left: 240px;
+      margin-left: 220px;
       padding: 20px;
       transition: margin-left 0.3s ease;
     }
@@ -76,7 +78,7 @@
       background-color: #0d6efd;
       color: #fff;
       border: none;
-      padding: 10px 15px;
+      padding: 8px 12px;
       border-radius: 5px;
       cursor: pointer;
       z-index: 1101;
@@ -86,9 +88,19 @@
       z-index: 900;
     }
 
-    /* Atur jarak teks navbar saat sidebar tampil */
-    .main-content:not(.full-width) .navbar-text {
-      margin-left: 20px;
+    .dropdown-menu {
+      min-width: 160px;
+      font-size: 0.95rem;
+      margin-top: 0px !important; /* naikkan dropdown */
+    }
+
+    .dropdown-menu a,
+    .dropdown-menu button {
+      padding: 8px 14px;
+    }
+
+    .sidebar .mb-3 {
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -97,49 +109,50 @@
   <!-- Tombol Toggle Sidebar -->
   <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
 
-  <!-- Logo K2NET -->
+  <!-- Logo -->
   <div class="logo-fixed" id="logoK2net">
-    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 40px;">
+    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 36px;">
   </div>
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <div class="mb-4">
-      <p class="mb-0">Selamat datang, <strong>Admin {{ Auth::user()->name }}</strong></p>
+    <div class="mb-3">
+      <p class="mb-1 small">Selamat datang, Admin</p>
+      <strong class="d-block mb-3">{{ Auth::user()->name }}</strong>
     </div>
     <nav class="nav flex-column">
       <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-        Dashboard
+        <i class="fas fa-home"></i> Dashboard
       </a>
       <a href="{{ route('admin.barangs') }}" class="nav-link {{ request()->routeIs('admin.barangs') ? 'active' : '' }}">
-        Daftar Barang
+        <i class="fas fa-box"></i> Daftar Barang
       </a>
       <a href="{{ route('admin.karyawans.index') }}" class="nav-link {{ request()->routeIs('admin.karyawans.*') ? 'active' : '' }}">
-        Daftar Karyawan
+        <i class="fas fa-users"></i> Daftar Karyawan
       </a>
       <a href="{{ route('admin.peminjaman.index') }}" class="nav-link {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
-        Daftar Peminjaman Barang
+        <i class="fas fa-handshake"></i> Peminjaman
       </a>
     </nav>
   </div>
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
+
     <!-- Top Navbar -->
     <nav class="navbar navbar-expand navbar-light bg-white shadow-sm rounded mb-4">
       <div class="container-fluid">
-        <span class="navbar-text fw-bold">Dashboard Admin</span>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-              {{ Auth::user()->name }}
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
+            <ul class="dropdown-menu dropdown-menu-end text-sm" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
               <li>
                 <form method="POST" action="{{ route('logout') }}">
                   @csrf
-                  <button class="dropdown-item" type="submit">Logout</button>
+                  <button class="dropdown-item" type="submit"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
                 </form>
               </li>
             </ul>
@@ -148,7 +161,17 @@
       </div>
     </nav>
 
-    <!-- Yield Halaman -->
+    <!-- Example Card for Content -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Selamat Datang di Dashboard</h5>
+        <p class="card-text">Ini adalah halaman utama untuk admin, di mana Anda dapat mengelola barang, karyawan, dan peminjaman.</p>
+        <a href="{{ route('admin.barangs') }}" class="btn btn-primary">Kelola Barang</a>
+        <a href="{{ route('admin.karyawans.index') }}" class="btn btn-secondary">Kelola Karyawan</a>
+      </div>
+    </div>
+
+    <!-- Yield Konten -->
     <div>
       @yield('content')
     </div>

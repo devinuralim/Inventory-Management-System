@@ -44,7 +44,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/karyawans', [KaryawanController::class, 'index'])->name('admin.karyawans.index');
     Route::get('admin/karyawans/create', [KaryawanController::class, 'create'])->name('admin.karyawans.create');
     Route::post('admin/karyawans/save', [KaryawanController::class, 'save'])->name('admin.karyawans.save');
-    Route::get('admin/karyawans/edit/{id}', [KaryawanController::class, 'edit'])->name('admin.karyawans.edit');
+    Route::get('admin/karyawans/edit/{id_pegawai}', [KaryawanController::class, 'edit'])->name('admin.karyawans.edit');
     Route::put('admin/karyawans/edit/{id}', [KaryawanController::class, 'update'])->name('admin.karyawans.update');
     Route::get('admin/karyawans/delete/{id}', [KaryawanController::class, 'delete'])->name('admin.karyawans.delete');
 

@@ -84,7 +84,6 @@ class PeminjamanController extends Controller
 
         // Ubah status peminjaman menjadi 'dikembalikan'
         $peminjaman->status = 'dikembalikan';
-        $peminjaman->status_konfirmasi = 'dikonfirmasi';  // Set status konfirmasi ke 'dikonfirmasi'
 
         if ($peminjaman->save()) {
             // Mengurangi stok barang jika sudah dikembalikan
