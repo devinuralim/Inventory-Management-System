@@ -75,7 +75,6 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            <!-- Ganti field email jadi id_pegawai -->
             <div class="form-group">
                 <label for="id_pegawai">ID Pegawai</label>
                 <input id="id_pegawai" type="text" name="id_pegawai" value="{{ old('id_pegawai') }}" required autofocus>

@@ -30,7 +30,7 @@
                             <th>Nama Barang</th>
                             <th>Jumlah</th>
                             <th>Tanggal Pinjam</th>
-                            <th>Tanggal Kembali</th>
+                            <th class="d-none">Tanggal Kembali</th> <!-- Kolom Tanggal Kembali disembunyikan -->
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -41,7 +41,7 @@
                                 <td>{{ $peminjaman->nama_barang }}</td>
                                 <td>{{ $peminjaman->jumlah }}</td>
                                 <td>{{ $peminjaman->tanggal_pinjam }}</td>
-                                <td>{{ $peminjaman->tanggal_kembali }}</td>
+                                <td class="d-none">{{ $peminjaman->tanggal_kembali }}</td> <!-- Kolom Tanggal Kembali disembunyikan -->
                                 <td>
                                     @if ($peminjaman->status == 'dipinjam')
                                         <span class="badge bg-danger">Dipinjam</span>

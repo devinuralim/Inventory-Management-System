@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -28,5 +27,11 @@ class Peminjaman extends Model
     public function barang()
     {
         return $this->belongsTo(Barang::class);
+    }
+
+    // Menambahkan relasi dengan Pengeluaran
+    public function pengeluarans()
+    {
+        return $this->hasMany(Pengeluarans::class, 'peminjaman_id'); // Pastikan foreign key benar
     }
 }

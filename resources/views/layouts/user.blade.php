@@ -133,9 +133,11 @@
       <a href="{{ route('user.barang.index') }}" class="nav-link {{ request()->routeIs('user.barang.*') ? 'active' : '' }}">
         <i class="fas fa-box"></i> Daftar Barang
       </a>
+      {{-- 
       <a href="{{ route('user.karyawan.index') }}" class="nav-link {{ request()->routeIs('user.karyawan.*') ? 'active' : '' }}">
         <i class="fas fa-users"></i> Daftar Karyawan
       </a>
+      --}}
       <a href="{{ route('user.peminjaman.index') }}" class="nav-link {{ request()->routeIs('user.peminjaman.*') ? 'active' : '' }}">
         <i class="fas fa-handshake"></i> Peminjaman
       </a>

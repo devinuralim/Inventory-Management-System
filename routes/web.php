@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/dashboard', [HomeUserController::class, 'index'])->name('user.dashboard');
 
     Route::get('user/barang', [UserBarangController::class, 'index'])->name('user.barang.index'); 
-    Route::get('user/karyawan', [UserKaryawanController::class, 'index'])->name('user.karyawan.index'); 
+   // Route::get('user/karyawan', [UserKaryawanController::class, 'index'])->name('user.karyawan.index'); 
     Route::get('user/peminjaman', [UserPeminjamanController::class, 'index'])->name('user.peminjaman.index');
     Route::get('user/peminjaman/create', [UserPeminjamanController::class, 'create'])->name('user.peminjaman.create');
     Route::post('user/peminjaman', [UserPeminjamanController::class, 'store'])->name('user.peminjaman.store');   

@@ -3,6 +3,7 @@
 @section('content')
 
 <div class="py-4">
+    {{-- Kartu Ringkasan --}}
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card text-center shadow-sm rounded">
@@ -38,9 +39,10 @@
             </div>
         </div>
     </div>
+
     <div class="card mb-4">
         <div class="card-header fw-bold" style="background-color: #b3e5fc; color: #01579b;">
-            <i class="fas fa-box"></i> Data Barang Terbaru
+            <i class="fas fa-box"></i> Barang yang tersedia di kantor
         </div>
         <div class="card-body">
             @if ($barangs->isEmpty())
@@ -75,6 +77,45 @@
                     </table>
                 </div>
                 <a href="{{ route('admin.barangs') }}" class="btn btn-outline-primary">Selengkapnya...</a>
+            @endif
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header fw-bold" style="background-color: #ffecb3; color: #ff6f00;">
+            <i class="fas fa-arrow-circle-up"></i> Barang yang dipinjam karyawan
+        </div>
+        <div class="card-body">
+            @if ($peminjamans->isEmpty())
+                <div class="alert alert-secondary" role="alert">
+                    Belum ada barang yang dipinjam.
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                                <th>Nama Peminjam</th>
+                                <th>Tanggal Pinjam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($peminjamans->take(5) as $peminjaman)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $peminjaman->nama_barang }}</td>
+                                    <td>{{ $peminjaman->jumlah }}</td>
+                                    <td>{{ $peminjaman->nama_peminjam }}</td>
+                                    <td>{{ $peminjaman->tanggal_pinjam }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline-warning">Selengkapnya...</a>
             @endif
         </div>
     </div>

@@ -28,7 +28,7 @@ public function store(Request $request)
         'nama_barang' => 'required',
         'jumlah' => 'required|integer|min:1',
         'tanggal_pinjam' => 'required|date',
-        'tanggal_kembali' => 'required|date',
+       'tanggal_kembali' => 'nullable|date',
     ]);
 
     $barang = Barang::where('nama_barang', $request->nama_barang)->first();
@@ -44,7 +44,7 @@ public function store(Request $request)
         'nama_barang' => $request->nama_barang,
         'jumlah' => $request->jumlah,
         'tanggal_pinjam' => $request->tanggal_pinjam,
-        'tanggal_kembali' => $request->tanggal_kembali,
+      'tanggal_kembali' => $request->tanggal_kembali ?: null,
         'status' => 'dipinjam',
     ]);
 

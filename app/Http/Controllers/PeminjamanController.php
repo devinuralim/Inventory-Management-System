@@ -30,7 +30,7 @@ class PeminjamanController extends Controller
             'nama_barang' => 'required',
             'jumlah' => 'required|integer',
             'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'required|date',
+          'tanggal_kembali' => $request->tanggal_kembali ?: null,
         ]);
 
         $data = Peminjaman::create([
@@ -38,7 +38,7 @@ class PeminjamanController extends Controller
             'nama_barang' => $request->nama_barang,
             'jumlah' => $request->jumlah,
             'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
+          'tanggal_kembali' => $request->tanggal_kembali ?: null,
             'status' => 'dipinjam', 
         ]);
 

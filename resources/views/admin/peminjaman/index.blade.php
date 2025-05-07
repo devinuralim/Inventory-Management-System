@@ -18,6 +18,9 @@
     .no-print {
         display: none !important;
     }
+    .no-print-column {
+        display: none !important;
+    }
 }
 </style>
 
@@ -55,55 +58,58 @@
                 <div class="text-center mb-4 d-none d-print-block">
                     <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 60px; margin-bottom: 10px;">
                     <h2 class="mb-0">Daftar Peminjaman Barang</h2>
-                    <small>PT. K2NET - Sistem Inventory</small>
+                    <small>PT. K2NET - Inventory Management System</small>
                     <hr>
                 </div>
 
                 <table class="table table-bordered mt-4">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nama Peminjam</th>
-                            <th>Nama Barang</th>
-                            <th>Tanggal Pinjam</th>
-                            <th>Tanggal Kembali</th>
-                            <th>Status</th>
-                            <th class="text-center no-print" style="width: 150px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($peminjamans as $peminjaman)
-                            <tr>
-                                <td>{{ $peminjaman->nama_peminjam }}</td>
-                                <td>{{ $peminjaman->nama_barang }}</td>
-                                <td>{{ $peminjaman->tanggal_pinjam }}</td>
-                                <td>{{ $peminjaman->tanggal_kembali }}</td>
-                                <td>
-                                    <span class="badge {{ $peminjaman->status === 'dipinjam' ? 'bg-danger' : 'bg-success' }}">
-                                        {{ ucfirst($peminjaman->status) }}
-                                    </span>
-                                </td>
-                                <td class="text-center no-print">
-                                    @if($peminjaman->status == 'menunggu konfirmasi')
-                                        <form action="{{ route('admin.peminjaman.konfirmasi', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengonfirmasi pengembalian barang ini?')">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                Konfirmasi
-                                            </button>
-                                        </form>
-                                    @elseif($peminjaman->status == 'dikembalikan')
-                                        <form action="{{ route('admin.peminjaman.delete', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus peminjaman ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                Hapus
-                                            </button>
-                                        </form>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
+                <thead class="table-light">
+    <tr>
+        <th>Nama Peminjam</th>
+        <th>Nama Barang</th>
+        <th>Jumlah</th> <!-- Tambahan -->
+        <th>Tanggal Pinjam</th>
+        <th class="d-none no-print-column">Tanggal Kembali</th>
+        <th>Status</th>
+        <th class="text-center no-print" style="width: 150px;">Aksi</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach ($peminjamans as $peminjaman)
+        <tr>
+            <td>{{ $peminjaman->nama_peminjam }}</td>
+            <td>{{ $peminjaman->nama_barang }}</td>
+            <td>{{ $peminjaman->jumlah }}</td> <!-- Tambahan -->
+            <td>{{ $peminjaman->tanggal_pinjam }}</td>
+            <td class="d-none no-print-column">{{ $peminjaman->tanggal_kembali }}</td>
+            <td>
+                <span class="badge {{ $peminjaman->status === 'dipinjam' ? 'bg-danger' : 'bg-success' }}">
+                    {{ ucfirst($peminjaman->status) }}
+                </span>
+            </td>
+            <td class="text-center no-print">
+                @if($peminjaman->status == 'menunggu konfirmasi')
+                    <form action="{{ route('admin.peminjaman.konfirmasi', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengonfirmasi pengembalian barang ini?')">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Konfirmasi
+                        </button>
+                    </form>
+                @elseif($peminjaman->status == 'dikembalikan')
+                    <form action="{{ route('admin.peminjaman.delete', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus peminjaman ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Hapus
+                        </button>
+                    </form>
+                @endif
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+
                 </table>
 
                 {{-- Total Peminjaman --}}

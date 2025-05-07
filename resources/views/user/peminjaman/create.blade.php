@@ -39,10 +39,11 @@
                         <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" class="form-control" required>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="tanggal_kembali" class="form-label">Tanggal Kembali</label>
-                        <input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control" required>
-                    </div>
+                        <!-- Menyembunyikan Tanggal Kembali -->
+                        <div class="mb-3 d-none">
+                                <label for="tanggal_kembali" class="form-label">Tanggal Kembali</label>
+                                <input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control" value="0000-00-00"> <!-- Atau nilai default lain -->
+                            </div>
 
                     <div>
                         <button type="submit" class="btn btn-primary">Pinjam Barang</button>

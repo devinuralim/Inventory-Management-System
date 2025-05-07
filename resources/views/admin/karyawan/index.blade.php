@@ -54,7 +54,7 @@
                 <div class="text-center mb-4 d-none d-print-block">
                     <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 60px; margin-bottom: 10px;">
                     <h2 class="mb-0">Data Karyawan</h2>
-                    <small>PT. K2NET - Sistem Inventory</small>
+                    <small>PT. K2NET - Inventory Management System</small>
                     <hr>
                 </div>
 

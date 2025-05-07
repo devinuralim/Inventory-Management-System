@@ -123,6 +123,7 @@
         </div>
         <h1>Welcome to Inventory System</h1>
         <p class="subtitle">Please login or register to continue.</p>
+
         @if(session('status'))
             <div class="error-message">
                 {{ session('status') }}
