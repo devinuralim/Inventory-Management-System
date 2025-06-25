@@ -8,9 +8,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
+      background-color: #f5f7fa;
     }
 
     .logo-fixed {
@@ -30,15 +31,19 @@
 
     .sidebar {
       height: 100vh;
-      background-color: #1d2b3a;
+      background: linear-gradient(to bottom, #1d3557, #0d1b2a);
       color: #fff;
-      padding: 60px 15px 40px;
+      padding: 80px 15px 20px;
       position: fixed;
       width: 220px;
       left: 0;
       top: 0;
       transition: transform 0.3s ease;
       z-index: 1000;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .sidebar.hidden {
@@ -47,18 +52,30 @@
 
     .sidebar .nav-link {
       color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 0.95rem;
-      padding: 8px 10px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: all 0.2s ease-in-out;
     }
 
     .sidebar .nav-link.active,
     .sidebar .nav-link:hover {
-      background-color: #0d6efd;
-      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      transform: translateX(5px);
+    }
+
+    .sidebar .sidebar-footer {
+      font-size: 0.85rem;
+      color: #ccc;
+      text-align: center;
+      padding-top: 20px;
+      margin-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .main-content {
@@ -73,102 +90,122 @@
 
     .toggle-btn {
       position: fixed;
-      top: 15px;
+      top: 23px;
       left: 15px;
-      background-color: #0d6efd;
+      background-color: #457b9d;
       color: #fff;
       border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
+      padding: 6px 10px;
+      border-radius: 8px;
       cursor: pointer;
       z-index: 1101;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      font-size: 1.2rem;
+      transition: background-color 0.3s ease;
     }
 
-    .navbar {
-      z-index: 900;
+    .toggle-btn:hover {
+      background-color: #1d3557;
     }
 
-    .dropdown-menu {
-      min-width: 160px;
+    .card {
+      border: none;
+      border-radius: 12px;
+    }
+
+    .card-title {
+      font-weight: 600;
+    }
+
+    .btn {
+      border-radius: 8px;
+    }
+
+    .sidebar .nav-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 10px;
+    }
+
+    .sidebar .nav-bottom .nav-link,
+    .sidebar .nav-bottom form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
       font-size: 0.95rem;
-      margin-top: 0px !important;
+      color: #fff;
     }
 
-    .dropdown-menu a,
-    .dropdown-menu button {
-      padding: 8px 14px;
+    .sidebar .nav-bottom form {
+      padding: 0;
     }
 
-    .sidebar .mb-3 {
-      margin-top: 15px;
+    .sidebar .nav-bottom button {
+      background: none;
+      border: none;
+      color: #fff;
+      padding: 10px 14px;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
   </style>
 </head>
 <body>
-
   <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
-
   <div class="logo-fixed" id="logoK2net">
-    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 36px;">
+    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 50px;">
   </div>
-  <div class="sidebar" id="sidebar">
-    <div class="mb-3">
-      <p class="mb-1 small">Selamat datang, Admin</p>
-      <strong class="d-block mb-3">{{ Auth::user()->name }}</strong>
-    </div>
-    <nav class="nav flex-column">
-      <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-        <i class="fas fa-home"></i> Dashboard
-      </a>
-      <a href="{{ route('admin.barangs') }}" class="nav-link {{ request()->routeIs('admin.barangs') ? 'active' : '' }}">
-        <i class="fas fa-box"></i> Daftar Barang
-      </a>
-      <a href="{{ route('admin.karyawans.index') }}" class="nav-link {{ request()->routeIs('admin.karyawans.*') ? 'active' : '' }}">
-        <i class="fas fa-users"></i> Daftar Karyawan
-      </a>
-      <a href="{{ route('admin.peminjaman.index') }}" class="nav-link {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
-        <i class="fas fa-handshake"></i> Peminjaman
-      </a>
-    </nav>
 
-    <div style="position: absolute; bottom: 10px; left: 0; width: 100%;" class="text-white small text-center">
-  &copy; 2025 K2NET
-</div>
+  <div class="sidebar" id="sidebar">
+    <div>
+      <div class="mb-3">
+        <p class="mb-1 small">Selamat datang, Admin</p>
+        <strong class="d-block mb-3">{{ Auth::user()->name }}</strong>
+      </div>
+      <nav class="nav flex-column">
+        <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="{{ route('admin.barangs') }}" class="nav-link {{ request()->routeIs('admin.barangs') ? 'active' : '' }}">
+          <i class="fas fa-box"></i> Daftar Barang
+        </a>
+        <a href="{{ route('admin.karyawans.index') }}" class="nav-link {{ request()->routeIs('admin.karyawans.*') ? 'active' : '' }}">
+          <i class="fas fa-users"></i> Daftar Karyawan
+        </a>
+        <a href="{{ route('admin.peminjaman.index') }}" class="nav-link {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
+          <i class="fas fa-handshake"></i> Peminjaman
+        </a>
+      </nav>
+    </div>
+    <div class="nav-bottom">
+      <a href="{{ route('profile.edit') }}" class="nav-link">
+        <i class="fas fa-user"></i> Profile
+      </a>
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </form>
+      <div class="sidebar-footer">
+        &copy; 2025 K2NET
+      </div>
+    </div>
   </div>
 
   <div class="main-content" id="mainContent">
-    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm rounded mb-4">
-      <div class="container-fluid">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end text-sm" aria-labelledby="userDropdown">
-              <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
-              <li>
-                <form method="POST" action="{{ route('logout') }}">
-                  @csrf
-                  <button class="dropdown-item" type="submit"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
-                </form>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    @if (request()->routeIs('admin.dashboard'))
+    <div class="dashboard-header p-4 mb-4 rounded text-white" style="background: linear-gradient(90deg, #457b9d, #1d3557); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      <h3><i class="fas fa-tachometer-alt me-2"></i>Dashboard Admin</h3>
+      <p class="mb-0">Kelola semua data barang, karyawan, dan peminjaman di sini.</p>
+    </div>
+    @endif
 
-    <div class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Selamat Datang di Dashboard</h5>
-        <p class="card-text">Ini adalah halaman utama untuk admin, di mana Anda dapat mengelola barang, karyawan, dan peminjaman.</p>
-        <a href="{{ route('admin.barangs') }}" class="btn btn-primary">Kelola Barang</a>
-        <a href="{{ route('admin.karyawans.index') }}" class="btn btn-secondary">Kelola Karyawan</a>
-      </div>
-    </div>
-    <div>
-      @yield('content')
-    </div>
+    @yield('content')
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
