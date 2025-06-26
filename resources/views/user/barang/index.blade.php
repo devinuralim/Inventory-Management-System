@@ -1,48 +1,60 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="py-12">
-    <div class="container mx-auto sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Daftar Barang</h2>
+<div class="pt-3 pb-5"> {{-- Ganti dari py-5 jadi pt-3 biar judul lebih naik --}}
+    <div class="container">
+        <!-- Judul Halaman -->
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <h2 class="fw-bold text-dark d-flex align-items-center">
+                <i class="fas fa-cube me-2 text-black"></i> {{-- Ganti icon & warna --}}
+                Daftar Barang
+            </h2>
+        </div>
 
         <!-- Form Pencarian -->
         <form action="{{ route('user.barang.index') }}" method="GET" class="mb-4">
-            <div class="input-group">
+            <div class="input-group shadow-sm">
                 <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari barang...">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search"></i> Cari
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
         </form>
 
-        <div class="card shadow-sm">
+        <!-- Card Tabel Barang -->
+        <div class="card shadow border-0 rounded-4">
             <div class="card-body">
-                <table class="table table-bordered table-striped table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-left">Nama Barang</th>
-                            <th class="text-left">Jenis Barang</th>
-                            <th class="text-center">Stok</th>
-                            <th class="text-left">Seri</th>
-                            <th class="text-left">Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($barangs as $barang)
+                @if($barangs->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary text-center">
                             <tr>
-                                <td>{{ $barang->nama_barang }}</td>
-                                <td>{{ $barang->jenis_barang }}</td>
-                                <td class="text-center">{{ $barang->stok }}</td>
-                                <td>{{ $barang->seri }}</td>
-                                <td>{{ $barang->keterangan }}</td>
+                                <th>Nama Barang</th>
+                                <th>Jenis Barang</th>
+                                <th>Stok</th>
+                                <th>Seri</th>
+                                <th>Keterangan</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-gray-500">Tidak ada data barang.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($barangs as $barang)
+                                <tr>
+                                    <td>{{ $barang->nama_barang }}</td>
+                                    <td>{{ $barang->jenis_barang }}</td>
+                                    <td class="text-center">{{ $barang->stok }}</td>
+                                    <td>{{ $barang->seri }}</td>
+                                    <td>{{ $barang->keterangan }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-box fa-2x mb-2 text-secondary"></i>
+                        <p class="mb-0">Tidak ada data barang yang ditemukan.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

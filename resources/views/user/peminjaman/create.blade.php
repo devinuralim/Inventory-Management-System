@@ -1,28 +1,32 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="py-12">
-    <div class="container mx-auto sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Peminjaman Barang</h2>
+<div class="pt-3 pb-5">
+    <div class="container">
+        <!-- Judul Halaman -->
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <h2 class="fw-bold text-dark d-flex align-items-center">
+                <i class="fas fa-cart-arrow-down me-2 text-black"></i>
+                Peminjaman Barang
+            </h2>
+        </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body text-gray-900">
-                @if(session('error'))
-                    <div class="alert alert-danger mb-4">
-                        {{ session('error') }}
-                    </div>
-                @endif
+        <!-- Notifikasi -->
+        @if(session('error'))
+            <div class="alert alert-danger shadow-sm">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+            </div>
+        @endif
 
+        <!-- Form Peminjaman -->
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body">
                 <form action="{{ route('user.peminjaman.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="nama_peminjam" class="form-label">Nama Peminjam</label>
-                        <input type="text" id="nama_peminjam" name="nama_peminjam" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="nama_barang" class="form-label">Nama Barang</label>
                         <select id="nama_barang" name="nama_barang" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Barang --</option>
                             @foreach ($barangs as $barang)
                                 <option value="{{ $barang->nama_barang }}">{{ $barang->nama_barang }}</option>
                             @endforeach
@@ -39,14 +43,16 @@
                         <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" class="form-control" required>
                     </div>
 
-                        <!-- Menyembunyikan Tanggal Kembali -->
-                        <div class="mb-3 d-none">
-                                <label for="tanggal_kembali" class="form-label">Tanggal Kembali</label>
-                                <input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control" value="0000-00-00"> <!-- Atau nilai default lain -->
-                            </div>
+                    <!-- Tanggal Kembali Disembunyikan -->
+                    <div class="mb-3 d-none">
+                        <label for="tanggal_kembali" class="form-label">Tanggal Kembali</label>
+                        <input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control" value="0000-00-00">
+                    </div>
 
-                    <div>
-                        <button type="submit" class="btn btn-primary">Pinjam Barang</button>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-1"></i> Pinjam Barang
+                        </button>
                     </div>
                 </form>
             </div>

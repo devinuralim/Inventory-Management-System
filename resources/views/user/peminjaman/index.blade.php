@@ -1,70 +1,87 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="py-12">
-    <div class="container mx-auto sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Daftar Peminjaman Anda</h2>
+<div class="pt-3 pb-5">
+    <div class="container">
+        <!-- Judul Halaman -->
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <h2 class="fw-bold text-dark d-flex align-items-center">
+                <i class="fas fa-clipboard-list me-2 text-black"></i>
+                Daftar Peminjaman Anda
+            </h2>
+        </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body text-gray-900">
-                @if(session('success'))
-                    <div class="alert alert-success mb-4">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger mb-4">
-                        {{ session('error') }}
-                    </div>
-                @endif
+        <!-- Notifikasi -->
+        @if(session('success'))
+            <div class="alert alert-success shadow-sm">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger shadow-sm">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+            </div>
+        @endif
 
-                <!-- Tombol untuk menambah peminjaman -->
-                <a href="{{ route('user.peminjaman.create') }}" class="btn btn-primary mb-4">
-                    Tambah Peminjaman
-                </a>
+        <!-- Tombol Tambah -->
+        <div class="mb-3 text-end">
+            <a href="{{ route('user.peminjaman.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Tambah Peminjaman
+            </a>
+        </div>
 
-                <!-- Tabel Daftar Peminjaman -->
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nama Barang</th>
-                            <th>Jumlah</th>
-                            <th>Tanggal Pinjam</th>
-                            <th class="d-none">Tanggal Kembali</th> <!-- Kolom Tanggal Kembali disembunyikan -->
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($peminjamans as $peminjaman)
+        <!-- Card Tabel -->
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary text-center">
                             <tr>
-                                <td>{{ $peminjaman->nama_barang }}</td>
-                                <td>{{ $peminjaman->jumlah }}</td>
-                                <td>{{ $peminjaman->tanggal_pinjam }}</td>
-                                <td class="d-none">{{ $peminjaman->tanggal_kembali }}</td> <!-- Kolom Tanggal Kembali disembunyikan -->
-                                <td>
-                                    @if ($peminjaman->status == 'dipinjam')
-                                        <span class="badge bg-danger">Dipinjam</span>
-                                    @elseif ($peminjaman->status == 'menunggu konfirmasi')
-                                        <span class="badge bg-warning text-dark">Menunggu Konfirmasi</span>
-                                    @else
-                                        <span class="badge bg-success">Dikembalikan</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($peminjaman->status == 'dipinjam')
-                                        <a href="{{ route('user.peminjaman.kembalikan', $peminjaman->id) }}" class="btn btn-success btn-sm">
-                                            Kembalikan Barang
-                                        </a>
-                                    @else
-                                        <span class="text-muted">Barang Sudah Dikembalikan</span>
-                                    @endif
-                                </td>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                                <th>Tanggal Pinjam</th>
+                                <th class="d-none">Tanggal Kembali</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                            @forelse ($peminjamans as $peminjaman)
+                                <tr>
+                                    <td>{{ $peminjaman->nama_barang }}</td>
+                                    <td class="text-center">{{ $peminjaman->jumlah }}</td>
+                                    <td>{{ $peminjaman->tanggal_pinjam }}</td>
+                                    <td class="d-none">{{ $peminjaman->tanggal_kembali }}</td>
+                                    <td class="text-center">
+                                        @if ($peminjaman->status == 'dipinjam')
+                                            <span class="badge bg-danger">Dipinjam</span>
+                                        @elseif ($peminjaman->status == 'menunggu konfirmasi')
+                                            <span class="badge bg-warning text-dark">Menunggu Konfirmasi</span>
+                                        @else
+                                            <span class="badge bg-success">Dikembalikan</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($peminjaman->status == 'dipinjam')
+                                            <a href="{{ route('user.peminjaman.kembalikan', $peminjaman->id) }}" class="btn btn-success btn-sm">
+                                                <i class="fas fa-undo me-1"></i> Kembalikan
+                                            </a>
+                                        @else
+                                            <span class="text-muted small">Barang Sudah Dikembalikan</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">
+                                        <i class="fas fa-box-open fa-2x mb-2 text-secondary"></i><br>
+                                        Tidak ada data peminjaman.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
