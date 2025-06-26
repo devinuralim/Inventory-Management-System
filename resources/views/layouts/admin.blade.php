@@ -182,7 +182,7 @@
       </nav>
     </div>
     <div class="nav-bottom">
-      <a href="{{ route('profile.edit') }}" class="nav-link">
+      <a href="{{ route('admin.profile') }}" class="nav-link">
         <i class="fas fa-user"></i> Profile
       </a>
       <form method="POST" action="{{ route('logout') }}">

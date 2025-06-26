@@ -1,8 +1,5 @@
-@php
-    $layout = Auth::user()->role == 'admin' ? 'layouts.admin' : 'layouts.user';
-@endphp
-
-@extends($layout)
+{{-- resources/views/user/profile.blade.php --}}
+@extends('layouts.user')
 
 @section('content')
 <div class="container py-5">
@@ -20,13 +17,11 @@
 
             {{-- INFORMASI PROFIL --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white fw-bold">
-                    Informasi Profil
-                </div>
+                <div class="card-header bg-primary text-white fw-bold">Informasi Profil</div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('profile.update') }}">
+                    <form method="POST" action="{{ route('user.profile.update') }}">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
@@ -47,9 +42,7 @@
 
             {{-- GANTI PASSWORD --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark fw-bold">
-                    Ganti Password
-                </div>
+                <div class="card-header bg-warning text-dark fw-bold">Ganti Password</div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
@@ -79,11 +72,9 @@
 
             {{-- HAPUS AKUN --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-danger text-white fw-bold">
-                    Hapus Akun
-                </div>
+                <div class="card-header bg-danger text-white fw-bold">Hapus Akun</div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('profile.destroy') }}">
+                    <form method="POST" action="{{ route('user.profile.destroy') }}">
                         @csrf
                         @method('DELETE')
 

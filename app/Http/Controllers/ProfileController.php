@@ -14,12 +14,6 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
 
     /**
      * Update the user's profile information.
@@ -34,7 +28,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::back()->with('status', 'profile-updated');
     }
 
     /**
@@ -56,5 +50,25 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Show profile page for admin.
+     */
+    public function adminProfile(): View
+    {
+        return view('admin.profile', [
+            'user' => Auth::user()
+        ]);
+    }
+
+    /**
+     * Show profile page for user.
+     */
+    public function userProfile(): View
+    {
+        return view('user.profile', [
+            'user' => Auth::user()
+        ]);
     }
 }
