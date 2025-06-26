@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan; // ← Tambahin ini
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeAdminController;
 use App\Http\Controllers\HomeUserController;
@@ -10,6 +11,14 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\User\BarangController as UserBarangController;
 use App\Http\Controllers\User\KaryawanController as UserKaryawanController;
 use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
+
+// ===============
+// 🔧 Tambahan route untuk migrate
+// ===============
+Route::get('/run-migrate', function () {
+    Artisan::call('migrate --force');
+    return '✅ Migrasi berhasil dijalankan!';
+});
 
 Route::get('/', function () {
     return view('welcome');
