@@ -15,34 +15,43 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    public function store(Request $request): RedirectResponse
+    // ✅ Tambahkan ini!
+    public function username()
     {
-        $request->validate([
-            'id_pegawai' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        $credentials = [
-            'id_pegawai' => $request->id_pegawai,
-            'password' => $request->password,
-        ];
-
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()->withErrors([
-                'id_pegawai' => 'ID Pegawai atau password salah.',
-            ])->onlyInput('id_pegawai');
-        }
-
-        $request->session()->regenerate();
-
-        if ($request->user()->usertype == 'admin') {
-            return redirect('admin/dashboard');
-        } elseif ($request->user()->usertype == 'user') {
-            return redirect('user/dashboard');
-        }
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        return 'id_pegawai';
     }
+
+   public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'id_pegawai' => 'required|string',
+        'password' => 'required|string',
+    ]);
+
+    $credentials = [
+        'id_pegawai' => $request->id_pegawai,
+        'password' => $request->password,
+    ];
+
+    if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        return back()->withErrors([
+            'id_pegawai' => 'ID Pegawai atau password salah.',
+        ])->onlyInput('id_pegawai');
+    }
+
+    $request->session()->regenerate();
+
+    // 👇 Redirect berdasarkan role
+    $user = Auth::user();
+    if ($user->usertype === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->usertype === 'user') {
+        return redirect()->route('user.dashboard');
+    }
+
+    // fallback
+    return redirect('/');
+}
 
 
     public function destroy(Request $request): RedirectResponse
