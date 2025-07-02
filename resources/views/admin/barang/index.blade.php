@@ -103,11 +103,15 @@ input:focus, button:focus {
                                 <a href="{{ route('admin.barangs.edit', $barang->id) }}" class="btn btn-warning btn-sm rounded-pill me-1">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a href="{{ route('admin.barangs.delete', $barang->id) }}"
-                                   onclick="return confirm('Yakin ingin menghapus?')"
-                                   class="btn btn-danger btn-sm rounded-pill">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </a>
+
+                                <!-- Form method DELETE -->
+                                <form action="{{ route('admin.barangs.delete', $barang->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm rounded-pill">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @empty
