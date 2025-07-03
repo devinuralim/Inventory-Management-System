@@ -6,14 +6,25 @@ use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Barang;
 use App\Models\Karyawan;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $peminjamans = Peminjaman::orderBy('id', 'desc')->get();
-        $total = Peminjaman::count();
-        return view('admin.peminjaman.index', compact(['peminjamans', 'total']));
+        $search = $request->query('search');
+
+        $peminjamans = Peminjaman::query();
+
+        if ($search) {
+            $peminjamans->where('nama_peminjam', 'like', "%$search%")
+                        ->orWhere('nama_barang', 'like', "%$search%");
+        }
+
+        $peminjamans = $peminjamans->orderBy('id', 'desc')->get();
+        $total = $peminjamans->count();
+
+        return view('admin.peminjaman.index', compact('peminjamans', 'total'));
     }
 
     public function create()
@@ -25,12 +36,12 @@ class PeminjamanController extends Controller
 
     public function save(Request $request)
     {
-        $validation = $request->validate([
+        $request->validate([
             'nama_peminjam' => 'required',
             'nama_barang' => 'required',
             'jumlah' => 'required|integer',
             'tanggal_pinjam' => 'required|date',
-          'tanggal_kembali' => $request->tanggal_kembali ?: null,
+            'tanggal_kembali' => 'nullable|date',
         ]);
 
         $data = Peminjaman::create([
@@ -38,16 +49,14 @@ class PeminjamanController extends Controller
             'nama_barang' => $request->nama_barang,
             'jumlah' => $request->jumlah,
             'tanggal_pinjam' => $request->tanggal_pinjam,
-          'tanggal_kembali' => $request->tanggal_kembali ?: null,
+            'tanggal_kembali' => $request->tanggal_kembali ?: null,
             'status' => 'dipinjam', 
         ]);
 
         if ($data) {
-            session()->flash('success', 'Peminjaman berhasil ditambahkan');
-            return redirect(route('admin.peminjaman.index'));
+            return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan');
         } else {
-            session()->flash('error', 'Terjadi masalah saat menambahkan peminjaman');
-            return redirect(route('admin.peminjaman.create'));
+            return redirect()->route('admin.peminjaman.create')->with('error', 'Terjadi masalah saat menambahkan peminjaman');
         }
     }
 
@@ -56,12 +65,10 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         
         if ($peminjaman->delete()) {
-            session()->flash('success', 'Peminjaman berhasil dihapus');
+            return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil dihapus');
         } else {
-            session()->flash('error', 'Peminjaman gagal dihapus');
+            return redirect()->route('admin.peminjaman.index')->with('error', 'Peminjaman gagal dihapus');
         }
-
-        return redirect(route('admin.peminjaman.index'));
     }
 
     public function konfirmasiPengembalian($id)
@@ -85,5 +92,45 @@ class PeminjamanController extends Controller
         } else {
             return redirect()->route('admin.peminjaman.index')->with('error', 'Gagal mengonfirmasi pengembalian barang');
         }
+    }
+
+    public function exportPdf()
+    {
+        $peminjamans = Peminjaman::all();
+        $total = $peminjamans->count();
+
+        $pdf = Pdf::loadView('admin.peminjaman.export-pdf', compact('peminjamans', 'total'));
+        return $pdf->download('data-peminjaman.pdf');
+    }
+
+    public function exportExcel()
+    {
+        $fileName = 'data-peminjaman.csv';
+        $peminjamans = Peminjaman::all();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function () use ($peminjamans) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Nama Peminjam', 'Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Tanggal Kembali', 'Status']);
+
+            foreach ($peminjamans as $p) {
+                fputcsv($file, [
+                    $p->nama_peminjam,
+                    $p->nama_barang,
+                    $p->jumlah,
+                    $p->tanggal_pinjam,
+                    $p->tanggal_kembali,
+                    $p->status,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -11,13 +11,6 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -31,9 +24,6 @@ class ProfileController extends Controller
         return Redirect::back()->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -52,9 +42,6 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    /**
-     * Show profile page for admin.
-     */
     public function adminProfile(): View
     {
         return view('admin.profile', [
@@ -62,9 +49,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Show profile page for user.
-     */
     public function userProfile(): View
     {
         return view('user.profile', [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BarangController extends Controller
 {
@@ -18,7 +19,7 @@ class BarangController extends Controller
         } else {
             $barangs = Barang::all();
         }
-    
+
         return view('admin.barang.index', compact('barangs'));
     }
 
@@ -30,11 +31,11 @@ class BarangController extends Controller
     public function save(Request $request)
     {
         $request->validate([
-        'nama_barang' => 'required',
-        'jenis_barang' => 'required',
-        'stok' => 'required|integer',
-        'seri' => 'required',
-        'keterangan' => 'nullable',
+            'nama_barang' => 'required',
+            'jenis_barang' => 'required',
+            'stok' => 'required|integer',
+            'seri' => 'required',
+            'keterangan' => 'nullable',
         ]);
 
         Barang::create($request->all());
@@ -51,11 +52,11 @@ class BarangController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-        'nama_barang' => 'required',
-        'jenis_barang' => 'required',
-        'stok' => 'required|integer',
-        'seri' => 'required',
-        'keterangan' => 'nullable',
+            'nama_barang' => 'required',
+            'jenis_barang' => 'required',
+            'stok' => 'required|integer',
+            'seri' => 'required',
+            'keterangan' => 'nullable',
         ]);
 
         $barang = Barang::findOrFail($id);
@@ -70,5 +71,42 @@ class BarangController extends Controller
         $barang->delete();
 
         return redirect()->route('admin.barangs')->with('success', 'Barang berhasil dihapus');
+    }
+
+    public function exportPdf()
+    {
+        $barangs = Barang::all();
+        $pdf = Pdf::loadView('admin.barang.export-pdf', compact('barangs'));
+        return $pdf->download('data-barang.pdf');
+    }
+
+    public function exportExcel()
+    {
+        $fileName = 'data-barang.csv';
+        $barangs = Barang::all();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function () use ($barangs) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Nama Barang', 'Jenis Barang', 'Stok', 'Seri', 'Keterangan']);
+
+            foreach ($barangs as $barang) {
+                fputcsv($file, [
+                    $barang->nama_barang,
+                    $barang->jenis_barang,
+                    $barang->stok,
+                    $barang->seri,
+                    $barang->keterangan,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

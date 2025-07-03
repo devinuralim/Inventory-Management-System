@@ -4,8 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aplikasi Inventory</title>
-
-  <!-- Google Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -77,7 +75,7 @@
       border-radius: 10px;
       border: 1px solid #94a3b8;
       font-size: 14px;
-      background-color: #ffffff; /* ← PUTIH */
+      background-color: #ffffff; 
       transition: border-color 0.2s;
       color: #1e293b;
     }
@@ -92,7 +90,7 @@
       top: 14px;
       left: 16px;
       color: #64748b;
-      background-color: transparent; /* ← TRANSPARAN */
+      background-color: transparent;
       padding: 0 6px;
       font-size: 14px;
       transition: 0.2s;
@@ -105,7 +103,7 @@
       left: 12px;
       font-size: 11px;
       color: #38bdf8;
-      background-color: #1e293b; /* biar label nggak transparan di belakang input */
+      background-color: #1e293b; 
     }
 
     .toggle-password {

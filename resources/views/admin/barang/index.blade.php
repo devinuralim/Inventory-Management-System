@@ -22,55 +22,52 @@
         display: none !important;
     }
 }
-
-input:focus, button:focus {
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
 </style>
 
-<div class="pt-4 pb-5 container">
-    <div class="card shadow border-0 rounded-4 p-4">
-        <!-- Header Judul & Aksi -->
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 no-print gap-3">
+<div class="container pt-4 pb-5">
+    <div class="card shadow-sm border-0 rounded-4 p-4">
+        {{-- Header --}}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <h2 class="fw-bold text-dark d-flex align-items-center mb-0">
-                <i class="fas fa-boxes-stacked me-2 text-black"></i> Daftar Barang
+                <i class="fas fa-boxes-stacked me-2 text-dark"></i> Daftar Barang
             </h2>
             <div class="d-flex flex-wrap gap-2">
-                <!-- Form Pencarian -->
-                <form action="{{ route('admin.barangs') }}" method="GET" class="input-group shadow-sm" style="max-width: 320px;">
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        class="form-control rounded-start-pill border-end-0"
-                        placeholder="Cari nama, jenis, atau seri barang..." aria-label="Cari barang">
+                <form action="{{ route('admin.barangs') }}" method="GET" class="input-group shadow-sm" style="max-width: 300px;">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control rounded-start-pill border-end-0" placeholder="Cari nama, jenis, seri...">
                     <button class="btn btn-outline-primary rounded-end-pill border-start-0" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
-                <!-- Tombol Tambah -->
-                <a href="{{ route('admin.barangs.create') }}" class="btn btn-success btn-sm rounded-pill">
-                    <i class="fas fa-plus-circle me-1"></i> Tambah Barang
+                <a href="{{ route('admin.barangs.create') }}" class="btn btn-success rounded-pill">
+                    <i class="fas fa-plus me-1"></i> Tambah
                 </a>
             </div>
         </div>
 
-        <!-- Tombol Cetak -->
-        <div class="mb-3 no-print">
+        {{-- Tombol Export & Cetak --}}
+        <div class="mb-3 d-flex flex-wrap gap-2 no-print">
             <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill">
                 <i class="fas fa-print"></i> Cetak
             </button>
+            <a href="{{ route('admin.barangs.export.pdf') }}" class="btn btn-danger rounded-pill">
+                <i class="fas fa-file-pdf"></i> PDF
+            </a>
+            <a href="{{ route('admin.barangs.export.csv') }}" class="btn btn-outline-success rounded-pill">
+                <i class="fas fa-file-csv"></i> CSV
+            </a>
         </div>
 
-        <!-- Notifikasi -->
+        {{-- Notifikasi --}}
         @if (session('success'))
             <div class="alert alert-success shadow-sm">
-                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
             </div>
         @endif
 
-        <!-- Tabel Data -->
+        {{-- Table Section --}}
         <div id="print-section" class="table-responsive">
-            <!-- Header untuk print -->
             <div class="text-center mb-4 d-none d-print-block">
-                <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 60px; margin-bottom: 10px;">
+                <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 60px;">
                 <h2 class="mb-0">Data Barang</h2>
                 <small>PT. K2NET - Inventory Management System</small>
                 <hr>
@@ -79,7 +76,7 @@ input:focus, button:focus {
             <table class="table table-hover align-middle table-bordered">
                 <thead class="table-primary text-center">
                     <tr>
-                        <th>NO</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Jenis</th>
                         <th>Stok</th>
@@ -91,7 +88,7 @@ input:focus, button:focus {
                 <tbody>
                     @forelse ($barangs as $barang)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $barang->nama_barang }}</td>
                             <td>{{ $barang->jenis_barang }}</td>
                             <td class="text-center">
@@ -100,23 +97,21 @@ input:focus, button:focus {
                             <td>{{ $barang->seri }}</td>
                             <td>{{ $barang->keterangan }}</td>
                             <td class="text-center no-print">
-                                <a href="{{ route('admin.barangs.edit', $barang->id) }}" class="btn btn-warning btn-sm rounded-pill me-1">
-                                    <i class="fas fa-edit"></i> Edit
+                                <a href="{{ route('admin.barangs.edit', $barang->id) }}" class="btn btn-sm btn-warning rounded-pill me-1">
+                                    <i class="fas fa-edit"></i>
                                 </a>
-
-                                <!-- Form method DELETE -->
                                 <form action="{{ route('admin.barangs.delete', $barang->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-danger btn-sm rounded-pill">
-                                        <i class="fas fa-trash"></i> Hapus
+                                    <button class="btn btn-sm btn-danger rounded-pill">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-3">
+                            <td colspan="7" class="text-center text-muted py-4">
                                 <i class="fas fa-box-open fa-2x mb-2 text-secondary"></i><br>
                                 Tidak ada barang ditemukan.
                             </td>

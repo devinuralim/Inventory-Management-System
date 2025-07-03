@@ -5,12 +5,10 @@
     <div class="card shadow border-0 rounded-4">
         <div class="card-body">
 
-            <!-- Judul Form -->
             <h2 class="fw-bold text-dark mb-4 d-flex align-items-center">
                 <i class="fas fa-box-open me-2 text-black"></i> Tambah Barang
             </h2>
 
-            <!-- Form Tambah Barang -->
             <form method="POST" action="{{ route('admin.barangs.save') }}">
                 @csrf
 

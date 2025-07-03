@@ -1,98 +1,71 @@
-{{-- resources/views/user/profile.blade.php --}}
 @extends('layouts.user')
 
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
+<style>
+    .profile-card {
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .profile-card .icon-box {
+        width: 50px;
+        height: 50px;
+        background: #198754;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.2rem;
+    }
+    .profile-label {
+        font-weight: 600;
+        color: #555;
+    }
+</style>
 
-            <h2 class="mb-4 text-center">Profil Saya</h2>
-
-            @if (session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            {{-- INFORMASI PROFIL --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white fw-bold">Informasi Profil</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('user.profile.update') }}">
-                        @csrf
-                        @method('PATCH')
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama</label>
-                            <input type="text" name="name" id="name" value="{{ old('name', Auth::user()->name) }}" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" value="{{ old('email', Auth::user()->email) }}" class="form-control">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Simpan
-                        </button>
-                    </form>
-                </div>
+<div class="pt-4 pb-5 container">
+    <div class="card profile-card border-0 rounded-4 p-4">
+        <div class="mb-4 d-flex align-items-center gap-3">
+            <div class="icon-box">
+                <i class="fas fa-id-card"></i>
             </div>
-
-            {{-- GANTI PASSWORD --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark fw-bold">Ganti Password</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-3">
-                            <label for="current_password" class="form-label">Password Lama</label>
-                            <input type="password" name="current_password" id="current_password" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password Baru</label>
-                            <input type="password" name="password" id="password" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-warning text-dark">
-                            <i class="bi bi-key"></i> Update Password
-                        </button>
-                    </form>
-                </div>
+            <div>
+                <h4 class="mb-0">Profil Saya</h4>
+                <small class="text-muted">Informasi karyawan yang sedang login</small>
             </div>
-
-            {{-- HAPUS AKUN --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-danger text-white fw-bold">Hapus Akun</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('user.profile.destroy') }}">
-                        @csrf
-                        @method('DELETE')
-
-                        <p class="mb-3">Apakah kamu yakin ingin menghapus akun ini? Tindakan ini tidak bisa dibatalkan.</p>
-
-                        <div class="mb-3">
-                            <label for="password_delete" class="form-label">Masukkan Password untuk Konfirmasi</label>
-                            <input type="password" name="password" id="password_delete" class="form-control" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash"></i> Hapus Akun
-                        </button>
-                    </form>
-                </div>
-            </div>
-
         </div>
+
+        @php
+            $karyawan = \App\Models\Karyawan::where('id_pegawai', Auth::user()->id_pegawai)->first();
+        @endphp
+
+        @if ($karyawan)
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3">
+                    <label class="profile-label">ID Pegawai</label>
+                    <div class="form-control bg-light">{{ $karyawan->id_pegawai }}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="profile-label">Nama Lengkap</label>
+                    <div class="form-control bg-light">{{ $karyawan->nama_lengkap }}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="profile-label">Tanggal Bergabung</label>
+                    <div class="form-control bg-light">
+                        {{ \Carbon\Carbon::parse($karyawan->tanggal_bergabung)->translatedFormat('d F Y') }}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="profile-label">Jabatan</label>
+                    <div class="form-control bg-light">{{ $karyawan->jabatan }}</div>
+                </div>
+            </div>
+        @else
+            <div class="alert alert-warning mt-2">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Data karyawan belum tersedia. Silakan hubungi admin.
+            </div>
+        @endif
     </div>
 </div>
 @endsection

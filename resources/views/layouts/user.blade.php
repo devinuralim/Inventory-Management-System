@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard User</title>
-
-  <!-- Bootstrap & Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -25,7 +21,6 @@
       color: #333;
     }
 
-    /* Animations */
     @keyframes fade-in {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -166,16 +161,11 @@
   </style>
 </head>
 <body>
-
-  <!-- Toggle Sidebar Button -->
   <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
-
-  <!-- Logo -->
   <div class="logo-fixed" id="logoK2net">
     <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 50px;">
   </div>
 
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div>
       <div class="mb-3">
@@ -194,7 +184,6 @@
       </nav>
     </div>
 
-    <!-- Profile & Logout -->
     <div>
       <nav class="nav flex-column mb-2">
         <a href="{{ route('user.profile') }}" class="nav-link">
@@ -213,12 +202,10 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content" id="mainContent">
     @yield('content')
   </div>
 
-  <!-- Script -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const toggleBtn = document.getElementById('toggleSidebarBtn');
@@ -233,7 +220,7 @@
 
       if (!sidebar.classList.contains('hidden')) {
         sidebar.classList.remove('fade-in');
-        void sidebar.offsetWidth; // Trigger reflow
+        void sidebar.offsetWidth; 
         sidebar.classList.add('fade-in');
       }
     });

@@ -3,7 +3,6 @@
 @section('content')
 <div class="pt-3 pb-5">
     <div class="container">
-        <!-- Judul Halaman -->
         <div class="mb-3 d-flex align-items-center justify-content-between">
             <h2 class="fw-bold text-dark d-flex align-items-center">
                 <i class="fas fa-cart-arrow-down me-2 text-black"></i>
@@ -11,14 +10,12 @@
             </h2>
         </div>
 
-        <!-- Notifikasi -->
         @if(session('error'))
             <div class="alert alert-danger shadow-sm">
                 <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
             </div>
         @endif
 
-        <!-- Form Peminjaman -->
         <div class="card shadow border-0 rounded-4">
             <div class="card-body">
                 <form action="{{ route('user.peminjaman.store') }}" method="POST">
@@ -43,7 +40,6 @@
                         <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" class="form-control" required>
                     </div>
 
-                    <!-- Tanggal Kembali Disembunyikan -->
                     <div class="mb-3 d-none">
                         <label for="tanggal_kembali" class="form-label">Tanggal Kembali</label>
                         <input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control" value="0000-00-00">

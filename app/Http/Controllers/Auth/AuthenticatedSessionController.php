@@ -15,7 +15,6 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    // ✅ Tambahkan ini!
     public function username()
     {
         return 'id_pegawai';
@@ -40,16 +39,12 @@ class AuthenticatedSessionController extends Controller
     }
 
     $request->session()->regenerate();
-
-    // 👇 Redirect berdasarkan role
     $user = Auth::user();
     if ($user->usertype === 'admin') {
         return redirect()->route('admin.dashboard');
     } elseif ($user->usertype === 'user') {
         return redirect()->route('user.dashboard');
     }
-
-    // fallback
     return redirect('/');
 }
 

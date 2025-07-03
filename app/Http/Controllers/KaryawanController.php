@@ -6,23 +6,36 @@ use App\Models\User;
 use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KaryawanController extends Controller
 {
-    // Tampilkan semua karyawan (dari tabel karyawans)
-    public function index()
+    public function index(Request $request)
     {
-        $karyawans = Karyawan::all();
+        $search = $request->query('search');
+
+        $karyawans = Karyawan::query();
+
+        if ($search) {
+            $karyawans->where('id_pegawai', 'like', "%$search%")
+                      ->orWhere('nama_lengkap', 'like', "%$search%")
+                      ->orWhere('jabatan', 'like', "%$search%");
+        }
+
+        $karyawans = $karyawans->get()->map(function ($karyawan) {
+            $user = User::where('id_pegawai', $karyawan->id_pegawai)->first();
+            $karyawan->password_plain = $user?->password_plain ?? null;
+            return $karyawan;
+        });
+
         return view('admin.karyawan.index', compact('karyawans'));
     }
 
-    // Form tambah akun + data karyawan
     public function create()
     {
         return view('admin.karyawan.create');
     }
 
-    // Simpan ke tabel users dan karyawans
     public function save(Request $request)
     {
         $request->validate([
@@ -33,15 +46,14 @@ class KaryawanController extends Controller
             'jabatan' => 'required|string|max:255',
         ]);
 
-        // Simpan ke tabel users
         User::create([
             'id_pegawai' => $request->id_pegawai,
             'name' => $request->name,
             'password' => Hash::make($request->password),
+            'password_plain' => $request->password,
             'role' => 'karyawan',
         ]);
 
-        // Simpan ke tabel karyawans
         Karyawan::create([
             'id_pegawai' => $request->id_pegawai,
             'nama_lengkap' => $request->name,
@@ -53,14 +65,12 @@ class KaryawanController extends Controller
                          ->with('success', 'Akun karyawan berhasil dibuat!');
     }
 
-    // Form edit data karyawan
     public function edit($id_pegawai)
     {
         $karyawan = Karyawan::where('id_pegawai', $id_pegawai)->firstOrFail();
         return view('admin.karyawan.edit', compact('karyawan'));
     }
 
-    // Update data di karyawans + optional update nama di users
     public function update(Request $request, $id_pegawai)
     {
         $karyawan = Karyawan::where('id_pegawai', $id_pegawai)->firstOrFail();
@@ -71,6 +81,7 @@ class KaryawanController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'tanggal_bergabung' => 'required|date',
             'jabatan' => 'required|string|max:255',
+            'password' => 'nullable|min:6',
         ]);
 
         $karyawan->update([
@@ -81,17 +92,21 @@ class KaryawanController extends Controller
         ]);
 
         if ($user) {
-            $user->update([
-                'id_pegawai' => $request->id_pegawai,
-                'name' => $request->nama_lengkap,
-            ]);
+            $user->id_pegawai = $request->id_pegawai;
+            $user->name = $request->nama_lengkap;
+
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+                $user->password_plain = $request->password;
+            }
+
+            $user->save();
         }
 
         return redirect()->route('admin.karyawans.index')
                          ->with('success', 'Data karyawan berhasil diperbarui');
     }
 
-    // Hapus dari karyawans dan users
     public function delete($id_pegawai)
     {
         $karyawan = Karyawan::where('id_pegawai', $id_pegawai)->first();
@@ -107,5 +122,41 @@ class KaryawanController extends Controller
 
         return redirect()->route('admin.karyawans.index')
                          ->with('success', 'Data karyawan berhasil dihapus');
+    }
+
+    public function exportPdf()
+    {
+        $karyawans = Karyawan::all();
+        $pdf = Pdf::loadView('admin.karyawan.export-pdf', compact('karyawans'));
+        return $pdf->download('data-karyawan.pdf');
+    }
+
+    public function exportExcel()
+    {
+        $fileName = 'data-karyawan.csv';
+        $karyawans = Karyawan::all();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function () use ($karyawans) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['ID Pegawai', 'Nama Lengkap', 'Tanggal Bergabung', 'Jabatan']);
+
+            foreach ($karyawans as $karyawan) {
+                fputcsv($file, [
+                    $karyawan->id_pegawai,
+                    $karyawan->nama_lengkap,
+                    \Carbon\Carbon::parse($karyawan->tanggal_bergabung)->format('d-m-Y'),
+                    $karyawan->jabatan,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

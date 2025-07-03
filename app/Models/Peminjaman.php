@@ -29,9 +29,8 @@ class Peminjaman extends Model
         return $this->belongsTo(Barang::class);
     }
 
-    // Menambahkan relasi dengan Pengeluaran
     public function pengeluarans()
     {
-        return $this->hasMany(Pengeluarans::class, 'peminjaman_id'); // Pastikan foreign key benar
+        return $this->hasMany(Pengeluarans::class, 'peminjaman_id'); 
     }
 }

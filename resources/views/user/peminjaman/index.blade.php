@@ -3,7 +3,6 @@
 @section('content')
 <div class="pt-3 pb-5">
     <div class="container">
-        <!-- Judul Halaman -->
         <div class="mb-3 d-flex align-items-center justify-content-between">
             <h2 class="fw-bold text-dark d-flex align-items-center">
                 <i class="fas fa-clipboard-list me-2 text-black"></i>
@@ -11,7 +10,6 @@
             </h2>
         </div>
 
-        <!-- Notifikasi -->
         @if(session('success'))
             <div class="alert alert-success shadow-sm">
                 <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
@@ -23,14 +21,11 @@
             </div>
         @endif
 
-        <!-- Tombol Tambah -->
         <div class="mb-3 text-end">
             <a href="{{ route('user.peminjaman.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus-circle me-1"></i> Tambah Peminjaman
             </a>
         </div>
-
-        <!-- Card Tabel -->
         <div class="card shadow border-0 rounded-4">
             <div class="card-body">
                 <div class="table-responsive">
