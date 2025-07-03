@@ -12,7 +12,7 @@ class PeminjamanController extends Controller
     public function index()
     {
         $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)
-                            ->latest() 
+                            ->latest()
                             ->get();
 
         return view('user.peminjaman.index', compact('peminjamans'));
@@ -26,31 +26,35 @@ class PeminjamanController extends Controller
 
     public function store(Request $request)
     {
-        $validation = $request->validate([
-            'nama_barang' => 'required',
-            'jumlah' => 'required|integer|min:1',
+        $request->validate([
+            'nama_barang' => 'required|array',
+            'nama_barang.*' => 'required|string|distinct',
+            'jumlah' => 'required|array',
+            'jumlah.*' => 'required|integer|min:1',
             'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'nullable|date',
         ]);
 
-        $barang = Barang::where('nama_barang', $request->nama_barang)->first();
-        if ($barang->stok < $request->jumlah) {
-            return back()->with('error', 'Stok barang tidak cukup');
+        foreach ($request->nama_barang as $index => $namaBarang) {
+            $barang = Barang::where('nama_barang', $namaBarang)->first();
+
+            if (!$barang || $barang->stok < $request->jumlah[$index]) {
+                return back()->with('error', 'Stok tidak cukup untuk barang: ' . $namaBarang);
+            }
+
+            $barang->stok -= $request->jumlah[$index];
+            $barang->save();
+
+            Peminjaman::create([
+                'nama_peminjam' => auth()->user()->name,
+                'nama_barang' => $namaBarang,
+                'jumlah' => $request->jumlah[$index],
+                'tanggal_pinjam' => $request->tanggal_pinjam,
+                'tanggal_kembali' => null,
+                'status' => 'dipinjam',
+            ]);
         }
 
-        $barang->stok -= $request->jumlah;
-        $barang->save();
-
-        Peminjaman::create([
-            'nama_peminjam' => auth()->user()->name,
-            'nama_barang' => $request->nama_barang,
-            'jumlah' => $request->jumlah,
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali ?: null,
-            'status' => 'dipinjam',
-        ]);
-
-        return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil');
+        return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan.');
     }
 
     public function kembalikan($id)

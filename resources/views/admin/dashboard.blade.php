@@ -44,7 +44,7 @@
 
     {{-- Notifikasi --}}
     @if(isset($notifikasiCount) && $notifikasiCount > 0)
-        <div class="alert alert-warning shadow-sm rounded-4 border-0">
+        <div class="alert alert-danger shadow-sm rounded-4 border-0">
             <strong><i class="fas fa-bell me-1"></i> Notifikasi:</strong>
             Ada <strong>{{ $notifikasiCount }}</strong> peminjaman yang menunggu konfirmasi.
             <a href="{{ route('admin.peminjaman.index') }}" class="ms-2 text-decoration-underline">Lihat Detail</a>
