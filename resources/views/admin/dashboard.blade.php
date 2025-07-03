@@ -3,42 +3,53 @@
 @section('content')
 
 <div class="py-4">
-    {{-- Kartu Ringkasan --}}
+    {{-- Statistik Ringkasan --}}
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card text-center shadow rounded-4 border-0">
                 <div class="card-body py-4" style="background: linear-gradient(to right, #bbdefb, #90caf9); color: #0d47a1;">
-                    <div class="mb-2">
-                        <i class="fas fa-box fa-2x"></i>
-                    </div>
-                    <h5 class="card-title mb-1">Total Barang</h5>
-                    <h2 class="card-text fw-bold">{{ $barangCount }}</h2>
+                    <i class="fas fa-box fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Barang</h5>
+                    <h2 class="fw-bold">{{ $barangCount }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card text-center shadow rounded-4 border-0">
                 <div class="card-body py-4" style="background: linear-gradient(to right, #c8e6c9, #a5d6a7); color: #1b5e20;">
-                    <div class="mb-2">
-                        <i class="fas fa-users fa-2x"></i>
-                    </div>
-                    <h5 class="card-title mb-1">Total Karyawan</h5>
-                    <h2 class="card-text fw-bold">{{ $karyawanCount }}</h2>
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Karyawan</h5>
+                    <h2 class="fw-bold">{{ $karyawanCount }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card text-center shadow rounded-4 border-0">
                 <div class="card-body py-4" style="background: linear-gradient(to right, #fff9c4, #ffe082); color: #f9a825;">
-                    <div class="mb-2">
-                        <i class="fas fa-arrow-circle-up fa-2x"></i>
-                    </div>
-                    <h5 class="card-title mb-1">Total Peminjaman</h5>
-                    <h2 class="card-text fw-bold">{{ $peminjamanCount }}</h2>
+                    <i class="fas fa-arrow-circle-up fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Peminjaman</h5>
+                    <h2 class="fw-bold">{{ $peminjamanCount }}</h2>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- Barang Terbanyak Dipinjam --}}
+    @if ($barangTerbanyak)
+        <div class="alert alert-info shadow-sm rounded-4 border-0">
+            <strong><i class="fas fa-crown me-1"></i> Barang paling banyak dipinjam:</strong>
+            {{ $barangTerbanyak->nama_barang }} ({{ $barangTerbanyak->total }} kali)
+        </div>
+    @endif
+
+    {{-- Notifikasi --}}
+    @if(isset($notifikasiCount) && $notifikasiCount > 0)
+        <div class="alert alert-warning shadow-sm rounded-4 border-0">
+            <strong><i class="fas fa-bell me-1"></i> Notifikasi:</strong>
+            Ada <strong>{{ $notifikasiCount }}</strong> peminjaman yang menunggu konfirmasi.
+            <a href="{{ route('admin.peminjaman.index') }}" class="ms-2 text-decoration-underline">Lihat Detail</a>
+        </div>
+    @endif
 
     {{-- Tabel Barang --}}
     <div class="card mb-4 shadow rounded-4 border-0">
@@ -47,25 +58,23 @@
         </div>
         <div class="card-body">
             @if ($barangs->isEmpty())
-                <div class="alert alert-secondary" role="alert">
-                    Belum ada barang yang tersedia.
-                </div>
+                <div class="alert alert-secondary">Belum ada barang yang tersedia.</div>
             @else
                 <div class="table-responsive">
                     <table class="table align-middle table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-start">No</th>
-                                <th class="text-start">Nama Barang</th>
-                                <th class="text-start">Jenis</th>
+                                <th>No</th>
+                                <th>Nama Barang</th>
+                                <th>Jenis</th>
                                 <th class="text-center">Stok</th>
-                                <th class="text-start">Seri</th>
-                                <th class="text-start">Keterangan</th>
+                                <th>Seri</th>
+                                <th>Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($barangs->take(5) as $barang)
-                                <tr class="align-middle">
+                                <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $barang->nama_barang }}</td>
                                     <td>{{ $barang->jenis_barang }}</td>
@@ -93,24 +102,22 @@
         </div>
         <div class="card-body">
             @if ($peminjamans->isEmpty())
-                <div class="alert alert-secondary" role="alert">
-                    Belum ada barang yang dipinjam.
-                </div>
+                <div class="alert alert-secondary">Belum ada barang yang dipinjam.</div>
             @else
                 <div class="table-responsive">
                     <table class="table align-middle table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-start">No</th>
-                                <th class="text-start">Nama Barang</th>
+                                <th>No</th>
+                                <th>Nama Barang</th>
                                 <th class="text-center">Jumlah</th>
-                                <th class="text-start">Nama Peminjam</th>
+                                <th>Nama Peminjam</th>
                                 <th class="text-center">Tanggal Pinjam</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($peminjamans->take(5) as $peminjaman)
-                                <tr class="align-middle">
+                            @foreach ($peminjamans as $peminjaman)
+                                <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $peminjaman->nama_barang }}</td>
                                     <td class="text-center">{{ $peminjaman->jumlah }}</td>

@@ -180,6 +180,9 @@
         </a>
         <a href="{{ route('admin.peminjaman.index') }}" class="nav-link {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
           <i class="fas fa-handshake"></i> Peminjaman
+          @if(isset($notifikasiCount) && $notifikasiCount > 0)
+            <span class="badge bg-danger ms-auto">{{ $notifikasiCount }}</span>
+          @endif
         </a>
       </nav>
     </div>
@@ -224,5 +227,6 @@
       });
     });
   </script>
+  @stack('scripts')
 </body>
 </html>

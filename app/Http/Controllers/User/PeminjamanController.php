@@ -11,7 +11,9 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)->get();
+        $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)
+                            ->latest() 
+                            ->get();
 
         return view('user.peminjaman.index', compact('peminjamans'));
     }
@@ -22,34 +24,34 @@ class PeminjamanController extends Controller
         return view('user.peminjaman.create', compact('barangs'));
     }
 
-public function store(Request $request)
-{
-    $validation = $request->validate([
-        'nama_barang' => 'required',
-        'jumlah' => 'required|integer|min:1',
-        'tanggal_pinjam' => 'required|date',
-       'tanggal_kembali' => 'nullable|date',
-    ]);
+    public function store(Request $request)
+    {
+        $validation = $request->validate([
+            'nama_barang' => 'required',
+            'jumlah' => 'required|integer|min:1',
+            'tanggal_pinjam' => 'required|date',
+            'tanggal_kembali' => 'nullable|date',
+        ]);
 
-    $barang = Barang::where('nama_barang', $request->nama_barang)->first();
-    if ($barang->stok < $request->jumlah) {
-        return back()->with('error', 'Stok barang tidak cukup');
+        $barang = Barang::where('nama_barang', $request->nama_barang)->first();
+        if ($barang->stok < $request->jumlah) {
+            return back()->with('error', 'Stok barang tidak cukup');
+        }
+
+        $barang->stok -= $request->jumlah;
+        $barang->save();
+
+        Peminjaman::create([
+            'nama_peminjam' => auth()->user()->name,
+            'nama_barang' => $request->nama_barang,
+            'jumlah' => $request->jumlah,
+            'tanggal_pinjam' => $request->tanggal_pinjam,
+            'tanggal_kembali' => $request->tanggal_kembali ?: null,
+            'status' => 'dipinjam',
+        ]);
+
+        return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil');
     }
-
-    $barang->stok -= $request->jumlah;
-    $barang->save();
-
-    $peminjaman = Peminjaman::create([
-        'nama_peminjam' => auth()->user()->name,
-        'nama_barang' => $request->nama_barang,
-        'jumlah' => $request->jumlah,
-        'tanggal_pinjam' => $request->tanggal_pinjam,
-      'tanggal_kembali' => $request->tanggal_kembali ?: null,
-        'status' => 'dipinjam',
-    ]);
-
-    return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil');
-}
 
     public function kembalikan($id)
     {
@@ -61,6 +63,26 @@ public function store(Request $request)
 
             return redirect()->route('user.peminjaman.index')->with('success', 'Pengembalian barang telah diajukan, menunggu konfirmasi admin.');
         }
-    
+
+        return redirect()->route('user.peminjaman.index')->with('error', 'Barang tidak dapat dikembalikan.');
+    }
+
+    public function destroy($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        if ($peminjaman->status === 'dipinjam') {
+            return redirect()->route('user.peminjaman.index')->with('error', 'Peminjaman tidak dapat dihapus karena masih berlangsung.');
+        }
+
+        $barang = Barang::where('nama_barang', $peminjaman->nama_barang)->first();
+        if ($barang) {
+            $barang->stok += $peminjaman->jumlah;
+            $barang->save();
+        }
+
+        $peminjaman->delete();
+
+        return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil dihapus.');
     }
 }

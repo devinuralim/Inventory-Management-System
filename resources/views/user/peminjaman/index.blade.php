@@ -38,6 +38,7 @@
                                 <th class="d-none">Tanggal Kembali</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
+                                <th>Hapus</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,10 +66,23 @@
                                             <span class="text-muted small">Barang Sudah Dikembalikan</span>
                                         @endif
                                     </td>
+                                    <td class="text-center">
+                                        @if ($peminjaman->status != 'dipinjam')
+                                            <form action="{{ route('user.peminjaman.destroy', $peminjaman->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-outline-danger btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted small">-</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-3">
+                                    <td colspan="7" class="text-center text-muted py-3">
                                         <i class="fas fa-box-open fa-2x mb-2 text-secondary"></i><br>
                                         Tidak ada data peminjaman.
                                     </td>
