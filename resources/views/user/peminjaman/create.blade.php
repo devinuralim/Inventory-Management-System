@@ -1,23 +1,44 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="pt-4 pb-5 bg-light min-vh-100">
+<style>
+    .judul-section {
+        border-bottom: 3px solid #1d3557;
+        display: inline-block;
+        padding-bottom: 6px;
+    }
+    .card-glass {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease-in-out;
+    }
+    .card-glass:hover {
+        transform: scale(1.01);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
     <div class="container">
 
+        {{-- Judul --}}
         <div class="text-center mb-4 animate__animated animate__fadeInDown">
-            <h2 class="fw-bold text-dark border-bottom border-primary border-3 d-inline-block pb-1">
+            <h2 class="fw-bold text-dark judul-section">
                 <i class="fas fa-cart-arrow-down me-2 text-black"></i>Peminjaman Barang
             </h2>
             <p class="text-muted mt-1">Isi formulir di bawah untuk meminjam barang kantor.</p>
         </div>
 
+        {{-- Error --}}
         @if(session('error'))
             <div class="alert alert-danger shadow-sm text-center w-75 mx-auto animate__animated animate__fadeIn">
                 <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
             </div>
         @endif
 
-        <div class="card shadow border-0 rounded-4 animate__animated animate__fadeInUp">
+        {{-- Form --}}
+        <div class="card card-glass border-0 rounded-4 animate__animated animate__fadeInUp shadow-sm">
             <div class="card-body p-4">
                 <form action="{{ route('user.peminjaman.store') }}" method="POST">
                     @csrf
@@ -45,12 +66,14 @@
                         </div>
                     </div>
 
+                    {{-- Tombol Tambah --}}
                     <div class="mb-3 text-end">
                         <button type="button" id="add-barang" class="btn btn-outline-primary btn-sm">
                             <i class="fas fa-plus-circle me-1"></i> Tambah Barang
                         </button>
                     </div>
 
+                    {{-- Tanggal Pinjam --}}
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Tanggal Pinjam</label>
                         <input type="date" name="tanggal_pinjam" class="form-control shadow-sm" required>
@@ -58,6 +81,7 @@
 
                     <input type="hidden" name="tanggal_kembali" value="0000-00-00">
 
+                    {{-- Submit --}}
                     <div class="text-end mt-4">
                         <button type="submit" class="btn text-white shadow-sm" style="background-color: #1d3557;">
                             <i class="fas fa-paper-plane me-1"></i> Pinjam Barang
@@ -70,7 +94,7 @@
     </div>
 </div>
 
-{{-- Tambahkan script --}}
+{{-- Script --}}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const addBtn = document.getElementById('add-barang');
@@ -83,11 +107,9 @@
                 const first = barangGroups[0];
                 const clone = first.cloneNode(true);
 
-                clone.querySelectorAll('input, select').forEach(el => {
-                    el.value = '';
-                });
-
+                clone.querySelectorAll('input, select').forEach(el => el.value = '');
                 clone.querySelector('.remove-barang').classList.remove('d-none');
+
                 wrapper.appendChild(clone);
             }
         });

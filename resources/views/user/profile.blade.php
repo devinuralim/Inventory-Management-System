@@ -2,57 +2,50 @@
 
 @section('content')
 <style>
+    .judul-section {
+        border-bottom: 3px solid #1d3557;
+        display: inline-block;
+        padding-bottom: 6px;
+    }
     .profile-card {
         border-radius: 20px;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
         box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        animation: fadeInDown 0.8s ease;
-        background-color: #ffffff;
+        transition: 0.3s ease-in-out;
     }
-    .icon-box {
-        width: 60px;
-        height: 60px;
-        background: #1d3557;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 1.4rem;
+    .profile-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     .profile-label {
         font-weight: 600;
-        color: #444;
+        color: #1d3557;
         margin-bottom: 6px;
     }
     .form-control[readonly], .form-control.bg-light {
         background-color: #f8f9fa;
         border: 1px solid #e2e6ea;
         box-shadow: none;
-    }
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        border-radius: 10px;
+        font-weight: 500;
+        color: #333;
     }
 </style>
 
-<div class="pt-4 pb-5 bg-light min-vh-100">
+<div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
     <div class="container">
 
         {{-- Judul --}}
-        <div class="text-center mb-4">
-            <h2 class="fw-bold text-dark border-bottom border-primary border-3 d-inline-block pb-1">
+        <div class="text-center mb-4 animate__animated animate__fadeInDown">
+            <h2 class="fw-bold text-dark judul-section">
                 <i class="fas fa-user-circle me-2 text-black"></i>Profil Saya
             </h2>
             <p class="text-muted">Informasi karyawan yang sedang login</p>
         </div>
 
-        <div class="card profile-card border-0 p-4">
+        {{-- Kartu Profil --}}
+        <div class="card profile-card border-0 p-4 animate__animated animate__fadeInUp">
             @php
                 $karyawan = \App\Models\Karyawan::where('id_pegawai', Auth::user()->id_pegawai)->first();
             @endphp

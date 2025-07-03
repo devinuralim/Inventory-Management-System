@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Barang;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Response;
 
 class PeminjamanController extends Controller
 {
@@ -16,6 +18,15 @@ class PeminjamanController extends Controller
                             ->get();
 
         return view('user.peminjaman.index', compact('peminjamans'));
+    }
+
+    public function riwayat()
+    {
+        $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)
+                            ->latest()
+                            ->get();
+
+        return view('user.peminjaman.riwayat', compact('peminjamans'));
     }
 
     public function create()
@@ -75,8 +86,8 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
 
-        if ($peminjaman->status === 'dipinjam') {
-            return redirect()->route('user.peminjaman.index')->with('error', 'Peminjaman tidak dapat dihapus karena masih berlangsung.');
+        if ($peminjaman->status === 'dipinjam' || $peminjaman->status === 'menunggu konfirmasi') {
+            return redirect()->route('user.peminjaman.index')->with('error', 'Peminjaman tidak dapat dihapus karena masih berlangsung atau menunggu konfirmasi.');
         }
 
         $barang = Barang::where('nama_barang', $peminjaman->nama_barang)->first();
@@ -89,4 +100,40 @@ class PeminjamanController extends Controller
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Peminjaman berhasil dihapus.');
     }
+
+    public function exportPdf()
+    {
+        $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)->get();
+        $pdf = Pdf::loadView('user.exports.riwayat_pdf', compact('peminjamans'));
+
+        return $pdf->download('riwayat-peminjaman.pdf');
+    }
+
+   public function exportCsv()
+{
+    $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)->get();
+
+    $filename = 'riwayat-peminjaman.csv';
+    $headers = ['Content-Type' => 'text/csv'];
+
+    $callback = function () use ($peminjamans) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, ['Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Status']);
+
+        foreach ($peminjamans as $p) {
+            fputcsv($file, [
+                $p->nama_barang,
+                $p->jumlah,
+                $p->tanggal_pinjam,
+                $p->status
+            ]);
+        }
+
+        fclose($file);
+    };
+
+    return Response::stream($callback, 200, array_merge($headers, [
+        'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+    ]));
+}
 }

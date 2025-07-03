@@ -33,14 +33,16 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+    public function favoritBarang()
     {
-        return [
-            'password' => 'hashed', 
-        ];
+        return $this->belongsToMany(Barang::class, 'favorit_barang_user')->withTimestamps();
     }
 }

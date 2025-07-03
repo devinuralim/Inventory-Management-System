@@ -12,14 +12,16 @@ class BarangController extends Controller
     {
         $search = $request->query('search');
 
-        if ($search) {
-            $barangs = Barang::where('nama_barang', 'like', '%' . $search . '%')
-                ->orWhere('jenis_barang', 'like', '%' . $search . '%')
-                ->orWhere('seri', 'like', '%' . $search . '%')
-                ->get();
-        } else {
-            $barangs = Barang::all();
-        }
+        $barangs = Barang::when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama_barang', 'like', "%$search%")
+                      ->orWhere('jenis_barang', 'like', "%$search%")
+                      ->orWhere('seri', 'like', "%$search%");
+                });
+            })
+            ->where('stok', '>', 0) // Hanya tampilkan yang stoknya masih ada
+            ->orderBy('nama_barang')
+            ->get();
 
         return view('user.barang.index', compact('barangs'));
     }

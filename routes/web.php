@@ -10,7 +10,9 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\User\BarangController as UserBarangController;
 use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
+use App\Http\Controllers\User\FavoritBarangController;
 
+// Jalankan migrate via route (opsional untuk development)
 Route::get('/run-migrate', function () {
     Artisan::call('migrate --force');
     return '✅ Migrasi berhasil dijalankan!';
@@ -23,7 +25,8 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-// ADMIN ROUTES
+
+// ================= ADMIN ROUTES =================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [HomeAdminController::class, 'index'])->name('dashboard');
 
@@ -55,7 +58,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// USER ROUTES
+
+// ================= USER ROUTES =================
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [HomeUserController::class, 'index'])->name('dashboard');
 
@@ -67,7 +71,14 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/peminjaman/create', [UserPeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/peminjaman', [UserPeminjamanController::class, 'store'])->name('peminjaman.store');
     Route::get('/peminjaman/kembalikan/{id}', [UserPeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
-    Route::delete('/peminjaman/{id}', [UserPeminjamanController::class, 'destroy'])->name('peminjaman.destroy'); // ✅ Tambahan route hapus
+    Route::delete('/peminjaman/{id}', [UserPeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
+
+    // Riwayat Peminjaman
+    Route::get('/riwayat', [UserPeminjamanController::class, 'riwayat'])->name('peminjaman.riwayat');
+
+    // Favorit Barang (Wishlist)
+    Route::get('/favorit', [FavoritBarangController::class, 'index'])->name('favorit.index');
+    Route::post('/favorit/toggle/{barang}', [FavoritBarangController::class, 'toggle'])->name('favorit.toggle');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'userProfile'])->name('profile');
@@ -75,7 +86,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Redirect otomatis setelah login
+
+// ================= REDIRECT OTOMATIS LOGIN =================
 Route::get('/dashboard', function () {
     if (auth()->check()) {
         if (auth()->user()->usertype === 'admin') {
@@ -87,6 +99,8 @@ Route::get('/dashboard', function () {
     return redirect('/');
 })->middleware(['auth'])->name('dashboard');
 
+
+// ================= EXPORT ROUTES =================
 // Export Barang
 Route::get('/admin/barangs/export/pdf', [BarangController::class, 'exportPdf'])->name('admin.barangs.export.pdf');
 Route::get('/admin/barangs/export/csv', [BarangController::class, 'exportExcel'])->name('admin.barangs.export.csv');
@@ -98,3 +112,7 @@ Route::get('/admin/karyawans/export/csv', [KaryawanController::class, 'exportExc
 // Export Peminjaman
 Route::get('/admin/peminjamans/export/pdf', [PeminjamanController::class, 'exportPdf'])->name('admin.peminjaman.export.pdf');
 Route::get('/admin/peminjamans/export/csv', [PeminjamanController::class, 'exportExcel'])->name('admin.peminjaman.export.csv');
+
+// Export Riwayat
+Route::get('/riwayat/export/pdf', [\App\Http\Controllers\User\PeminjamanController::class, 'exportPdf'])->name('user.riwayat.export.pdf');
+Route::get('/riwayat/export/csv', [\App\Http\Controllers\User\PeminjamanController::class, 'exportCsv'])->name('user.riwayat.export.csv');
