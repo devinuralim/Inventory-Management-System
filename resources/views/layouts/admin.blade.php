@@ -173,6 +173,10 @@
             <span class="badge bg-danger ms-auto">{{ $notifikasiCount }}</span>
           @endif
         </a>
+        <!-- Tambahan menu Pengumuman -->
+        <a href="{{ route('admin.pengumuman.index') }}" class="nav-link {{ request()->routeIs('admin.pengumuman.*') ? 'active' : '' }}">
+          <i class="fas fa-bullhorn"></i> Pengumuman
+        </a>
       </nav>
     </div>
     <div class="nav-bottom">
@@ -204,7 +208,7 @@
     @yield('content')
   </div>
 
-  <!-- Bootstrap JS (penting untuk modal, dropdown, dsb) -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>

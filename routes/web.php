@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeUserController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\User\BarangController as UserBarangController;
 use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
 use App\Http\Controllers\User\FavoritBarangController;
@@ -28,6 +29,14 @@ require __DIR__.'/auth.php';
 // ================= ADMIN ROUTES =================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [HomeAdminController::class, 'index'])->name('dashboard');
+
+
+    Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('pengumuman.create');
+    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+    Route::get('/pengumuman/{pengumuman}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
+    Route::put('/pengumuman/{pengumuman}', [PengumumanController::class, 'update'])->name('pengumuman.update');
+    Route::delete('/pengumuman/{pengumuman}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
 
     // Barang
     Route::get('/barangs', [BarangController::class, 'index'])->name('barangs');

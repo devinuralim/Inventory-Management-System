@@ -21,14 +21,34 @@ class PeminjamanController extends Controller
         return view('user.peminjaman.index', compact('peminjamans'));
     }
 
-    public function riwayat()
-    {
-        $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)
-                            ->latest()
-                            ->get();
+public function riwayat(Request $request)
+{
+    $query = Peminjaman::where('nama_peminjam', auth()->user()->name);
 
-        return view('user.peminjaman.riwayat', compact('peminjamans'));
+    // Filter status
+    if ($request->has('status') && $request->status != '') {
+        $query->where('status', $request->status);
     }
+
+    // Filter waktu
+    if ($request->has('waktu') && $request->waktu != '') {
+        if ($request->waktu == '7') {
+            $query->whereDate('created_at', '>=', now()->subDays(7));
+        } elseif ($request->waktu == '30') {
+            $query->whereDate('created_at', '>=', now()->subDays(30));
+        }
+    }
+
+    // Urutan
+    $peminjamans = $query->orderByRaw("FIELD(status, 'dipinjam', 'menunggu konfirmasi', 'dikembalikan')")
+                         ->orderBy('created_at', 'desc')
+                         ->get();
+
+    return view('user.peminjaman.riwayat', compact('peminjamans'));
+}
+
+
+
 
     public function create()
     {

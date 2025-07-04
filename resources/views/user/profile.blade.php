@@ -51,11 +51,31 @@
             font-size: 0.9rem;
             padding: 8px 10px;
         }
+
+        .btn.rounded-circle {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn.rounded-circle i {
+            font-size: 1rem;
+        }
     }
 </style>
 
 <div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
     <div class="container">
+
+        {{-- Tombol Kembali di pojok kiri atas, icon saja --}}
+        <div class="text-start mb-3">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-outline-secondary btn-sm rounded-circle shadow-sm" title="Kembali">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
 
         {{-- Judul --}}
         <div class="text-center mb-4 animate__animated animate__fadeInDown">
@@ -98,13 +118,6 @@
                     Data karyawan belum tersedia. Silakan hubungi admin.
                 </div>
             @endif
-        </div>
-
-        {{-- Tombol Kembali --}}
-        <div class="text-end mt-4">
-            <a href="{{ route('user.dashboard') }}" class="btn btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left me-1"></i> Kembali
-            </a>
         </div>
 
     </div>
