@@ -42,15 +42,17 @@ class PeminjamanController extends Controller
             'jumlah' => 'required|integer',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'nullable|date',
+            'keterangan' => 'nullable|string',
         ]);
 
         $data = Peminjaman::create([
-            'nama_peminjam' => $request->nama_peminjam,
-            'nama_barang' => $request->nama_barang,
-            'jumlah' => $request->jumlah,
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali ?: null,
-            'status' => 'dipinjam', 
+            'nama_peminjam'     => $request->nama_peminjam,
+            'nama_barang'       => $request->nama_barang,
+            'jumlah'            => $request->jumlah,
+            'tanggal_pinjam'    => $request->tanggal_pinjam,
+            'tanggal_kembali'   => $request->tanggal_kembali ?: null,
+            'status'            => 'dipinjam', 
+            'keterangan'        => $request->keterangan,
         ]);
 
         if ($data) {
@@ -115,7 +117,7 @@ class PeminjamanController extends Controller
 
         $callback = function () use ($peminjamans) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['Nama Peminjam', 'Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Tanggal Kembali', 'Status']);
+            fputcsv($file, ['Nama Peminjam', 'Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Tanggal Kembali', 'Status', 'Bukti', 'Keterangan']);
 
             foreach ($peminjamans as $p) {
                 fputcsv($file, [
@@ -125,6 +127,8 @@ class PeminjamanController extends Controller
                     $p->tanggal_pinjam,
                     $p->tanggal_kembali,
                     $p->status,
+                    $p->bukti_pengembalian ? asset('storage/' . $p->bukti_pengembalian) : '-',
+                    $p->keterangan ?? '-',
                 ]);
             }
 

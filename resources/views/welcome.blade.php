@@ -18,15 +18,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
       padding: 20px;
     }
 
     .container {
       background-color: #1e293b;
-      border-radius: 20px;
-      padding: 50px 35px;
+      border-radius: 16px;
+      padding: 40px 30px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
       width: 100%;
       max-width: 420px;
@@ -40,8 +40,8 @@
     }
 
     .logo {
-      width: 90px;
-      margin: 0 auto 20px;
+      width: 80px;
+      margin: 0 auto 18px;
     }
 
     .logo img {
@@ -49,7 +49,7 @@
     }
 
     h1 {
-      font-size: 26px;
+      font-size: 22px;
       margin-bottom: 10px;
       color: #ffffff;
     }
@@ -57,7 +57,7 @@
     p.subtitle {
       font-size: 14px;
       color: #cbd5e1;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     form {
@@ -66,16 +66,16 @@
 
     .form-group {
       position: relative;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-group input {
       width: 100%;
-      padding: 14px 16px;
+      padding: 13px 14px;
       border-radius: 10px;
       border: 1px solid #94a3b8;
       font-size: 14px;
-      background-color: #ffffff; 
+      background-color: #ffffff;
       transition: border-color 0.2s;
       color: #1e293b;
     }
@@ -103,7 +103,7 @@
       left: 12px;
       font-size: 11px;
       color: #38bdf8;
-      background-color: #1e293b; 
+      background-color: #1e293b;
     }
 
     .toggle-password {
@@ -156,6 +156,35 @@
       color: #f87171;
       font-size: 14px;
       margin-bottom: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .logo {
+        width: 70px;
+      }
+
+      .form-group input {
+        padding: 12px;
+        font-size: 13px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 11px;
+      }
+
+      .footer-text {
+        font-size: 12px;
+        margin-top: 20px;
+      }
     }
   </style>
 </head>

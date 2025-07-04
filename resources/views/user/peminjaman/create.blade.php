@@ -7,15 +7,32 @@
         display: inline-block;
         padding-bottom: 6px;
     }
+
     .card-glass {
         backdrop-filter: blur(10px);
         background: rgba(255, 255, 255, 0.75);
         border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease-in-out;
     }
+
     .card-glass:hover {
         transform: scale(1.01);
         box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive adjustment */
+    @media (max-width: 576px) {
+        .judul-section {
+            font-size: 1.4rem;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .text-end {
+            text-align: center !important;
+        }
     }
 </style>
 
@@ -67,7 +84,7 @@
                     </div>
 
                     {{-- Tombol Tambah --}}
-                    <div class="mb-3 text-end">
+                    <div class="mb-3 text-end text-md-end">
                         <button type="button" id="add-barang" class="btn btn-outline-primary btn-sm">
                             <i class="fas fa-plus-circle me-1"></i> Tambah Barang
                         </button>
@@ -81,8 +98,11 @@
 
                     <input type="hidden" name="tanggal_kembali" value="0000-00-00">
 
-                    {{-- Submit --}}
-                    <div class="text-end mt-4">
+                    {{-- Tombol Submit dan Kembali --}}
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-4">
+                        <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary shadow-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Kembali
+                        </a>
                         <button type="submit" class="btn text-white shadow-sm" style="background-color: #1d3557;">
                             <i class="fas fa-paper-plane me-1"></i> Pinjam Barang
                         </button>

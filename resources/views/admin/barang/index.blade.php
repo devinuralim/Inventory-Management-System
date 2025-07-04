@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
+
 <style>
 @media print {
     body * {
@@ -22,16 +23,43 @@
         display: none !important;
     }
 }
+
+/* Responsif tambahan */
+@media (max-width: 768px) {
+    .table th,
+    .table td {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    .input-group input {
+        font-size: 0.85rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+
+    .btn i {
+        font-size: 0.85rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+}
 </style>
 
 <div class="container pt-4 pb-5">
     <div class="card shadow-sm border-0 rounded-4 p-4">
+
         {{-- Header --}}
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
             <h2 class="fw-bold text-dark d-flex align-items-center mb-0">
                 <i class="fas fa-boxes-stacked me-2 text-dark"></i> Daftar Barang
             </h2>
-            <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-column flex-sm-row gap-2 w-100 justify-content-start justify-content-md-end">
                 <form action="{{ route('admin.barangs') }}" method="GET" class="input-group shadow-sm" style="max-width: 300px;">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control rounded-start-pill border-end-0" placeholder="Cari nama, jenis, seri...">
                     <button class="btn btn-outline-primary rounded-end-pill border-start-0" type="submit">

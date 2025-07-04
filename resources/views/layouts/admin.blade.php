@@ -4,30 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Admin</title>
+
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
       margin: 0;
       padding: 0;
-      background-color: #f8f9fa;
-    }
-
-    .logo-fixed {
-      position: fixed;
-      top: 15px;
-      left: 60px;
-      z-index: 1100;
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: white;
-      transition: transform 0.3s ease;
-    }
-
-    .logo-fixed.hidden {
-      transform: translateX(-200%);
     }
 
     .sidebar {
@@ -41,10 +29,10 @@
       top: 0;
       transition: transform 0.3s ease;
       z-index: 1000;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .sidebar.hidden {
@@ -66,16 +54,14 @@
     .sidebar .nav-link.active,
     .sidebar .nav-link:hover {
       background-color: rgba(255, 255, 255, 0.15);
-      color: #ffffff;
       transform: translateX(5px);
     }
 
-    .sidebar .sidebar-footer {
+    .sidebar-footer {
       font-size: 0.85rem;
       color: #ccc;
       text-align: center;
       padding-top: 20px;
-      margin-top: 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -102,25 +88,10 @@
       z-index: 1101;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       font-size: 1.2rem;
-      transition: background-color 0.3s ease;
     }
 
     .toggle-btn:hover {
       background-color: #1d3557;
-    }
-
-    .card {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-title {
-      font-weight: 600;
-    }
-
-    .btn {
-      border-radius: 8px;
     }
 
     .sidebar .nav-bottom {
@@ -128,19 +99,14 @@
       padding-top: 10px;
     }
 
-    .sidebar .nav-bottom .nav-link,
-    .sidebar .nav-bottom form {
+    .sidebar .nav-bottom form,
+    .sidebar .nav-bottom .nav-link {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
-      margin-bottom: 10px;
       font-size: 0.95rem;
+      margin-bottom: 10px;
       color: #fff;
-    }
-
-    .sidebar .nav-bottom form {
-      padding: 0;
     }
 
     .sidebar .nav-bottom button {
@@ -150,20 +116,43 @@
       padding: 10px 14px;
       width: 100%;
       text-align: left;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 200px;
+        padding: 60px 10px 20px;
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+      }
+
+      .toggle-btn {
+        top: 15px;
+        left: 10px;
+        padding: 6px 8px;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
-  <div class="logo-fixed" id="logoK2net">
-    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 50px;">
-  </div>
 
+  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div>
+      <div class="text-center mb-4">
+        <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 50px;">
+      </div>
       <div class="mb-3">
         <p class="mb-1 small">Selamat datang, Admin</p>
         <strong class="d-block mb-3">{{ Auth::user()->name }}</strong>
@@ -202,31 +191,39 @@
     </div>
   </div>
 
+  <!-- Main Content -->
   <div class="main-content" id="mainContent">
     @if (request()->routeIs('admin.dashboard'))
-    <div class="dashboard-header p-4 mb-4 rounded text-white" style="background: linear-gradient(90deg, #457b9d, #1d3557); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      <h3><i class="fas fa-tachometer-alt me-2"></i>Dashboard Admin</h3>
-      <p class="mb-0">Kelola semua data barang, karyawan, dan peminjaman di sini.</p>
-    </div>
+      <div class="dashboard-header p-4 mb-4 rounded text-white"
+           style="background: linear-gradient(90deg, #457b9d, #1d3557); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <h3><i class="fas fa-tachometer-alt me-2"></i>Dashboard Admin</h3>
+        <p class="mb-0">Kelola semua data barang, karyawan, dan peminjaman di sini.</p>
+      </div>
     @endif
 
     @yield('content')
   </div>
+
+  <!-- Bootstrap JS (penting untuk modal, dropdown, dsb) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const toggleBtn = document.getElementById('toggleSidebarBtn');
       const sidebar = document.getElementById('sidebar');
       const mainContent = document.getElementById('mainContent');
-      const logo = document.getElementById('logoK2net');
 
       toggleBtn.addEventListener('click', function () {
-        sidebar.classList.toggle('hidden');
-        logo.classList.toggle('hidden');
-        mainContent.classList.toggle('full-width');
+        if (window.innerWidth <= 768) {
+          sidebar.classList.toggle('show');
+        } else {
+          sidebar.classList.toggle('hidden');
+          mainContent.classList.toggle('full-width');
+        }
       });
     });
   </script>
+
   @stack('scripts')
 </body>
 </html>

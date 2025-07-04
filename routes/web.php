@@ -25,7 +25,6 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-
 // ================= ADMIN ROUTES =================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [HomeAdminController::class, 'index'])->name('dashboard');
@@ -58,10 +57,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 // ================= USER ROUTES =================
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [HomeUserController::class, 'index'])->name('dashboard');
+
+    // Form upload bukti pengembalian (pasti pakai UserPeminjamanController)
+    Route::get('/peminjaman/{id}/bukti', [UserPeminjamanController::class, 'formBukti'])->name('peminjaman.bukti');
+    Route::post('/peminjaman/{id}/bukti', [UserPeminjamanController::class, 'uploadBukti'])->name('peminjaman.uploadBukti');
+     Route::get('/peminjaman/{id}/detail', [UserPeminjamanController::class, 'detail'])->name('peminjaman.detail');
 
     // Barang
     Route::get('/barang', [UserBarangController::class, 'index'])->name('barang.index');
@@ -86,7 +89,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 // ================= REDIRECT OTOMATIS LOGIN =================
 Route::get('/dashboard', function () {
     if (auth()->check()) {
@@ -98,7 +100,6 @@ Route::get('/dashboard', function () {
     }
     return redirect('/');
 })->middleware(['auth'])->name('dashboard');
-
 
 // ================= EXPORT ROUTES =================
 // Export Barang
@@ -113,6 +114,6 @@ Route::get('/admin/karyawans/export/csv', [KaryawanController::class, 'exportExc
 Route::get('/admin/peminjamans/export/pdf', [PeminjamanController::class, 'exportPdf'])->name('admin.peminjaman.export.pdf');
 Route::get('/admin/peminjamans/export/csv', [PeminjamanController::class, 'exportExcel'])->name('admin.peminjaman.export.csv');
 
-// Export Riwayat
-Route::get('/riwayat/export/pdf', [\App\Http\Controllers\User\PeminjamanController::class, 'exportPdf'])->name('user.riwayat.export.pdf');
-Route::get('/riwayat/export/csv', [\App\Http\Controllers\User\PeminjamanController::class, 'exportCsv'])->name('user.riwayat.export.csv');
+// Export Riwayat (user)
+Route::get('/riwayat/export/pdf', [UserPeminjamanController::class, 'exportPdf'])->name('user.riwayat.export.pdf');
+Route::get('/riwayat/export/csv', [UserPeminjamanController::class, 'exportCsv'])->name('user.riwayat.export.csv');

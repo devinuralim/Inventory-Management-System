@@ -8,6 +8,7 @@ use App\Models\Peminjaman;
 use App\Models\Barang;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class PeminjamanController extends Controller
 {
@@ -73,10 +74,7 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
 
         if ($peminjaman->status == 'dipinjam') {
-            $peminjaman->status = 'menunggu konfirmasi';
-            $peminjaman->save();
-
-            return redirect()->route('user.peminjaman.index')->with('success', 'Pengembalian barang telah diajukan, menunggu konfirmasi admin.');
+            return redirect()->route('user.peminjaman.bukti', $peminjaman->id);
         }
 
         return redirect()->route('user.peminjaman.index')->with('error', 'Barang tidak dapat dikembalikan.');
@@ -109,31 +107,76 @@ class PeminjamanController extends Controller
         return $pdf->download('riwayat-peminjaman.pdf');
     }
 
-   public function exportCsv()
-{
-    $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)->get();
+    public function exportCsv()
+    {
+        $peminjamans = Peminjaman::where('nama_peminjam', auth()->user()->name)->get();
 
-    $filename = 'riwayat-peminjaman.csv';
-    $headers = ['Content-Type' => 'text/csv'];
+        $filename = 'riwayat-peminjaman.csv';
+        $headers = ['Content-Type' => 'text/csv'];
 
-    $callback = function () use ($peminjamans) {
-        $file = fopen('php://output', 'w');
-        fputcsv($file, ['Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Status']);
+        $callback = function () use ($peminjamans) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Status']);
 
-        foreach ($peminjamans as $p) {
-            fputcsv($file, [
-                $p->nama_barang,
-                $p->jumlah,
-                $p->tanggal_pinjam,
-                $p->status
-            ]);
+            foreach ($peminjamans as $p) {
+                fputcsv($file, [
+                    $p->nama_barang,
+                    $p->jumlah,
+                    $p->tanggal_pinjam,
+                    $p->status
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, array_merge($headers, [
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]));
+    }
+
+    // === Form Upload Bukti ===
+    public function formBukti($id)
+    {
+        $peminjaman = Peminjaman::where('id', $id)
+                        ->where('nama_peminjam', auth()->user()->name)
+                        ->firstOrFail();
+
+        if ($peminjaman->status !== 'dipinjam') {
+            return redirect()->route('user.peminjaman.index')->with('error', 'Pengembalian tidak bisa diajukan.');
         }
 
-        fclose($file);
-    };
+        return view('user.peminjaman.upload_bukti', compact('peminjaman'));
+    }
 
-    return Response::stream($callback, 200, array_merge($headers, [
-        'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-    ]));
+    public function uploadBukti(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_pengembalian' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'keterangan' => 'required|string|max:500',
+        ]);
+
+        $peminjaman = Peminjaman::where('id', $id)
+                        ->where('nama_peminjam', auth()->user()->name)
+                        ->firstOrFail();
+
+        $path = $request->file('bukti_pengembalian')->store('bukti_pengembalian', 'public');
+
+        $peminjaman->bukti_pengembalian = $path;
+        $peminjaman->keterangan = $request->keterangan; // disimpan
+        $peminjaman->status = 'menunggu konfirmasi';
+        $peminjaman->save();
+
+        return redirect()->route('user.peminjaman.index')->with('success', 'Bukti pengembalian berhasil diupload! Menunggu konfirmasi admin.');
+    }
+
+    public function detail($id)
+{
+    $peminjaman = Peminjaman::where('id', $id)
+                    ->where('nama_peminjam', auth()->user()->name)
+                    ->firstOrFail();
+
+    return view('user.peminjaman.detail', compact('peminjaman'));
 }
+
 }

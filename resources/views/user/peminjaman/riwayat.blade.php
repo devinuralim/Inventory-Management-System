@@ -7,23 +7,90 @@
         display: inline-block;
         padding-bottom: 6px;
     }
+
     .card-glass {
         backdrop-filter: blur(10px);
         background: rgba(255, 255, 255, 0.75);
         border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease-in-out;
     }
+
     .card-glass:hover {
         transform: scale(1.01);
         box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
+
+    .btn-icon {
+        padding: 8px;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-icon:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn-ajukan {
+        background-color: #1d3557;
+        color: #fff;
+        font-size: 0.875rem;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 8px;
+        white-space: nowrap;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-ajukan:hover {
+        background-color: #16324f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn-back {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        font-size: 0.9rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .action-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+        animation: fadeIn 0.7s ease;
+    }
+
+    .action-right {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
     @media print {
         body * {
             visibility: hidden;
         }
+
         #print-section, #print-section * {
             visibility: visible;
         }
+
         #print-section {
             position: absolute;
             left: 0;
@@ -31,10 +98,50 @@
             width: 100%;
         }
     }
+
+    @media (max-width: 576px) {
+        .action-wrapper {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .action-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .action-right .btn-icon,
+        .btn-ajukan {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+
+        .btn-back {
+            width: 28px;
+            height: 28px;
+            font-size: 0.85rem;
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 
 <div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
     <div class="container">
+
+        {{-- Tombol Kembali --}}
+        <div class="mb-3">
+            <a href="{{ route('user.dashboard') }}"
+               class="btn btn-outline-secondary btn-icon btn-back shadow-sm"
+               title="Kembali">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+
+        {{-- Judul --}}
         <div class="text-center mb-4 animate__animated animate__fadeInDown">
             <h2 class="fw-bold text-dark judul-section">
                 <i class="fas fa-history me-2 text-black"></i>Riwayat Peminjaman
@@ -42,17 +149,22 @@
             <p class="text-muted mt-1">Berisi semua peminjaman yang pernah kamu lakukan</p>
         </div>
 
-        {{-- Tombol Export --}}
-        <div class="mb-3 d-flex justify-content-end gap-2">
-            <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
-                <i class="fas fa-print me-1"></i> Print
-            </button>
-            <a href="{{ route('user.riwayat.export.pdf') }}" class="btn btn-outline-danger btn-sm">
-                <i class="fas fa-file-pdf me-1"></i> PDF
-            </a>
-            <a href="{{ route('user.riwayat.export.csv') }}" class="btn btn-outline-success btn-sm">
-                <i class="fas fa-file-csv me-1"></i> CSV
-            </a>
+        {{-- Tombol Aksi --}}
+        <div class="action-wrapper">
+            <div class="action-right">
+                <button onclick="window.print()" class="btn btn-icon btn-sm btn-outline-dark" title="Print">
+                    <i class="fas fa-print"></i>
+                </button>
+                <a href="{{ route('user.riwayat.export.pdf') }}" class="btn btn-icon btn-sm btn-danger" title="Export PDF">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
+                <a href="{{ route('user.riwayat.export.csv') }}" class="btn btn-icon btn-sm btn-success" title="Export CSV">
+                    <i class="fas fa-file-csv"></i>
+                </a>
+                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-ajukan btn-sm" title="Ajukan Peminjaman">
+                    <i class="fas fa-plus"></i> Peminjaman
+                </a>
+            </div>
         </div>
 
         {{-- Tabel Riwayat --}}
@@ -78,7 +190,7 @@
                                         @if ($peminjaman->status == 'dipinjam')
                                             <span class="badge bg-danger">Dipinjam</span>
                                         @elseif ($peminjaman->status == 'menunggu konfirmasi')
-                                            <span class="badge bg-warning text-dark">Menunggu Konfirmasi</span>
+                                            <span class="badge bg-warning text-dark">Menunggu</span>
                                         @else
                                             <span class="badge bg-success">Dikembalikan</span>
                                         @endif
@@ -97,6 +209,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 @endsection

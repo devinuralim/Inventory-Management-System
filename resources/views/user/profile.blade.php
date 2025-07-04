@@ -7,29 +7,50 @@
         display: inline-block;
         padding-bottom: 6px;
     }
+
     .profile-card {
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.75);
+        background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         transition: 0.3s ease-in-out;
+        padding: 1.5rem;
     }
+
     .profile-card:hover {
-        transform: scale(1.01);
+        transform: translateY(-2px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
+
     .profile-label {
         font-weight: 600;
         color: #1d3557;
         margin-bottom: 6px;
+        font-size: 0.95rem;
     }
+
     .form-control[readonly], .form-control.bg-light {
         background-color: #f8f9fa;
         border: 1px solid #e2e6ea;
-        box-shadow: none;
         border-radius: 10px;
         font-weight: 500;
+        font-size: 0.95rem;
         color: #333;
+    }
+
+    @media (max-width: 768px) {
+        .profile-card {
+            padding: 1rem;
+        }
+
+        .profile-label {
+            font-size: 0.9rem;
+        }
+
+        .form-control.bg-light {
+            font-size: 0.9rem;
+            padding: 8px 10px;
+        }
     }
 </style>
 
@@ -45,39 +66,47 @@
         </div>
 
         {{-- Kartu Profil --}}
-        <div class="card profile-card border-0 p-4 animate__animated animate__fadeInUp">
+        <div class="card profile-card border-0 animate__animated animate__fadeInUp">
             @php
                 $karyawan = \App\Models\Karyawan::where('id_pegawai', Auth::user()->id_pegawai)->first();
             @endphp
 
             @if ($karyawan)
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-3">
+                <div class="row g-3">
+                    <div class="col-md-6">
                         <label class="profile-label">ID Pegawai</label>
                         <div class="form-control bg-light" readonly>{{ $karyawan->id_pegawai }}</div>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6">
                         <label class="profile-label">Nama Lengkap</label>
                         <div class="form-control bg-light" readonly>{{ $karyawan->nama_lengkap }}</div>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6">
                         <label class="profile-label">Tanggal Bergabung</label>
                         <div class="form-control bg-light" readonly>
                             {{ \Carbon\Carbon::parse($karyawan->tanggal_bergabung)->translatedFormat('d F Y') }}
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6">
                         <label class="profile-label">Jabatan</label>
                         <div class="form-control bg-light" readonly>{{ $karyawan->jabatan }}</div>
                     </div>
                 </div>
             @else
-                <div class="alert alert-warning mt-2">
+                <div class="alert alert-warning mt-3">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     Data karyawan belum tersedia. Silakan hubungi admin.
                 </div>
             @endif
         </div>
+
+        {{-- Tombol Kembali --}}
+        <div class="text-end mt-4">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-secondary shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Kembali
+            </a>
+        </div>
+
     </div>
 </div>
 @endsection

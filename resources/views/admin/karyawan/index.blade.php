@@ -22,6 +22,33 @@
         display: none !important;
     }
 }
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .form-control, .btn {
+        font-size: 0.9rem;
+    }
+
+    .table th, .table td {
+        font-size: 0.85rem;
+        padding: 6px;
+    }
+
+    .input-group input {
+        font-size: 0.85rem;
+    }
+
+    .btn i {
+        font-size: 0.85rem;
+    }
+
+    .card-body {
+        padding: 1.5rem 1rem;
+    }
+}
 </style>
 
 <div class="container pt-4 pb-5">

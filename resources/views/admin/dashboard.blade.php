@@ -1,32 +1,71 @@
 @extends('layouts.admin')
 
-@section('content')
+@push('styles')
+<style>
+    /* Statistik Card Hover */
+    .stat-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .stat-card .stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .stat-card h5 {
+            font-size: 0.95rem;
+        }
+
+        .stat-card h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+@endpush
+
+@section('content')
 <div class="py-4">
+
     {{-- Statistik Ringkasan --}}
     <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-center shadow rounded-4 border-0">
-                <div class="card-body py-4" style="background: linear-gradient(to right, #bbdefb, #90caf9); color: #0d47a1;">
-                    <i class="fas fa-box fa-2x mb-2"></i>
+        <div class="col-12 col-md-4 mb-3 mb-md-0">
+            <div class="card stat-card text-center shadow rounded-4 border-0">
+                <div class="card-body py-4" style="background: linear-gradient(to right, #e3f2fd, #90caf9); color: #0d47a1;">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
                     <h5 class="card-title">Total Barang</h5>
                     <h2 class="fw-bold">{{ $barangCount }}</h2>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-center shadow rounded-4 border-0">
-                <div class="card-body py-4" style="background: linear-gradient(to right, #c8e6c9, #a5d6a7); color: #1b5e20;">
-                    <i class="fas fa-users fa-2x mb-2"></i>
+        <div class="col-12 col-md-4 mb-3 mb-md-0">
+            <div class="card stat-card text-center shadow rounded-4 border-0">
+                <div class="card-body py-4" style="background: linear-gradient(to right, #e8f5e9, #a5d6a7); color: #1b5e20;">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
                     <h5 class="card-title">Total Karyawan</h5>
                     <h2 class="fw-bold">{{ $karyawanCount }}</h2>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-center shadow rounded-4 border-0">
+        <div class="col-12 col-md-4">
+            <div class="card stat-card text-center shadow rounded-4 border-0">
                 <div class="card-body py-4" style="background: linear-gradient(to right, #fff9c4, #ffe082); color: #f9a825;">
-                    <i class="fas fa-arrow-circle-up fa-2x mb-2"></i>
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-circle-up"></i>
+                    </div>
                     <h5 class="card-title">Total Peminjaman</h5>
                     <h2 class="fw-bold">{{ $peminjamanCount }}</h2>
                 </div>
@@ -133,5 +172,4 @@
         </div>
     </div>
 </div>
-
 @endsection
