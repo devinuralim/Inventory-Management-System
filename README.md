@@ -1,61 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Inventory Management System
 
-## About Laravel
+Inventory Management System adalah aplikasi berbasis web yang dikembangkan dengan Laravel untuk membantu pengelolaan data barang di lingkungan kantor. Aplikasi ini memungkinkan admin dan karyawan untuk melakukan pencatatan barang masuk/keluar, pengajuan peminjaman, konfirmasi pengembalian, serta monitoring kondisi stok barang secara real-time.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini juga mendukung fitur role-based login (admin & karyawan), notifikasi status peminjaman, riwayat aktivitas, serta ekspor data ke berbagai format seperti PDF dan Excel. Aplikasi ini dirancang agar efisien, mudah digunakan, dan scalable untuk kebutuhan inventarisasi kecil hingga menengah.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tujuan Aplikasi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Mempermudah pengelolaan barang kantor secara digital
+2. Menghindari kehilangan atau ketidakteraturan data barang
+3. Menyediakan sistem peminjaman dan pengembalian yang transparan
+4. Memberi insight cepat melalui dashboard statistik dan riwayat aktivitas
 
-## Learning Laravel
+## Fitur
+1. Autentikasi Login (Admin & Karyawan)
+2. CRUD Barang
+3. Manajemen Karyawan
+4. Peminjaman & Pengembalian Barang
+5. Dashboard Statistik
+6. Notifikasi Peminjaman Menunggu Konfirmasi
+7. Ekspor PDF & Excel (Barang & Peminjaman)
+8. Print
+9. Riwayat Peminjaman Karyawan
+10. Pengumuman
+11. Barang Favorit
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Teknologi yang Digunakan
+- Laravel 12
+- PHP 8
+- Blade
+- Boostrap
+- MySQL
+- PHPExcel / DomPDF
+- Laravel Breeze
+- GitHub & Git
+- VSCode
+- XAMPP
+## Run Locally
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Clone the project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+  git clone https://github.com/devinuralim/Inventory-Management-System
+```
 
-## Laravel Sponsors
+Go to the project directory
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+  cd Inventory-Management-System
+```
 
-### Premium Partners
+Install dependencies
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+  npm install
+```
 
-## Contributing
+Run Vite
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+  npm run dev
+```
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Environment Variables
 
-## Security Vulnerabilities
+To run this project, you will need to add the following environment variables to your .env file
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+`DB_CONNECTION=mysql`
 
-## License
+`DB_HOST=127.0.0.1`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+`DB_PORT=3306`
+
+`DB_DATABASE=db_inventory`
+
+`DB_USERNAME=root`
+
+`DB_PASSWORD=`
+
+💡 Jangan lupa nyalakan XAMPP (Apache & MySQL) dan buat database baru di phpMyAdmin dengan nama db_inventory.
+
+Jalankan Migrasi Database
+```bash
+  php artisan migrate
+```
+Jalankan Server
+```bash
+  php artisan serve
+```
+## Demo
+http://127.0.0.1:8000
+## Screenshots
+### Admin
+1. Dashboard
+![Dashboard](public/1.png)
+2. Daftar Barang
+![Dashboard](public/image.png)
+3. Daftar karyawan
+![Dashboard](public/3.png)
+4. Peminjaman
+![Dashboard](public/4.png)
+5. Peminjaman
+![Dashboard](public/5.png)
+
+### User
+
+1. Dashboard
+![Dashboard](public/6.png)
+2. Barang
+![Dashboard](public/7.png)
+3. Daftar Peminjaman
+![Dashboard](public/8.png)
+4. Riwayat Peminjaman
+![Dashboard](public/9.png)
+5. Barang Favorit
+![Dashboard](public/10.png)
