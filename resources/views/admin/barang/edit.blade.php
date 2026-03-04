@@ -3,31 +3,39 @@
 @section('content')
 
 <style>
+.page-title {
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+.form-wrapper {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.form-control {
+    border-radius: 12px;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
 @media (max-width: 768px) {
-    h2 {
-        font-size: 1.25rem;
-    }
-
-    .form-label {
-        font-size: 0.9rem;
-    }
-
-    .form-control {
-        font-size: 0.9rem;
-        padding: 8px 10px;
-    }
-
-    .btn {
-        font-size: 0.9rem;
-        padding: 8px 16px;
-    }
-
-    .btn i {
-        font-size: 0.9rem;
-    }
-
-    .card-body {
-        padding: 1.5rem 1rem;
+    .form-wrapper {
+        padding: 18px;
     }
 
     .btn-group-flex {
@@ -41,70 +49,73 @@
         justify-content: center;
     }
 }
-
-.btn-primary {
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-    background-color: #0d47a1 !important;
-    transform: scale(1.02);
-}
 </style>
 
-<div class="pt-4 pb-5 container">
-    <div class="card shadow border-0 rounded-4">
-        <div class="card-body">
+<div class="container pt-2 pb-4">
 
-            <h2 class="fw-bold text-dark mb-4 d-flex align-items-center">
-                <i class="fas fa-pen-to-square me-2 text-black"></i> Edit Barang
-            </h2>
-
-            <form method="POST" action="{{ route('admin.barangs.update', $barang->id) }}">
-                @csrf
-                @method('PUT')
-
-                <div class="mb-3">
-                    <label for="nama_barang" class="form-label">Nama Barang</label>
-                    <input type="text" name="nama_barang" id="nama_barang"
-                        value="{{ old('nama_barang', $barang->nama_barang) }}" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="jenis_barang" class="form-label">Jenis Barang</label>
-                    <input type="text" name="jenis_barang" id="jenis_barang"
-                        value="{{ old('jenis_barang', $barang->jenis_barang) }}" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="stok" class="form-label">Stok</label>
-                    <input type="number" name="stok" id="stok"
-                        value="{{ old('stok', $barang->stok) }}" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="seri" class="form-label">Seri</label>
-                    <input type="text" name="seri" id="seri"
-                        value="{{ old('seri', $barang->seri) }}" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="keterangan" class="form-label">Keterangan</label>
-                    <textarea name="keterangan" id="keterangan" class="form-control" rows="3"
-                        placeholder="Opsional...">{{ old('keterangan', $barang->keterangan) }}</textarea>
-                </div>
-
-                <div class="d-flex justify-content-between btn-group-flex mt-4">
-                    <a href="{{ route('admin.barangs') }}" class="btn btn-secondary rounded-pill">
-                        <i class="fas fa-arrow-left me-1"></i> Kembali
-                    </a>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4">
-                        <i class="fas fa-save me-1"></i> Update
-                    </button>
-                </div>
-            </form>
-
+    {{-- Header --}}
+    <div class="mb-4">
+        <div class="page-title">
+            Edit Barang
         </div>
+        <small class="text-muted">Perbarui data barang yang sudah ada</small>
+    </div>
+
+    {{-- Form --}}
+    <div class="form-wrapper">
+
+        <form method="POST" action="{{ route('admin.barangs.update', $barang->id) }}">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-3">
+                <label for="nama_barang" class="form-label">Nama Barang</label>
+                <input type="text" name="nama_barang" id="nama_barang"
+                    value="{{ old('nama_barang', $barang->nama_barang) }}"
+                    class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="jenis_barang" class="form-label">Jenis Barang</label>
+                <input type="text" name="jenis_barang" id="jenis_barang"
+                    value="{{ old('jenis_barang', $barang->jenis_barang) }}"
+                    class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="stok" class="form-label">Stok</label>
+                <input type="number" name="stok" id="stok"
+                    value="{{ old('stok', $barang->stok) }}"
+                    class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="seri" class="form-label">Seri</label>
+                <input type="text" name="seri" id="seri"
+                    value="{{ old('seri', $barang->seri) }}"
+                    class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="keterangan" class="form-label">Keterangan</label>
+                <textarea name="keterangan" id="keterangan"
+                    class="form-control" rows="3"
+                    placeholder="Opsional...">{{ old('keterangan', $barang->keterangan) }}</textarea>
+            </div>
+
+            <div class="d-flex justify-content-between btn-group-flex mt-4">
+                <a href="{{ route('admin.barangs') }}" class="btn btn-outline-secondary rounded-pill">
+                    Kembali
+                </a>
+
+                <button type="submit" class="btn btn-primary rounded-pill px-4">
+                    Update
+                </button>
+            </div>
+
+        </form>
+
     </div>
 </div>
+
 @endsection

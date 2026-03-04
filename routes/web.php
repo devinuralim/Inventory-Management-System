@@ -8,7 +8,7 @@ use App\Http\Controllers\HomeUserController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PeminjamanController;
-use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\User\BarangController as UserBarangController;
 use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
 use App\Http\Controllers\User\FavoritBarangController;
@@ -29,14 +29,6 @@ require __DIR__.'/auth.php';
 // ================= ADMIN ROUTES =================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [HomeAdminController::class, 'index'])->name('dashboard');
-
-
-    Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
-    Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('pengumuman.create');
-    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
-    Route::get('/pengumuman/{pengumuman}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
-    Route::put('/pengumuman/{pengumuman}', [PengumumanController::class, 'update'])->name('pengumuman.update');
-    Route::delete('/pengumuman/{pengumuman}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
 
     // Barang
     Route::get('/barangs', [BarangController::class, 'index'])->name('barangs');
@@ -60,6 +52,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/peminjaman/{id}/konfirmasi', [PeminjamanController::class, 'konfirmasiPengembalian'])->name('peminjaman.konfirmasi');
     Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.delete');
 
+    // Reporting
+    Route::get('/reporting/history', [LaporanController::class, 'history'])->name('reporting.history');
+    Route::get('/reporting/bulanan', [LaporanController::class, 'bulanan'])->name('reporting.bulanan');
+    Route::get('/reporting/rusak', [LaporanController::class, 'rusak'])->name('reporting.rusak');
+    Route::post('/reporting/rusak/store', [LaporanController::class, 'storeRusak'])->name('reporting.rusak.store');
+
+    Route::post('/reporting/rusak/update/{id}', [LaporanController::class, 'updateStatus'])->name('reporting.rusak.update');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -70,10 +70,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [HomeUserController::class, 'index'])->name('dashboard');
 
-    // Form upload bukti pengembalian (pasti pakai UserPeminjamanController)
+    
+    // Form upload bukti pengembalian
     Route::get('/peminjaman/{id}/bukti', [UserPeminjamanController::class, 'formBukti'])->name('peminjaman.bukti');
     Route::post('/peminjaman/{id}/bukti', [UserPeminjamanController::class, 'uploadBukti'])->name('peminjaman.uploadBukti');
-     Route::get('/peminjaman/{id}/detail', [UserPeminjamanController::class, 'detail'])->name('peminjaman.detail');
+    Route::get('/peminjaman/{id}/detail', [UserPeminjamanController::class, 'detail'])->name('peminjaman.detail');
 
     // Barang
     Route::get('/barang', [UserBarangController::class, 'index'])->name('barang.index');
@@ -96,6 +97,18 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/profile', [ProfileController::class, 'userProfile'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // ================= LAPORAN (PERBAIKAN) =================
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])
+            ->name('index'); // Ini akan menjadi 'user.laporan.index'
+
+        Route::get('/create', [LaporanController::class, 'create'])
+            ->name('create'); // Ini akan menjadi 'user.laporan.create'
+
+        Route::post('/', [LaporanController::class, 'storeRusak'])
+            ->name('store');
+    });
 });
 
 // ================= REDIRECT OTOMATIS LOGIN =================
@@ -119,10 +132,14 @@ Route::get('/admin/barangs/export/csv', [BarangController::class, 'exportExcel']
 Route::get('/admin/karyawans/export/pdf', [KaryawanController::class, 'exportPdf'])->name('admin.karyawans.export.pdf');
 Route::get('/admin/karyawans/export/csv', [KaryawanController::class, 'exportExcel'])->name('admin.karyawans.export.csv');
 
-// Export Peminjaman
-Route::get('/admin/peminjamans/export/pdf', [PeminjamanController::class, 'exportPdf'])->name('admin.peminjaman.export.pdf');
-Route::get('/admin/peminjamans/export/csv', [PeminjamanController::class, 'exportExcel'])->name('admin.peminjaman.export.csv');
+// Export history
+Route::get('/report/history', [LaporanController::class, 'history'])->name('report.history');
+Route::get('/report/history/pdf', [LaporanController::class, 'pdf'])->name('report.history.pdf');
+Route::get('/report/history/excel', [LaporanController::class, 'excel'])->name('report.history.excel');
 
 // Export Riwayat (user)
 Route::get('/riwayat/export/pdf', [UserPeminjamanController::class, 'exportPdf'])->name('user.riwayat.export.pdf');
 Route::get('/riwayat/export/csv', [UserPeminjamanController::class, 'exportCsv'])->name('user.riwayat.export.csv');
+
+Route::post('/reporting/rusak/store', [LaporanController::class, 'storeRusak'])
+    ->name('reporting.rusak.store');

@@ -120,13 +120,11 @@
     use Carbon\Carbon;
     Carbon::setLocale('id');
     $hour = Carbon::now()->hour;
-    $greeting = $hour >= 4 && $hour < 10 ? 'Selamat pagi' : ($hour < 15 ? 'Selamat siang' : ($hour < 18 ? 'Selamat sore' : 'Selamat malam'));
+    $greeting = $hour >= 4 && $hour < 10 ? 'Selamat Pagi' : ($hour < 15 ? 'Selamat Siang' : ($hour < 18 ? 'Selamat Sore' : 'Selamat Malam'));
 
     $notifPeminjaman = \App\Models\Peminjaman::where('nama_peminjam', auth()->user()->name)
                         ->whereIn('status', ['dipinjam', 'menunggu konfirmasi'])
                         ->get();
-
-    $pengumuman = \App\Models\Pengumuman::where('tampilkan', true)->latest()->first();
 @endphp
 
 <div class="container min-vh-100 py-3">
@@ -171,15 +169,6 @@
         <div class="datetime-text">
             {{ Carbon::now()->translatedFormat('l, d F Y — H:i') }} WIB
         </div>
-
-        {{-- Pengumuman --}}
-        @if ($pengumuman)
-            <div class="announcement-card animate__animated animate__fadeInDown">
-                <h6><i class="fas fa-bullhorn me-1"></i> {{ $pengumuman->judul }}</h6>
-                <div>{{ $pengumuman->isi }}</div>
-            </div>
-        @endif
-    </div>
 
     {{-- Fitur --}}
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-4 animate__animated animate__fadeInUp">

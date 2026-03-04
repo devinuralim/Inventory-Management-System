@@ -16,7 +16,7 @@ class HomeAdminController extends Controller
         $barangs = Barang::latest()->get();
         $barangCount = Barang::count();
         $karyawanCount = Karyawan::count();
-        $peminjamanCount = Peminjaman::count();
+        $peminjamanCount = Peminjaman::where('status', 'dipinjam')->count();
         $peminjamans = Peminjaman::latest()->take(5)->get();
 
         $barangTerbanyak = Peminjaman::select('nama_barang', DB::raw('COUNT(*) as total'))

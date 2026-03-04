@@ -170,6 +170,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('user.laporan.index') ? 'active' : '' }}"
+              href="{{ route('user.laporan.index') }}">
+              <i class="fas fa-flag me-1"></i> Laporan
+            </a>
+          </li>
+          <li class="nav-item">
             <form method="POST" action="{{ route('logout') }}">
               @csrf
               <button type="submit" class="nav-link bg-transparent border-0 text-warning fw-semibold btn-logout">
@@ -187,12 +193,6 @@
       @yield('content')
     </div>
   </main>
-
-  <footer>
-    <div class="container">
-      <small>© {{ now()->year }} K2NET. All rights reserved.</small>
-    </div>
-  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
