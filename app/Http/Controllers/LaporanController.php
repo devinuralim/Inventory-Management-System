@@ -8,9 +8,25 @@ use App\Models\Barang;
 
 class LaporanController extends Controller
 {
-    public function index()
+    // Tambahkan parameter Request $request di sini
+    public function index(Request $request)
     {
-        $laporans = LaporanBarang::with('barang')->latest()->get();
+        // Mulai query dari model
+        $query = LaporanBarang::with('barang');
+
+        // Filter Bulan (jika ada input bulan)
+        if ($request->filled('bulan')) {
+            $query->whereMonth('created_at', $request->bulan);
+        }
+
+        // Filter Tahun (jika ada input tahun)
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->tahun);
+        }
+
+        // Eksekusi query
+        $laporans = $query->latest()->get();
+
         return view('admin.laporan.index', compact('laporans'));
     }
 
