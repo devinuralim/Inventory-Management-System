@@ -1,166 +1,120 @@
 @extends('layouts.admin')
 
-@push('styles')
 <style>
-.card-clean, .card {
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-.page-title {
-    font-weight: 600;
-    font-size: 1.4rem;
-}
-
-.table thead {
-    background-color: #f8f9fa;
-}
-
-.btn-success, .btn-warning, .btn-danger, .btn-outline-primary, .btn-outline-warning {
-    border-radius: 50px;
-    font-weight: 500;
-}
-
-@media (max-width: 768px) {
-    h5 {
-        font-size: 0.95rem;
+    :root {
+        --primary: #4f46e5;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
     }
-    h2 {
-        font-size: 1.3rem;
-    }
-}
+
+    body { background-color: var(--bg); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); }
+    .dashboard-title { font-size: 1.75rem; font-weight: 700; color: var(--text-main); }
+    .card-dashboard { border: 1px solid var(--border-color); border-radius: 16px; background: var(--card); transition: 0.3s; }
+    .card-dashboard:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px rgba(0,0,0,0.08); }
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .action-btn { border: 1px solid var(--border-color); background: white; border-radius: 10px; padding: 8px 16px; font-weight: 600; font-size: 0.875rem; color: var(--text-main); transition: 0.2s; display: inline-flex; align-items: center; text-decoration: none; }
+    .action-btn:hover { background: #f1f5f9; color: var(--primary); }
+    .table-modern thead th { background: #f8fafc; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); padding: 16px; border: none; }
+    .table-modern tbody td { padding: 16px; border-bottom: 1px solid #f1f5f9; }
+    .bg-soft-blue { background: #eef2ff; color: #4f46e5; }
+    .bg-soft-green { background: #ecfdf5; color: #10b981; }
+    .bg-soft-orange { background: #fffbeb; color: #f59e0b; }
+    .bg-soft-red { background: #fef2f2; color: #ef4444; }
 </style>
-@endpush
 
 @section('content')
-<div class="py-4">
+<div class="container-fluid py-4">
 
-    {{-- Statistik Ringkasan --}}
-    <div class="row mb-4">
-        <div class="col-12 col-md-4 mb-3 mb-md-0">
-            <div class="card text-center shadow rounded-4 border-0">
-                <div class="card-body py-4" style="background: linear-gradient(to right, #e3f2fd, #90caf9); color: #0d47a1;">
-                    <div class="mb-2"><i class="fas fa-box fa-2x"></i></div>
-                    <h5>Total Barang</h5>
-                    <h2 class="fw-bold">{{ $barangCount }}</h2>
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap">
+        <div>
+            <h1 class="dashboard-title mb-1">Inventory Dashboard</h1>
+            <p class="text-muted mb-0">Overview of your warehouse assets and activities</p>
+        </div>
+        <span class="badge bg-white border text-dark p-2 px-3 shadow-sm rounded-pill">
+            <i class="far fa-calendar-alt me-2 text-primary"></i> {{ now()->format('d M Y') }}
+        </span>
+    </div>
+
+    {{-- STATISTICS --}}
+    <div class="row g-3 mb-4">
+        @foreach([['Total Barang', $barangCount, 'fa-box', 'blue'], ['Barang Masuk', $barangMasuk, 'fa-arrow-down', 'green'], ['Barang Keluar', $barangKeluar, 'fa-arrow-up', 'orange'], ['Sedang Dipinjam', $peminjamanCount, 'fa-handshake', 'red']] as $s)
+        <div class="col-lg-3 col-md-6">
+            <div class="card card-dashboard p-3 border-0 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-soft-{{ $s[3] }} me-3"><i class="fas {{ $s[2] }}"></i></div>
+                    <div>
+                        <p class="text-muted small mb-0 fw-medium">{{ $s[0] }}</p>
+                        <h3 class="fw-bold mb-0">{{ number_format($s[1]) }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-4 mb-3 mb-md-0">
-            <div class="card text-center shadow rounded-4 border-0">
-                <div class="card-body py-4" style="background: linear-gradient(to right, #e8f5e9, #a5d6a7); color: #1b5e20;">
-                    <div class="mb-2"><i class="fas fa-users fa-2x"></i></div>
-                    <h5>Total Karyawan</h5>
-                    <h2 class="fw-bold">{{ $karyawanCount }}</h2>
+        @endforeach
+    </div>
+
+    {{-- BARANG MASUK (DENGAN ICON) --}}
+    <div class="card card-dashboard border-0 shadow-sm mb-4">
+        <div class="card-body p-0">
+            <div class="p-4 border-bottom d-flex align-items-center">
+                <div class="stat-icon bg-soft-green me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                    <i class="fas fa-boxes"></i>
                 </div>
+                <h5 class="fw-bold mb-0">Barang Masuk Terbaru</h5>
             </div>
-        </div>
-        <div class="col-12 col-md-4">
-            <div class="card text-center shadow rounded-4 border-0">
-                <div class="card-body py-4" style="background: linear-gradient(to right, #fff9c4, #ffe082); color: #f9a825;">
-                    <div class="mb-2"><i class="fas fa-arrow-circle-up fa-2x"></i></div>
-                    <h5>Total Peminjaman</h5>
-                    <h2 class="fw-bold">{{ $peminjamanCount }}</h2>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead><tr><th class="ps-4">Nama Barang</th><th>Stok</th><th>Ditambahkan</th></tr></thead>
+                    <tbody>
+                        @forelse($barangs->take(10) as $brg)
+                        <tr>
+                            <td class="ps-4 fw-semibold">{{ $brg->nama_barang }}</td>
+                            <td><span class="badge bg-light text-dark">{{ $brg->stok }}</span></td>
+                            <td class="text-muted">{{ $brg->created_at ? $brg->created_at->format('d M Y') : '-' }}</td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="3" class="text-center py-4 text-muted">Belum ada barang</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    {{-- Barang Terbanyak Dipinjam --}}
-    @if ($barangTerbanyak)
-        <div class="alert alert-info shadow-sm rounded-4 border-0">
-            <strong><i class="fas fa-crown me-1"></i> Barang paling banyak dipinjam:</strong>
-            {{ $barangTerbanyak->nama_barang }} ({{ $barangTerbanyak->total }} kali)
-        </div>
-    @endif
-
-    {{-- Notifikasi --}}
-    @if(isset($notifikasiCount) && $notifikasiCount > 0)
-        <div class="alert alert-danger shadow-sm rounded-4 border-0">
-            <strong><i class="fas fa-bell me-1"></i> Notifikasi:</strong>
-            Ada <strong>{{ $notifikasiCount }}</strong> peminjaman yang menunggu konfirmasi.
-            <a href="{{ route('admin.peminjaman.index') }}" class="ms-2 text-decoration-underline">Lihat Detail</a>
-        </div>
-    @endif
-
-    {{-- Tabel Barang --}}
-    <div class="card mb-4 shadow rounded-4 border-0">
-        <div class="card-header fw-bold fs-6 bg-light">
-            <i class="fas fa-box"></i> Barang yang tersedia di kantor
-        </div>
-        <div class="card-body">
-            @if ($barangs->isEmpty())
-                <div class="alert alert-secondary">Belum ada barang yang tersedia.</div>
-            @else
-                <div class="table-responsive">
-                    <table class="table align-middle table-hover table-bordered">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Barang</th>
-                                <th>Jenis</th>
-                                <th class="text-center">Stok</th>
-                                <th>Seri</th>
-                                <th>Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($barangs->take(5) as $barang)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $barang->nama_barang }}</td>
-                                    <td>{{ $barang->jenis_barang }}</td>
-                                    <td class="text-center">
-                                        <span class="badge bg-primary px-3 py-2">{{ $barang->stok }}</span>
-                                    </td>
-                                    <td>{{ $barang->seri }}</td>
-                                    <td>{{ $barang->keterangan }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+    {{-- AKTIVITAS PEMINJAMAN (DENGAN ICON) --}}
+    <div class="card card-dashboard border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-soft-blue me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0">Aktivitas Peminjaman</h5>
                 </div>
-                <a href="{{ route('admin.barangs') }}" class="btn btn-outline-primary rounded-pill mt-2">Selengkapnya...</a>
-            @endif
+                <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-sm btn-light rounded-pill px-3">Lihat Semua</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead><tr><th class="ps-4">Peminjam</th><th>Barang</th><th>Tanggal</th><th class="text-center">Status</th></tr></thead>
+                    <tbody>
+                        @forelse($peminjamans as $p)
+                        <tr>
+                            <td class="ps-4 fw-semibold">{{ $p->nama_peminjam }}</td>
+                            <td>{{ $p->nama_barang }}</td>
+                            <td class="text-muted">{{ \Carbon\Carbon::parse($p->tanggal_pinjam)->format('d M Y') }}</td>
+                            <td class="text-center"><span class="badge {{ $p->status == 'dipinjam' ? 'bg-soft-orange' : 'bg-soft-green' }}">{{ ucfirst($p->status) }}</span></td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="4" class="text-center py-4 text-muted">Belum ada aktivitas</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    {{-- Tabel Peminjaman --}}
-    <div class="card mb-4 shadow rounded-4 border-0">
-        <div class="card-header fw-bold fs-6 bg-light">
-            <i class="fas fa-arrow-circle-up"></i> Barang yang dipinjam karyawan
-        </div>
-        <div class="card-body">
-            @if ($peminjamans->isEmpty())
-                <div class="alert alert-secondary">Belum ada barang yang dipinjam.</div>
-            @else
-                <div class="table-responsive">
-                    <table class="table align-middle table-hover table-bordered">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Barang</th>
-                                <th class="text-center">Jumlah</th>
-                                <th>Nama Peminjam</th>
-                                <th class="text-center">Tanggal Pinjam</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($peminjamans as $peminjaman)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $peminjaman->nama_barang }}</td>
-                                    <td class="text-center">{{ $peminjaman->jumlah }}</td>
-                                    <td>{{ $peminjaman->nama_peminjam }}</td>
-                                    <td class="text-center">{{ $peminjaman->tanggal_pinjam }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline-warning rounded-pill mt-2">Selengkapnya...</a>
-            @endif
-        </div>
-    </div>
-</div>
 @endsection

@@ -8,37 +8,27 @@ use App\Models\Barang;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | LIST DATA PEMINJAMAN
-    |--------------------------------------------------------------------------
-    */
     public function index(Request $request)
-{
-    $query = Peminjaman::where('created_at', '>=', Carbon::now()->subDays(30));
+    {
+    $query = Peminjaman::whereIn('status', ['dipinjam', 'menunggu konfirmasi']);
 
-    if ($request->search) {
-        $query->where(function ($q) use ($request) {
-            $q->where('nama_peminjam', 'like', '%' . $request->search . '%')
-              ->orWhere('nama_barang', 'like', '%' . $request->search . '%');
-        });
-    }
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_peminjam', 'like', '%' . $request->search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $request->search . '%');
+            });
+        }
 
     $peminjamans = $query->latest()->get();
+        $total = $peminjamans->count();
 
-    $total = $peminjamans->count();
+        return view('admin.peminjaman.index', compact('peminjamans', 'total'));
+    }
 
-    return view('admin.peminjaman.index', compact('peminjamans', 'total'));
-}
-
-    /*
-    |--------------------------------------------------------------------------
-    | FORM TAMBAH PEMINJAMAN (ADMIN)
-    |--------------------------------------------------------------------------
-    */
     public function create()
     {
         $barangs = Barang::all();
@@ -47,11 +37,6 @@ class PeminjamanController extends Controller
         return view('admin.peminjaman.create', compact('barangs', 'karyawans'));
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | SIMPAN PEMINJAMAN BARU
-    |--------------------------------------------------------------------------
-    */
     public function save(Request $request)
     {
         $request->validate([
@@ -79,8 +64,6 @@ class PeminjamanController extends Controller
             // Kurangi stok
             $barang->stok -= $request->jumlah;
             $barang->save();
-
-            // Simpan peminjaman
             Peminjaman::create([
                 'nama_peminjam'   => $request->nama_peminjam,
                 'nama_barang'     => $request->nama_barang,
@@ -103,12 +86,6 @@ class PeminjamanController extends Controller
             return back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | HAPUS DATA (HANYA YANG SUDAH DIKEMBALIKAN)
-    |--------------------------------------------------------------------------
-    */
     public function destroy($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
@@ -124,11 +101,6 @@ class PeminjamanController extends Controller
             ->with('success', 'Peminjaman berhasil dihapus');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 🔥 KONFIRMASI PENGEMBALIAN (INI YANG ISI TANGGAL KEMBALI)
-    |--------------------------------------------------------------------------
-    */
     public function konfirmasiPengembalian($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
@@ -141,15 +113,11 @@ class PeminjamanController extends Controller
         DB::beginTransaction();
 
         try {
-
-            // Tambah stok kembali
             $barang = Barang::where('nama_barang', $peminjaman->nama_barang)->first();
             if ($barang) {
                 $barang->stok += $peminjaman->jumlah;
                 $barang->save();
             }
-
-            // 🔥 UPDATE STATUS & TANGGAL KEMBALI OTOMATIS
             $peminjaman->status = 'dikembalikan';
             $peminjaman->tanggal_kembali = Carbon::now(); 
             $peminjaman->save();
@@ -166,5 +134,80 @@ class PeminjamanController extends Controller
             return redirect()->route('admin.peminjaman.index')
                 ->with('error', 'Terjadi kesalahan saat konfirmasi pengembalian.');
         }
+    }
+    public function riwayat(Request $request)
+    {
+        $query = Peminjaman::where('status', 'dikembalikan');
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_peminjam', 'like', '%' . $request->search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $riwayat = $query->orderBy('tanggal_kembali', 'DESC')->get();
+
+        return view('admin.riwayat.index', compact('riwayat'));
+    }
+    public function exportPDF(Request $request)
+    {
+        $query = Peminjaman::where('status', 'dikembalikan');
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_peminjam', 'like', '%' . $request->search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $riwayat = $query->orderBy('tanggal_kembali', 'DESC')->get();
+
+        $pdf = Pdf::loadView('admin.riwayat.pdf', compact('riwayat'));
+        
+        return $pdf->download('Riwayat-Peminjaman-'.date('d-m-Y').'.pdf');
+    }
+
+    public function exportCSV(Request $request)
+    {
+        $query = Peminjaman::where('status', 'dikembalikan');
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_peminjam', 'like', '%' . $request->search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $riwayat = $query->orderBy('tanggal_kembali', 'DESC')->get();
+
+        $filename = "Riwayat-Peminjaman-".date('d-m-Y').".csv";
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use($riwayat) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['No', 'Nama Peminjam', 'Nama Barang', 'Jumlah', 'Tanggal Pinjam', 'Tanggal Kembali', 'Keterangan']);
+
+            foreach ($riwayat as $key => $row) {
+                fputcsv($file, [
+                    $key + 1,
+                    $row->nama_peminjam,
+                    $row->nama_barang,
+                    $row->jumlah,
+                    $row->tanggal_pinjam,
+                    $row->tanggal_kembali,
+                    $row->keterangan ?? '-'
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -14,7 +14,7 @@ use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
 use App\Http\Controllers\User\FavoritBarangController;
 use App\Http\Controllers\User\LaporanController as UserLaporanController;
 
-// Jalankan migrate via route (opsional untuk development)
+
 Route::get('/run-migrate', function () {
     Artisan::call('migrate --force');
     return '✅ Migrasi berhasil dijalankan!';
@@ -56,7 +56,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::post('/laporan/{id}/selesai', [LaporanController::class, 'selesaikan'])->name('laporan.selesai');
-   
+    
+    // Riwayat
+    Route::get('/riwayat-peminjaman', [PeminjamanController::class, 'riwayat'])->name('riwayat.index');
+    Route::get('/riwayat-peminjaman/pdf', [PeminjamanController::class, 'exportPDF'])->name('riwayat.pdf');
+    Route::get('/riwayat-peminjaman/csv', [PeminjamanController::class, 'exportCSV'])->name('riwayat.csv');
+    
     // Profile
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -85,6 +90,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
     // Riwayat Peminjaman
     Route::get('/riwayat', [UserPeminjamanController::class, 'riwayat'])->name('peminjaman.riwayat');
+    
 
     // Favorit Barang (Wishlist)
     Route::get('/favorit', [FavoritBarangController::class, 'index'])->name('favorit.index');

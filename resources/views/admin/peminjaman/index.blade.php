@@ -72,19 +72,7 @@
             <small class="text-muted">Kelola data peminjaman dan pengembalian barang</small>
         </div>
 
-        <div class="d-flex flex-wrap gap-2 btn-group-flex">
-
-            <form action="{{ route('admin.peminjaman.index') }}" method="GET" class="input-group" style="max-width: 260px;">
-                <input type="text"
-                       name="search"
-                       value="{{ request('search') }}"
-                       class="form-control rounded-start-pill"
-                       placeholder="Cari...">
-                <button class="btn btn-outline-secondary rounded-end-pill">
-                    Cari
-                </button>
-            </form>
-        </div>
+    
     </div>
 
     {{-- Notifikasi --}}

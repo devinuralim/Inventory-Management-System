@@ -82,7 +82,7 @@
 
             /* ================= MAIN CONTENT ================= */
             .main-content {
-                margin-left: 250px; /* Sesuai sidebar */
+                margin-left: 300px; 
                 padding: 25px;
                 transition: margin-left 0.3s ease;
             }
@@ -230,7 +230,12 @@
                                 <span class="badge bg-danger ms-auto">{{ $notifikasiLaporan }}</span>
                             @endif
                         </a>
-                        
+                        <a
+                            href="{{ route('admin.riwayat.index') }}"
+                            class="nav-link ps-4 {{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
+                            <i class="fas fa-history me-2"></i>
+                            Riwayat Peminjaman
+                        </a>
                     </div>
                 </nav>
             </div>

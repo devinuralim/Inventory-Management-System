@@ -17,28 +17,46 @@ class HomeAdminController extends Controller
         $barangs = Barang::latest()->get();
         $barangCount = Barang::count();
         $karyawanCount = Karyawan::count();
+
+        // Barang yang sedang dipinjam (Status aktif)
         $peminjamanCount = Peminjaman::where('status', 'dipinjam')->count();
+
         $peminjamans = Peminjaman::latest()->take(5)->get();
+        $stokRendah = Barang::where('stok', '<', 3)->get();
+
+        // --- LOGIKA BULAN INI ---
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // BARANG MASUK (Barang yang baru diinput/dibuat bulan ini)
+        $barangMasuk = Barang::whereMonth('created_at', $currentMonth)
+                            ->whereYear('created_at', $currentYear)
+                            ->sum('stok');
+
+        // BARANG KELUAR (Total peminjaman yang terjadi bulan ini)
+        $barangKeluar = Peminjaman::whereMonth('tanggal_pinjam', $currentMonth)
+                                ->whereYear('tanggal_pinjam', $currentYear)
+                                ->count();
+        // -------------------------
 
         $barangTerbanyak = Peminjaman::select('nama_barang', DB::raw('COUNT(*) as total'))
             ->groupBy('nama_barang')
             ->orderByDesc('total')
             ->first();
 
+        // Data statistik untuk list bulanan (mengganti grafik)
         $peminjamanPerBulan = Peminjaman::select(
-                DB::raw('MONTH(tanggal_pinjam) as bulan'),
-                DB::raw('COUNT(*) as total')
-            )
-            ->whereYear('tanggal_pinjam', Carbon::now()->year)
-            ->groupBy('bulan')
-            ->orderBy('bulan')
-            ->get();
-
+                    DB::raw('MONTH(tanggal_pinjam) as bulan'),
+                    DB::raw('COUNT(*) as total')
+                )
+                ->whereYear('tanggal_pinjam', $currentYear)
+                ->groupBy('bulan')
+                ->orderBy('bulan')
+                ->get();
 
         $notifikasiCount = Peminjaman::where('status', 'menunggu konfirmasi')->count();
         $notifikasiLaporan = LaporanBarang::where('status', 'menunggu')->count();
 
-        
         return view('admin.dashboard', compact(
             'barangs',
             'barangCount',
@@ -48,7 +66,10 @@ class HomeAdminController extends Controller
             'barangTerbanyak',
             'peminjamanPerBulan',
             'notifikasiCount',
-            'notifikasiLaporan'
+            'notifikasiLaporan',
+            'stokRendah',
+            'barangMasuk',
+            'barangKeluar'
         ));
     }
 }
