@@ -89,10 +89,10 @@
         {{-- Top Bar --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill shadow-sm">
-                <i class="fas fa-arrow-left me-1"></i> Kembali
+                <i class="fas fa-arrow-left me-1"></i> 
             </a>
             <a href="{{ route('user.laporan.create') }}" class="btn-laporan shadow-sm animate__animated animate__fadeInRight">
-                <i class="fas fa-plus-circle me-1"></i> Buat Laporan
+                <i class="fas fa-plus-circle me-1"></i> 
             </a>
         </div>
 

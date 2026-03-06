@@ -88,16 +88,16 @@
         {{-- Action Bar --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill shadow-sm">
-                <i class="fas fa-arrow-left me-1"></i> Kembali
+                <i class="fas fa-arrow-left me-1"></i> 
             </a>
             <a href="{{ route('user.peminjaman.create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                <i class="fas fa-plus me-1"></i> Tambah Pinjaman
+                <i class="fas fa-plus me-1"></i> 
             </a>
         </div>
 
         {{-- Judul --}}
         <div class="mb-4 animate__animated animate__fadeIn">
-            <h2 class="judul-section">Riwayat Peminjaman</h2>
+            <h2 class="judul-section">Pinjam Barang</h2>
             <p class="text-muted small mt-2">Pantau status dan kelola peminjaman barang Anda.</p>
         </div>
 
@@ -133,7 +133,7 @@
                                     @elseif ($peminjaman->status == 'menunggu konfirmasi')
                                         <span class="badge bg-warning text-dark badge-status">Menunggu</span>
                                     @else
-                                        <span class="badge bg-success badge-status">Kembali</span>
+                                        <span class="badge bg-success badge-status"></span>
                                     @endif
                                 </td>
                                 <td class="text-end">
@@ -179,7 +179,7 @@
                         @elseif ($peminjaman->status == 'menunggu konfirmasi')
                             <span class="badge bg-warning text-dark badge-status">Menunggu</span>
                         @else
-                            <span class="badge bg-success badge-status">Kembali</span>
+                            <span class="badge bg-success badge-status"></span>
                         @endif
                     </div>
 

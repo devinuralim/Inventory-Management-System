@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
             ])->count();
 
             $notifikasiLaporan = LaporanBarang::where('status', [
-                'pending',
+                'diproses',
                 'menunggu'
             ])->count();
 

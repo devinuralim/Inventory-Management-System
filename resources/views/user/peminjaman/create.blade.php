@@ -80,7 +80,7 @@
         {{-- Action Bar --}}
         <div class="mb-4">
             <a href="{{ route('user.peminjaman.index') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill">
-                <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar
+                <i class="fas fa-arrow-left me-1"></i>
             </a>
         </div>
 

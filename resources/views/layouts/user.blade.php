@@ -14,151 +14,191 @@
             :root {
                 --primary-color: #1d3557;
                 --secondary-color: #457b9d;
-                /* GANTI: Orange jadi Biru Cyan khas K2NET */
                 --highlight-color: #00b4d8; 
                 --bg-color: #f8fafc;
-                --card-bg: #ffffff;
             }
 
             body {
                 font-family: 'Poppins', sans-serif;
                 background-color: var(--bg-color);
-                color: #334155;
                 margin: 0;
-                overflow-x: hidden;
             }
 
-            /* --- Navbar Styling --- */
+            /* --- Navbar Dasar --- */
             .navbar {
                 background-color: var(--primary-color) !important;
-                padding: 0.8rem 0;
-                /* Border bawah ganti biru */
                 border-bottom: 3px solid var(--highlight-color);
+                padding: 0.6rem 0;
             }
 
-            .navbar-brand img {
-                height: 40px;
-                filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
+            .navbar-brand img { 
+                height: 45px; 
+                width: auto;
+                object-fit: contain;
             }
 
             .nav-link {
-                color: rgba(255, 255, 255, 0.8) !important;
+                color: rgba(255, 255, 255, 0.7) !important; /* Warna default (sama semua) */
                 font-weight: 500;
-                padding: 0.5rem 1rem !important;
-                transition: all 0.3s ease;
                 border-radius: 8px;
-            }
-
-            .nav-link:hover {
-                color: #ffffff !important;
-                background: rgba(255, 255, 255, 0.1);
-            }
-
-            .nav-link.active {
-                /* Text menu aktif jadi biru */
-                color: var(--highlight-color) !important;
-                background: rgba(0, 180, 216, 0.1);
-            }
-
-            .btn-logout {
-                color: #fecaca !important;
+                padding: 0.6rem 1rem !important;
                 transition: 0.3s;
             }
 
-            .btn-logout:hover {
-                color: #ef4444 !important;
-                background: rgba(239, 68, 68, 0.1);
+            /* Saat Menu Utama Aktif atau Di-hover */
+            .nav-link.active, .nav-link:hover, .show > .nav-link {
+                color: var(--highlight-color) !important;
+                background: rgba(255, 255, 255, 0.05);
             }
 
-            /* --- Main Content --- */
-            main {
-                min-height: 85vh;
-                padding-top: 30px;
-                padding-bottom: 50px;
-            }
-
-            /* --- Responsive Mobile --- */
-            @media (max-width: 991px) {
-                .navbar-collapse {
-                    background: var(--primary-color);
-                    padding: 1rem;
+            /* --- Dropdown Desktop --- */
+            @media (min-width: 992px) {
+                .dropdown-menu {
+                    background-color: white;
+                    border: none;
                     border-radius: 12px;
-                    margin-top: 1rem;
-                    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                    padding: 0.5rem;
+                    margin-top: 10px !important;
+                }
+                .dropdown-item {
+                    color: var(--primary-color); /* Warna teks item di desktop */
+                    font-weight: 500;
+                    border-radius: 8px;
+                    padding: 0.7rem 1rem;
+                }
+                .dropdown-item:hover, .dropdown-item.active {
+                    background: #f0f9ff;
+                    color: var(--highlight-color) !important;
                 }
             }
 
-            .page-transition {
-                animation: fadeIn 0.5s ease-out;
+            /* --- RESPONSIVE HP (Mobile) --- */
+            @media (max-width: 991.98px) {
+                .navbar-collapse {
+                    background: var(--primary-color);
+                    margin-top: 10px;
+                    padding: 15px;
+                    border-radius: 12px;
+                    border: 1px solid rgba(255,255,255,0.1);
+                }
+
+                .dropdown-menu {
+                    background-color: transparent;
+                    border: none;
+                    padding-left: 1.5rem;
+                    margin: 0;
+                }
+
+                /* Warna font item dropdown disamakan dengan menu lain (Putih Transparan) */
+                .dropdown-item {
+                    color: rgba(255, 255, 255, 0.7) !important;
+                    font-weight: 500;
+                    padding: 0.6rem 0;
+                    background: transparent !important;
+                }
+
+                /* Baru jadi Biru kalau di-klik/aktif */
+                .dropdown-item.active, .dropdown-item:hover {
+                    color: var(--highlight-color) !important;
+                }
+
+                .dropdown-divider { border-color: rgba(255,255,255,0.1); }
+                .nav-item { margin-bottom: 5px; }
             }
 
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
+            .dropdown-item i {
+                width: 25px;
+                /* Icon ikut warna teks kecuali kalau aktif */
+                color: inherit; 
             }
 
-            /* Badge inventory agar warnanya senada */
-            .badge-custom {
-                background-color: var(--highlight-color);
-                color: white;
-                font-size: 0.65rem;
-                padding: 2px 6px;
-                border-radius: 4px;
+            .dropdown-item.active i, .dropdown-item:hover i {
+                color: var(--highlight-color);
             }
+
+            .btn-logout { color: #fecaca !important; }
+            .btn-logout:hover { color: #ef4444 !important; }
+
+            main { min-height: 80vh; padding: 20px 0; }
         </style>
     </head>
     <body>
         
-        <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ route('user.dashboard') }}">
-                    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" />
-                    <div class="ms-2 d-none d-sm-block">
-                        <span class="fw-bold text-white mb-0 d-block" style="line-height: 1;">K2NET</span>
-                        <span class="badge-custom">INVENTORY</span>
-                    </div>
+                <a class="navbar-brand" href="{{ route('user.dashboard') }}">
+                    <img src="{{ asset('k2net.png') }}" alt="Logo K2NET" />
                 </a>
 
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto gap-1">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}" href="{{ route('user.dashboard') }}">
                                 <i class="fas fa-home me-1"></i> Beranda
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('user.barang.*') ? 'active' : '' }}" href="{{ route('user.barang.index') }}">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('user.barang.*') || request()->is('user/favorit*') ? 'active' : '' }}" 
+                               href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-boxes me-1"></i> Barang
                             </a>
+                            <ul class="dropdown-menu animate__animated animate__fadeIn">
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('user.barang.index') ? 'active' : '' }}" href="{{ route('user.barang.index') }}">
+                                        <i class="fas fa-list-ul me-1"></i> Daftar Barang
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('user/favorit*') ? 'active' : '' }}" href="{{ route('user.favorit.index') }}">
+                                        <i class="fas fa-star me-1"></i> Barang Favorit
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('user.peminjaman.*') ? 'active' : '' }}" href="{{ route('user.peminjaman.index') }}">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('user.peminjaman.*') ? 'active' : '' }}" 
+                               href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-exchange-alt me-1"></i> Pinjam
                             </a>
+                            <ul class="dropdown-menu animate__animated animate__fadeIn">
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('user.peminjaman.index') ? 'active' : '' }}" href="{{ route('user.peminjaman.index') }}">
+                                        <i class="fas fa-plus-circle me-1"></i> Pinjam Barang
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('user.peminjaman.riwayat') ? 'active' : '' }}" href="{{ route('user.peminjaman.riwayat') }}">
+                                        <i class="fas fa-history me-1"></i> Riwayat Pinjam
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->is('user/favorit*') ? 'active' : '' }}" href="{{ route('user.favorit.index') }}">
-                                <i class="fas fa-star me-1"></i> Favorit
-                            </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('user.laporan.*') ? 'active' : '' }}" href="{{ route('user.laporan.index') }}">
                                 <i class="fas fa-flag me-1"></i> Laporan
                             </a>
                         </li>
-                        <li class="nav-item border-lg-start ms-lg-2 ps-lg-2">
+
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('user.profile') ? 'active' : '' }}" href="{{ route('user.profile') }}">
                                 <i class="fas fa-user-circle me-1"></i> Profil
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="nav-link bg-transparent border-0 btn-logout w-100 text-start">
+                                <button type="submit" class="nav-link bg-transparent border-0 btn-logout text-start w-100">
                                     <i class="fas fa-sign-out-alt me-1"></i> Keluar
                                 </button>
                             </form>
@@ -168,21 +208,16 @@
             </div>
         </nav>
 
-        <main class="page-transition">
-            @yield('content')
+        <main class="animate__animated animate__fadeIn">
+            <div class="container">
+                @yield('content')
+            </div>
         </main>
 
-        <footer class="py-4 bg-white border-top mt-auto">
-            <div class="container text-center">
-                <p class="text-muted small mb-0">&copy; {{ date('Y') }} <strong>K2NET</strong> Inventory System. All rights reserved.</p>
-            </div>
+        <footer class="py-4 bg-white border-top text-center mt-5">
+            <p class="text-muted small mb-0">&copy; {{ date('Y') }} <strong>K2NET</strong> Inventory. All rights reserved.</p>
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <script>
-            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-        </script>
     </body>
 </html>

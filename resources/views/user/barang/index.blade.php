@@ -85,7 +85,7 @@
         {{-- Tombol Kembali --}}
         <div class="mb-4">
             <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill shadow-sm">
-                <i class="fas fa-arrow-left me-1"></i> Kembali
+                <i class="fas fa-arrow-left me-1"></i>
             </a>
         </div>
 

@@ -31,19 +31,33 @@ class LaporanController extends Controller
     }
 
     public function selesaikan(Request $request, $id)
-    {
-        $laporan = LaporanBarang::findOrFail($id);
-        $barang = Barang::findOrFail($laporan->barang_id);
+{
+    $laporan = LaporanBarang::findOrFail($id);
+    $barang = Barang::findOrFail($laporan->barang_id);
 
-        if ($request->tindakan_admin == 'kurangi_stok') {
+    // 1. Ambil status dari input dropdown di View
+    $statusBaru = $request->status;
+
+    // 2. Logika Kurangi Stok: Hanya jalan kalau status diubah ke 'selesai'
+    // Dan pastikan stok belum pernah dikurangi sebelumnya (biar tidak berkali-kali berkurang)
+    if ($statusBaru == 'selesai' && $laporan->status != 'selesai') {
+        // Cek jika tindakan admin adalah kurangi stok (atau buat default jika perlu)
+        if ($request->tindakan_admin == 'kurangi_stok' || $laporan->jenis_laporan == 'hilang' || $laporan->jenis_laporan == 'rusak') {
             $barang->stok -= $laporan->jumlah;
             $barang->save();
         }
-
-        $laporan->status = 'selesai';
-        $laporan->tindakan_admin = $request->tindakan_admin;
-        $laporan->save();
-
-        return redirect()->back()->with('success', 'Laporan selesai diproses');
     }
+
+    // 3. Update status sesuai pilihan dropdown
+    $laporan->status = $statusBaru;
+    
+    // Simpan tindakan admin jika ada inputnya
+    if ($request->filled('tindakan_admin')) {
+        $laporan->tindakan_admin = $request->tindakan_admin;
+    }
+    
+    $laporan->save();
+
+    return redirect()->back()->with('success', 'Status laporan berhasil diperbarui menjadi ' . ucfirst($statusBaru));
+}
 }

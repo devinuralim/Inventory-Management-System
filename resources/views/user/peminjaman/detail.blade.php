@@ -155,9 +155,20 @@
                     </div>
                 </div>
 
+                {{-- TOMBOL KEMBALI DINAMIS --}}
                 <div class="mt-5 text-center">
-                    <a href="{{ route('user.peminjaman.index') }}" class="btn btn-outline-secondary px-5 rounded-pill btn-back shadow-sm">
-                        <i class="fas fa-arrow-left me-2"></i> Kembali ke Daftar
+                    @php
+                        // Cek asal halaman, kalau dari riwayat ya balik ke riwayat
+                        $urlAsal = url()->previous();
+                        $linkKembali = route('user.peminjaman.index'); // Default
+
+                        if (strpos($urlAsal, 'riwayat') !== false || $peminjaman->status == 'kembali') {
+                            $linkKembali = route('user.peminjaman.riwayat');
+                        }
+                    @endphp
+
+                    <a href="{{ $linkKembali }}" class="btn btn-outline-secondary px-5 rounded-pill btn-back shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i> Kembali
                     </a>
                 </div>
             </div>

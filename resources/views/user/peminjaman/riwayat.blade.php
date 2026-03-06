@@ -88,7 +88,7 @@
         {{-- Top Bar: Kembali & Filter --}}
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
             <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill shadow-sm">
-                <i class="fas fa-arrow-left me-1"></i> Kembali
+                <i class="fas fa-arrow-left me-1"></i>
             </a>
             
             <div class="filter-wrapper animate__animated animate__fadeIn">
