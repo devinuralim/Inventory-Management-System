@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Karyawan; // Pastikan ini di-import
 
 class ProfileController extends Controller
 {
+    /**
+     * Update the user's profile information.
+     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -24,6 +28,9 @@ class ProfileController extends Controller
         return Redirect::back()->with('status', 'profile-updated');
     }
 
+    /**
+     * Delete the user's account.
+     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -42,6 +49,9 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
+    /**
+     * Tampilan Profile untuk Admin
+     */
     public function adminProfile(): View
     {
         return view('admin.profile', [
@@ -49,10 +59,20 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Tampilan Profile untuk User (Karyawan)
+     */
     public function userProfile(): View
-    {
-        return view('user.profile', [
-            'user' => Auth::user()
-        ]);
-    }
+{
+    $user = Auth::user();
+
+    // Cari di tabel karyawans yang nama_lengkap-nya mengandung nama user
+    // Kita gunakan 'like' agar pencarian lebih fleksibel
+    $karyawan = \App\Models\Karyawan::where('nama_lengkap', 'LIKE', '%' . $user->name . '%')->first();
+
+    return view('user.profile', [
+        'user' => $user,
+        'karyawan' => $karyawan
+    ]);
+}
 }

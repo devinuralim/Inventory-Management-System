@@ -1,114 +1,197 @@
 @extends('layouts.user')
 
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 <style>
-    /* CSS tetap sama, tidak diubah dari sebelumnya */
+    :root {
+        --primary-blue: #1d3557;
+        --highlight: #00b4d8;
+        --secondary-slate: #64748b;
+    }
+
+    .judul-section {
+        border-bottom: 3px solid var(--highlight);
+        display: inline-block;
+        padding-bottom: 6px;
+        color: var(--primary-blue);
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* --- PC VIEW (TABLE) --- */
+    .table-container {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        display: block;
+    }
+
+    .table thead th {
+        background-color: #f8fafc;
+        color: var(--primary-blue);
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 15px;
+        border-top: none;
+    }
+
+    /* --- MOBILE VIEW (CARDS) --- */
+    .mobile-card {
+        display: none; 
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--primary-blue);
+        position: relative;
+    }
+
+    /* Badge Status Custom */
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+    .status-dipinjam { background-color: #fee2e2; color: #991b1b; }
+    .status-menunggu { background-color: #fef9c3; color: #854d0e; }
+    .status-selesai { background-color: #dcfce7; color: #166534; }
+
+    /* Filter Styling */
+    .form-select-compact {
+        width: auto;
+        min-width: 140px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+        padding: 0.4rem 0.75rem;
+    }
+
+    /* RESPONSIVE LOGIC */
+    @media (max-width: 768px) {
+        .table-container { display: none; } /* Sembunyikan Tabel di HP */
+        .mobile-card { display: block; }    /* Munculkan Kartu di HP */
+        .filter-wrapper { width: 100%; margin-top: 10px; }
+        .form-select-compact { width: 100%; }
+    }
 </style>
 
-<div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
+<div class="pt-4 pb-5 min-vh-100">
     <div class="container">
 
-        {{-- Tombol Kembali --}}
-        <div class="mb-3">
-            <a href="{{ route('user.dashboard') }}"
-               class="btn btn-outline-secondary btn-icon btn-back shadow-sm"
-               title="Kembali">
-                <i class="fas fa-arrow-left"></i>
+        {{-- Top Bar: Kembali & Filter --}}
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Kembali
             </a>
-        </div>
-
-        {{-- Judul --}}
-        <div class="text-center mb-4 animate__animated animate__fadeInDown">
-            <h2 class="fw-bold text-dark judul-section">
-                <i class="fas fa-history me-2 text-black"></i>Riwayat Peminjaman
-            </h2>
-            <p class="text-muted mt-1">Berisi semua peminjaman yang pernah kamu lakukan</p>
-        </div>
-
-        {{-- Filter & Action --}}
-        <div class="action-wrapper flex-column flex-md-row align-items-start align-items-md-center">
-            {{-- Filter --}}
-            <form method="GET" action="{{ route('user.peminjaman.riwayat') }}" class="d-flex flex-wrap align-items-center gap-2 mb-3 mb-md-0">
-                {{-- Filter Status --}}
-                <div>
-                    <label for="status" class="fw-semibold text-dark mb-0 me-1"><i class="fas fa-filter me-1"></i>Status</label>
-                    <select name="status" id="status" class="form-select form-select-sm w-auto rounded-3 shadow-sm" onchange="this.form.submit()">
-                        <option value="">Semua</option>
-                        <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                        <option value="menunggu konfirmasi" {{ request('status') == 'menunggu konfirmasi' ? 'selected' : '' }}>Menunggu</option>
-                        <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
-                    </select>
-                </div>
-
-                {{-- Filter Waktu --}}
-                <div>
-                    <label for="waktu" class="fw-semibold text-dark mb-0 me-1"><i class="fas fa-clock me-1"></i>Waktu</label>
-                    <select name="waktu" id="waktu" class="form-select form-select-sm w-auto rounded-3 shadow-sm" onchange="this.form.submit()">
-                        <option value="">Semua</option>
+            
+            <div class="filter-wrapper animate__animated animate__fadeIn">
+                <form action="{{ route('user.peminjaman.riwayat') }}" method="GET">
+                    <select name="waktu" class="form-select form-select-compact shadow-sm" onchange="this.form.submit()">
+                        <option value="">Semua Waktu</option>
                         <option value="7" {{ request('waktu') == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
                         <option value="30" {{ request('waktu') == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
+                        <option value="90" {{ request('waktu') == '90' ? 'selected' : '' }}>3 Bulan Terakhir</option>
                     </select>
-                </div>
-            </form>
-
-            {{-- Tombol Aksi --}}
-            <div class="action-right">
-                <button onclick="window.print()" class="btn btn-icon btn-sm btn-outline-dark" title="Print">
-                    <i class="fas fa-print"></i>
-                </button>
-                <a href="{{ route('user.riwayat.export.pdf') }}" class="btn btn-icon btn-sm btn-danger" title="Export PDF">
-                    <i class="fas fa-file-pdf"></i>
-                </a>
-                <a href="{{ route('user.riwayat.export.csv') }}" class="btn btn-icon btn-sm btn-success" title="Export CSV">
-                    <i class="fas fa-file-csv"></i>
-                </a>
-                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-ajukan btn-sm" title="Ajukan Peminjaman">
-                    <i class="fas fa-plus"></i> Peminjaman
-                </a>
+                </form>
             </div>
         </div>
 
-        {{-- Tabel Riwayat --}}
-        <div class="card card-glass border-0 rounded-4 animate__animated animate__fadeInUp" id="print-section">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle text-center mb-0">
-                        <thead style="background-color: #1d3557; color: white;">
-                            <tr>
-                                <th>Nama Barang</th>
-                                <th>Jumlah</th>
-                                <th>Tanggal Pinjam</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($peminjamans as $peminjaman)
-                                <tr>
-                                    <td>{{ $peminjaman->nama_barang }}</td>
-                                    <td>{{ $peminjaman->jumlah }}</td>
-                                    <td>{{ $peminjaman->tanggal_pinjam }}</td>
-                                    <td>
-                                        @if ($peminjaman->status == 'dipinjam')
-                                            <span class="badge bg-danger">Dipinjam</span>
-                                        @elseif ($peminjaman->status == 'menunggu konfirmasi')
-                                            <span class="badge bg-warning text-dark">Menunggu</span>
-                                        @else
-                                            <span class="badge bg-success">Dikembalikan</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
-                                        <i class="fas fa-box-open fa-2x mb-2 text-secondary"></i><br>
-                                        Belum ada riwayat peminjaman.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+        <div class="mb-4 animate__animated animate__fadeIn">
+            <h2 class="judul-section">Riwayat Peminjaman</h2>
+            <p class="text-muted small mt-2">Daftar transaksi peminjaman barang Anda.</p>
+        </div>
+
+        {{-- TAMPILAN PC (TABEL) --}}
+        <div class="table-container animate__animated animate__fadeInUp">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th class="text-center">Jumlah</th>
+                        <th>Tanggal Pinjam</th>
+                        <th class="text-center">Status</th>
+                        <th width="100">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($peminjamans as $peminjaman)
+                        <tr>
+                            <td class="fw-bold text-dark">{{ $peminjaman->nama_barang }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border px-3">{{ $peminjaman->jumlah }} Unit</span>
+                            </td>
+                            <td>
+                                <span class="text-secondary small">
+                                    <i class="far fa-calendar-alt me-1"></i>
+                                    {{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->translatedFormat('d M Y') }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @if ($peminjaman->status == 'dipinjam')
+                                    <span class="badge-status status-dipinjam">Dipinjam</span>
+                                @elseif ($peminjaman->status == 'menunggu konfirmasi')
+                                    <span class="badge-status status-menunggu">Menunggu</span>
+                                @else
+                                    <span class="badge-status status-selesai">Selesai</span>
+                                @endif
+                            </td>
+                            <td>
+                                <a href="{{ route('user.peminjaman.detail', $peminjaman->id) }}" class="btn btn-sm btn-light border rounded-pill px-3">Detail</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="text-center py-5 text-muted">Belum ada data riwayat.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- TAMPILAN HP (KARTU) --}}
+        <div class="animate__animated animate__fadeInUp">
+            @foreach ($peminjamans as $peminjaman)
+                <div class="mobile-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 1.1rem;">{{ $peminjaman->nama_barang }}</div>
+                            <div class="text-muted small">
+                                {{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->translatedFormat('d M Y') }}
+                            </div>
+                        </div>
+                        @if ($peminjaman->status == 'dipinjam')
+                            <span class="badge-status status-dipinjam">Dipinjam</span>
+                        @elseif ($peminjaman->status == 'menunggu konfirmasi')
+                            <span class="badge-status status-menunggu">Menunggu</span>
+                        @else
+                            <span class="badge-status status-selesai">Selesai</span>
+                        @endif
+                    </div>
+                    
+                    <div class="row g-2 mt-2 pt-2 border-top">
+                        <div class="col-6">
+                            <small class="text-muted d-block text-uppercase" style="font-size: 0.65rem;">Jumlah:</small>
+                            <span class="fw-bold text-dark">{{ $peminjaman->jumlah }} Unit</span>
+                        </div>
+                        <div class="col-6 text-end">
+                            <a href="{{ route('user.peminjaman.detail', $peminjaman->id) }}" class="btn btn-sm btn-primary rounded-pill px-3 mt-1">
+                                Detail <i class="fas fa-chevron-right ms-1 small"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            @endforeach
+            
+            @if($peminjamans->isEmpty())
+                <div class="mobile-card text-center py-4 text-muted d-md-none">
+                    Data riwayat tidak ditemukan.
+                </div>
+            @endif
         </div>
 
     </div>

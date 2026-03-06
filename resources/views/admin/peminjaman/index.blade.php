@@ -19,11 +19,20 @@
     .btn-primary { background-color: #3b82f6; border: none; padding: 0.5rem 1.2rem; }
     .btn-danger { background-color: #ef4444; border: none; }
 
+    /* CSS Khusus Print agar Tabel Rapi */
     @media print {
         body * { visibility: hidden !important; }
         #print-section, #print-section * { visibility: visible !important; }
-        #print-section { position: absolute; left: 0; top: 0; width: 100%; }
+        #print-section { 
+            position: absolute; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            border: none !important;
+            box-shadow: none !important;
+        }
         .no-print { display: none !important; }
+        .badge { border: 1px solid #000 !important; color: #000 !important; }
     }
 </style>
 
@@ -35,6 +44,10 @@
             <div class="page-title">Daftar Peminjaman</div>
             <p class="text-muted small mb-0">Monitor status peminjaman dan verifikasi pengembalian barang</p>
         </div>
+        {{-- Tombol Cetak jika diperlukan --}}
+        <button onclick="window.print()" class="btn btn-outline-secondary btn-sm rounded-pill px-3 no-print">
+            <i class="fas fa-print me-1"></i> Cetak Tabel
+        </button>
     </div>
 
     @if(session('success'))
@@ -85,7 +98,7 @@
                         <td>
                             @if ($peminjaman->bukti_pengembalian)
                                 <a href="{{ asset('storage/' . $peminjaman->bukti_pengembalian) }}" target="_blank">
-                                    <img src="{{ asset('storage/' . $peminjaman->bukti_pengembalian) }}" width="40" class="rounded shadow-sm">
+                                    <img src="{{ asset('storage/' . $peminjaman->bukti_pengembalian) }}" width="40" height="40" class="rounded shadow-sm" style="object-fit: cover;">
                                 </a>
                             @else
                                 <span class="text-muted small">Tidak ada</span>
@@ -120,16 +133,16 @@
 </div>
 
 {{-- Modal Konfirmasi --}}
-<div class="modal fade" id="confirmModal" tabindex="-1">
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4">
       <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title">Konfirmasi Pengembalian</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title fw-bold">Konfirmasi Pengembalian</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">Apakah Anda yakin barang ini sudah dikembalikan dengan benar?</div>
+      <div class="modal-body text-muted">Apakah Anda yakin barang ini sudah dikembalikan dengan benar? Status akan berubah menjadi "Dikembalikan".</div>
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
         <form id="confirmForm" method="POST">
           @csrf @method('PATCH')
           <button type="submit" class="btn btn-primary rounded-pill px-4">Ya, Konfirmasi</button>
@@ -139,12 +152,18 @@
   </div>
 </div>
 
-@push('scripts')
+{{-- JavaScript diletakkan di sini agar langsung jalan --}}
 <script>
     function showConfirmModal(route) {
-        document.getElementById('confirmForm').action = route;
-        new bootstrap.Modal(document.getElementById('confirmModal')).show();
+        // 1. Set action form ke route yang dikirim dari tombol
+        const form = document.getElementById('confirmForm');
+        form.action = route;
+
+        // 2. Inisialisasi dan tampilkan modal secara manual
+        const modalElement = document.getElementById('confirmModal');
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
     }
 </script>
-@endpush
+
 @endsection

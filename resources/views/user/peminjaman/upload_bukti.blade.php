@@ -1,105 +1,144 @@
 @extends('layouts.user')
 
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 <style>
-    .custom-file-label {
-        border: 2px dashed #ccc;
-        padding: 0.8rem;
+    :root {
+        --primary-blue: #1d3557;
+        --highlight: #00b4d8;
+    }
+
+    .judul-section {
+        border-bottom: 3px solid var(--highlight);
+        display: inline-block;
+        padding-bottom: 6px;
+        color: var(--primary-blue);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Custom Upload Box */
+    .upload-area {
+        border: 2px dashed #cbd5e1;
+        background: #f8fafc;
+        border-radius: 15px;
+        padding: 30px;
         text-align: center;
-        border-radius: 10px;
-        cursor: pointer;
         transition: all 0.3s ease;
-        background-color: #f8f9fa;
-        font-size: 0.9rem;
+        cursor: pointer;
+        position: relative;
     }
 
-    .custom-file-label:hover {
-        background-color: #e0e0e0;
+    .upload-area:hover {
+        border-color: var(--primary-blue);
+        background: #f1f5f9;
     }
 
-    .custom-file-label i {
-        font-size: 1.5rem;
-        color: #1d3557;
-        margin-bottom: 0.3rem;
+    .upload-area i {
+        font-size: 2.5rem;
+        color: #94a3b8;
+        margin-bottom: 10px;
     }
 
     .preview-image {
         display: none;
-        margin-top: 1rem;
-        max-width: 100%;
+        width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border-radius: 12px;
+        margin-top: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-control {
         border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 12px;
+        border: 1px solid #e2e8f0;
     }
 
     @media (max-width: 576px) {
-        .custom-file-label {
-            font-size: 0.85rem;
-            padding: 0.7rem;
-        }
-
-        .custom-file-label i {
-            font-size: 1.3rem;
-        }
+        .btn-action { width: 100%; }
+        .judul-section { font-size: 1.1rem; }
     }
 </style>
 
-<div class="container pt-3 pb-5 d-flex flex-column justify-content-start align-items-center" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff); min-height: 85vh;">
-    <div class="card shadow border-0 rounded-4 p-4 w-100" style="max-width: 500px;">
-        <h4 class="text-center mb-3 fw-bold text-dark">
-            <i class="fas fa-upload me-2"></i>Upload Bukti Pengembalian
-        </h4>
+<div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%);">
+    <div class="container d-flex flex-column align-items-center">
 
-        {{-- Alert jika ada error --}}
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+        {{-- Judul Tanpa Icon --}}
+        <div class="text-center mb-4 animate__animated animate__fadeIn">
+            <h2 class="judul-section">Bukti Pengembalian</h2>
+            <p class="text-muted small mt-2">Upload foto barang sebagai bukti sudah dikembalikan.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 w-100 animate__animated animate__fadeInUp" style="max-width: 550px;">
+            <div class="card-body p-4 p-md-5">
+                
+                @if ($errors->any())
+                    <div class="alert alert-danger border-0 rounded-3 mb-4">
+                        <ul class="mb-0 small">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('user.peminjaman.uploadBukti', $peminjaman->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="mb-4 text-center">
+                        <span class="badge bg-light text-primary border px-3 py-2 rounded-pill mb-3">
+                            Barang: {{ $peminjaman->nama_barang }}
+                        </span>
+                    </div>
+
+                    {{-- Upload Box --}}
+                    <div class="mb-4">
+                        <label for="bukti_pengembalian" class="upload-area d-block" id="drop-area">
+                            <div id="upload-placeholder">
+                                <i class="fas fa-camera"></i>
+                                <p class="mb-0 fw-bold text-dark">Klik untuk Ambil Foto</p>
+                                <small class="text-muted">Gunakan kamera HP atau pilih file</small>
+                            </div>
+                            
+                            <img id="preview" class="preview-image" alt="Preview">
+                            
+                            <input 
+                                type="file" 
+                                name="bukti_pengembalian" 
+                                id="bukti_pengembalian" 
+                                class="d-none" 
+                                accept="image/*" 
+                                capture="environment" 
+                                required 
+                                onchange="previewFile(this)"
+                            >
+                        </label>
+                    </div>
+
+                    {{-- Keterangan --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase" style="color: var(--primary-blue);">Keterangan</label>
+                        <textarea name="keterangan" class="form-control" rows="3" placeholder="Contoh: Barang sudah diletakkan di lemari alat..." required></textarea>
+                    </div>
+
+                    {{-- Tombol Aksi --}}
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3 pt-3">
+                        <a href="{{ route('user.peminjaman.index') }}" class="btn btn-light rounded-pill px-4 text-muted btn-action">
+                            Batal
+                        </a>
+                        <button type="submit" class="btn text-white rounded-pill px-5 shadow btn-action" style="background-color: var(--primary-blue);">
+                            Kirim Bukti <i class="fas fa-check-circle ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+
             </div>
-        @endif
+        </div>
 
-        {{-- Form upload --}}
-        <form action="{{ route('user.peminjaman.uploadBukti', $peminjaman->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            {{-- Upload gambar --}}
-            <div class="mb-3">
-                <label for="bukti_pengembalian" class="custom-file-label d-block">
-                    <i class="fas fa-camera mb-1"></i><br>
-                    <span id="file-label-text">Klik untuk ambil/pilih gambar</span>
-                    <input 
-                        type="file" 
-                        name="bukti_pengembalian" 
-                        id="bukti_pengembalian" 
-                        class="d-none" 
-                        accept="image/*" 
-                        capture="environment" 
-                        required 
-                        onchange="previewFile(this)"
-                    >
-                </label>
-                <small class="text-muted d-block mt-1">Format: jpg/jpeg/png | Maks: 2MB</small>
-                <img id="preview" class="preview-image mt-2" alt="Preview Gambar">
-            </div>
-
-            {{-- Keterangan --}}
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Keterangan Pengembalian</label>
-                <textarea name="keterangan" class="form-control" rows="3" placeholder="Contoh: Sudah dikembalikan ke meja admin..." required></textarea>
-            </div>
-
-            {{-- Tombol --}}
-            <div class="d-flex justify-content-between mt-4">
-                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Kembali
-                </a>
-                <button type="submit" class="btn text-white" style="background-color: #1d3557;">
-                    <i class="fas fa-paper-plane me-1"></i> Upload
-                </button>
-            </div>
-        </form>
     </div>
 </div>
 
@@ -107,16 +146,19 @@
     function previewFile(input) {
         const file = input.files[0];
         const preview = document.getElementById('preview');
-        const label = document.getElementById('file-label-text');
+        const placeholder = document.getElementById('upload-placeholder');
+        const dropArea = document.getElementById('drop-area');
 
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
+                placeholder.style.display = 'none';
+                dropArea.style.borderStyle = 'solid';
+                dropArea.style.borderColor = '#1d3557';
             };
             reader.readAsDataURL(file);
-            label.innerText = file.name;
         }
     }
 </script>

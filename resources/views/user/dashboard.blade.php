@@ -1,211 +1,324 @@
 @extends('layouts.user')
 
 @section('content')
-<style>
-    body {
-        background: linear-gradient(to bottom right, #e3f2fd, #ffffff);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-    .dashboard-header {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        position: relative;
-    }
-
-    .dashboard-header h1 {
-        font-weight: 700;
-        font-size: 1.8rem;
-        color: #1d3557;
-    }
-
-    .dashboard-header p {
-        color: #555;
-        font-size: 0.95rem;
-        margin-top: -4px;
-    }
-
-    .datetime-text {
-        font-size: 0.9rem;
-        color: #777;
-        margin-top: 0.25rem;
-    }
-
-    .notification-wrapper {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 10px 15px;
-    }
-
-    .dropdown-menu {
-        font-size: 0.85rem;
-        min-width: 270px;
-    }
-
-    .card-feature {
-        border: none;
-        border-radius: 16px;
-        padding: 1.2rem;
-        height: 100%;
-        text-align: center;
-        background: linear-gradient(to top right, #ffffff, #f1f9ff);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-        transition: 0.3s;
-    }
-
-    .card-feature:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    }
-
-    .card-feature i {
-        font-size: 2rem;
-        margin-bottom: 10px;
-    }
-
-    .card-feature h5 {
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-
-    .btn-feature {
-        font-size: 0.8rem;
-        padding: 6px 14px;
-        margin-top: 8px;
-    }
-
-    .announcement-card {
-        background: #e8f5e9;
-        border-left: 6px solid #4caf50;
-        padding: 1rem;
-        border-radius: 12px;
-        color: #2e7d32;
-        margin-top: 1rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-    }
-
-    .announcement-card h6 {
-        margin-bottom: 0.25rem;
-        font-weight: 600;
-    }
-
-    .tips-card {
-        background-color: #fff8e1;
-        border-left: 4px solid #ffc107;
-        padding: 1rem;
-        border-radius: 12px;
-        font-size: 0.9rem;
-        color: #6d4c41;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-    }
-
-    @media (max-width: 768px) {
-        .dashboard-header h1 {
-            font-size: 1.5rem;
+    <style>
+        :root {
+            /* Warna Utama K2NET */
+            --primary: #1d3557;
+            --highlight: #00b4d8;
+            --secondary: #64748b;
+            --bg-main: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(29, 53, 87, 0.08), 0 8px 10px -6px rgba(29, 53, 87, 0.05);
         }
 
-        .card-feature {
-            margin-bottom: 1rem;
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Poppins', sans-serif;
         }
 
-        .notification-wrapper {
-            margin-top: -10px;
-            margin-right: 5px;
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
-    }
-</style>
 
-@php
-    use Carbon\Carbon;
-    Carbon::setLocale('id');
-    $hour = Carbon::now()->hour;
-    $greeting = $hour >= 4 && $hour < 10 ? 'Selamat Pagi' : ($hour < 15 ? 'Selamat Siang' : ($hour < 18 ? 'Selamat Sore' : 'Selamat Malam'));
+        .welcome-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem;
+            border: none;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            border-left: 6px solid var(--highlight); /* Aksen Biru Cyan */
+        }
 
-    $notifPeminjaman = \App\Models\Peminjaman::where('nama_peminjam', auth()->user()->name)
-                        ->whereIn('status', ['dipinjam', 'menunggu konfirmasi'])
-                        ->get();
-@endphp
+        .welcome-text h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
 
-<div class="container min-vh-100 py-3">
+        .welcome-text p {
+            color: var(--secondary);
+            margin-bottom: 0;
+        }
 
-    {{-- Header --}}
-    <div class="dashboard-header animate__animated animate__fadeInDown">
+        .text-cyan {
+            color: var(--highlight) !important;
+        }
 
-        {{-- Notifikasi --}}
-        <div class="notification-wrapper dropdown">
-            <button class="btn btn-light position-relative shadow-sm" data-bs-toggle="dropdown">
-                <i class="fas fa-bell text-dark"></i>
-                @if ($notifPeminjaman->count() > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $notifPeminjaman->count() }}
-                    </span>
-                @endif
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm p-2">
-                <li class="dropdown-header fw-bold text-dark mb-1">Notifikasi</li>
-                @forelse ($notifPeminjaman->take(5) as $notif)
+        .btn-notif {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+            color: var(--primary);
+        }
+
+        .btn-notif:hover {
+            background: var(--highlight);
+            color: white;
+            border-color: var(--highlight);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.75rem;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: var(--card-shadow);
+            text-decoration: none !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 180, 216, 0.2);
+            border-color: var(--highlight);
+        }
+
+        .menu-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Versi Biru Semua */
+        .icon-blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        .icon-cyan {
+            background: #e0f7fa;
+            color: #00b4d8;
+        }
+        .icon-navy {
+            background: #e0e7ff;
+            color: #1d3557;
+        }
+
+        .menu-card h5 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-card p {
+            font-size: 0.875rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .info-banner {
+            background: var(--primary);
+            color: white;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-right: 5px solid var(--highlight);
+        }
+
+        .btn-action-text {
+            margin-top: auto;
+            font-weight: 700;
+            font-size: 0.875rem;
+            padding-top: 1rem;
+            display: flex;
+            align-items: center;
+            transition: gap 0.3s;
+        }
+
+        .menu-card:hover .btn-action-text {
+            gap: 10px;
+        }
+
+        @media (max-width: 992px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .welcome-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem 1.5rem;
+                border-left: none;
+                border-top: 6px solid var(--highlight);
+            }
+            .notif-wrapper {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            .welcome-text h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+
+    @php
+        use Carbon\Carbon;
+        Carbon::setLocale('id');
+        $hour = Carbon::now()->hour;
+        $greeting = $hour >= 4 && $hour < 10 ? 'Selamat Pagi' : ($hour < 15 ? 'Selamat Siang' : ($hour < 18 ? 'Selamat Sore' : 'Selamat Malam'));
+
+        $notifPeminjaman = \App\Models\Peminjaman::where('nama_peminjam', auth()->user()->name)
+            ->whereIn('status', ['dipinjam', 'menunggu konfirmasi'])
+            ->latest()
+            ->get();
+    @endphp
+
+    <div class="dashboard-container">
+        {{-- Header --}}
+        <div class="welcome-card animate__animated animate__fadeIn">
+            <div class="welcome-text">
+                <div class="text-cyan fw-bold small mb-1">
+                    <i class="far fa-clock me-1"></i>
+                    {{ Carbon::now()->translatedFormat('l, d F Y') }}
+                </div>
+                <h1>{{ $greeting }}, {{ Auth::user()->name }}</h1>
+                <p>Akses inventaris kantor K2NET dengan mudah dan cepat.</p>
+            </div>
+
+            <div class="notif-wrapper dropdown">
+                <button class="btn btn-notif shadow-sm" data-bs-toggle="dropdown" data-bs-display="static">
+                    <i class="fas fa-bell"></i>
+                    @if ($notifPeminjaman->count() > 0)
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                    @endif
+                </button>
+                <ul
+                    class="dropdown-menu dropdown-menu-end shadow-lg p-2 animate__animated animate__fadeIn border-0"
+                    style="border-radius: 15px; width: 300px">
+                    <li class="px-3 py-2 fw-bold small text-navy">Status Peminjaman</li>
+                    <li><hr class="dropdown-divider" /></li>
+                    @forelse ($notifPeminjaman->take(4) as $notif)
+                        <li>
+                            <a class="dropdown-item rounded-3 p-2 mb-1" href="{{ route('user.peminjaman.index') }}">
+                                <div class="d-flex align-items-center">
+                                    <div
+                                        class="menu-icon icon-cyan mb-0 me-3"
+                                        style="width: 35px; height: 35px; font-size: 0.8rem; flex-shrink: 0">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold small text-dark">
+                                            {{ Str::limit($notif->nama_barang, 20) }}
+                                        </div>
+                                        <small class="text-muted" style="font-size: 0.7rem">
+                                            Status:
+                                            <span class="text-info">{{ ucfirst($notif->status) }}</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    @empty
+                        <li class="text-center py-3 text-muted small">Tidak ada peminjaman aktif</li>
+                    @endforelse
+                    <li><hr class="dropdown-divider" /></li>
                     <li>
-                        <a class="dropdown-item d-flex justify-content-between align-items-center small text-dark" href="{{ route('user.peminjaman.index') }}">
-                            <span>
-                                <i class="fas fa-box me-1 text-primary"></i>{{ $notif->nama_barang }}
-                                <span class="text-muted">({{ $notif->jumlah }}x)</span>
-                            </span>
-                            <span class="badge {{ $notif->status == 'dipinjam' ? 'bg-danger' : 'bg-warning text-dark' }}">
-                                {{ ucfirst($notif->status) }}
-                            </span>
+                        <a
+                            class="dropdown-item text-center small text-info fw-bold"
+                            href="{{ route('user.peminjaman.index') }}">
+                            Lihat Semua
                         </a>
                     </li>
-                @empty
-                    <li class="text-center small text-muted p-2">Tidak ada notifikasi</li>
-                @endforelse
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-center small" href="{{ route('user.peminjaman.index') }}">Lihat semua</a></li>
-            </ul>
-        </div>
-
-        <h1>👋 {{ $greeting }}, {{ Auth::user()->name }}</h1>
-        <p>Selamat datang di sistem peminjaman barang!</p>
-        <div class="datetime-text">
-            {{ Carbon::now()->translatedFormat('l, d F Y — H:i') }} WIB
-        </div>
-
-    {{-- Fitur --}}
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-4 animate__animated animate__fadeInUp">
-        <div class="col">
-            <div class="card-feature">
-                <i class="fas fa-box text-primary"></i>
-                <h5 class="text-primary">Barang</h5>
-                <p>Lihat semua barang yang tersedia untuk dipinjam.</p>
-                <a href="{{ route('user.barang.index') }}" class="btn btn-outline-primary btn-feature">Lihat Barang</a>
+                </ul>
             </div>
         </div>
-        <div class="col">
-            <div class="card-feature">
-                <i class="fas fa-history text-success"></i>
-                <h5 class="text-success">Riwayat</h5>
-                <p>Riwayat semua barang yang pernah kamu pinjam.</p>
-                <a href="{{ route('user.peminjaman.riwayat') }}" class="btn btn-outline-success btn-feature">Lihat Riwayat</a>
-            </div>
+
+        {{-- Menu --}}
+        <div class="menu-grid animate__animated animate__fadeInUp">
+            <a href="{{ route('user.barang.index') }}" class="menu-card">
+                <div class="menu-icon icon-blue">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h5>Katalog Barang</h5>
+                <p>Cari barang inventaris kantor dan lakukan peminjaman secara instan.</p>
+                <div class="btn-action-text text-primary">
+                    Buka Katalog
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </div>
+            </a>
+
+            <a href="{{ route('user.peminjaman.riwayat') }}" class="menu-card">
+                <div class="menu-icon icon-cyan">
+                    <i class="fas fa-history"></i>
+                </div>
+                <h5>Riwayat Pinjam</h5>
+                <p>Pantau status pengajuan dan riwayat barang yang pernah kamu pinjam.</p>
+                <div class="btn-action-text text-info">
+                    Cek Riwayat
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </div>
+            </a>
+
+            <a href="{{ route('user.favorit.index') }}" class="menu-card">
+                <div class="menu-icon icon-navy">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h5>Barang Favorit</h5>
+                <p>Akses cepat untuk barang-barang yang sering kamu gunakan sehari-hari.</p>
+                <div class="btn-action-text text-navy">
+                    Lihat Favorit
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </div>
+            </a>
         </div>
-        <div class="col">
-            <div class="card-feature">
-                <i class="fas fa-star text-warning"></i>
-                <h5 class="text-warning">Favorit</h5>
-                <p>Barang favorit yang kamu tandai.</p>
-                <a href="{{ route('user.favorit.index') }}" class="btn btn-outline-warning btn-feature">Lihat Favorit</a>
+
+        {{-- Info --}}
+        <div class="info-banner animate__animated animate__fadeInUp" style="background: var(--primary); color: white">
+            <div
+                class="menu-icon mb-0"
+                style="
+                    width: 45px;
+                    height: 45px;
+                    background: rgba(255, 255, 255, 0.1);
+                    color: var(--highlight);
+                    border: 1px solid rgba(0, 180, 216, 0.3);
+                ">
+                <i class="fas fa-bullhorn"></i>
+            </div>
+            <div class="small">
+                <strong class="d-block mb-1" style="color: var(--highlight)">Pemberitahuan Sistem</strong>
+                Pastikan untuk melakukan konfirmasi pengembalian barang tepat waktu agar stok tetap akurat.
             </div>
         </div>
     </div>
-
-    {{-- Tips --}}
-    <div class="row justify-content-center animate__animated animate__fadeInUp">
-        <div class="col-md-10 col-lg-8">
-            <div class="tips-card">
-                <i class="fas fa-lightbulb me-2 text-warning"></i>
-                <strong>Tips Hari Ini:</strong> Jangan lupa kembalikan barang tepat waktu ya! Cek di menu <strong>Peminjaman Barang</strong>.
-            </div>
-        </div>
-    </div>
-</div>
 @endsection

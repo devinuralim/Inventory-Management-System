@@ -1,126 +1,191 @@
 @extends('layouts.user')
 
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 <style>
+    :root {
+        --primary-blue: #1d3557;
+        --highlight: #00b4d8;
+        --secondary-slate: #64748b;
+    }
+
     .judul-section {
-        border-bottom: 3px solid #1d3557;
+        border-bottom: 3px solid var(--highlight);
         display: inline-block;
         padding-bottom: 6px;
+        color: var(--primary-blue);
+        font-weight: 700;
+        text-transform: uppercase;
     }
 
-    .favorit-card {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(6px);
+    /* --- PC VIEW (TABLE) --- */
+    .table-container {
+        background: #ffffff;
         border-radius: 16px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        transition: 0.3s;
+        padding: 20px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        display: block;
     }
 
-    .favorit-card:hover {
-        transform: scale(1.01);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-
-    .favorit-title {
+    .table thead th {
+        background-color: #f8fafc;
+        color: var(--primary-blue);
         font-weight: 600;
-        font-size: 1rem;
-        color: #1d3557;
-        margin-bottom: 0.5rem;
-    }
-
-    .favorit-info {
         font-size: 0.85rem;
-        color: #555;
+        padding: 15px;
+        border-top: none;
     }
 
-    .favorit-actions {
-        text-align: right;
-        margin-top: 0.5rem;
+    /* --- MOBILE VIEW (CARDS) --- */
+    .mobile-card {
+        display: none; 
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--highlight); /* Warna Kuning untuk membedakan dengan daftar umum */
+        position: relative;
     }
 
-    .favorit-actions button {
-        font-size: 0.75rem;
-        padding: 4px 8px;
+    /* Badge Stok */
+    .badge-stok {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
     }
+    .stok-aman { background-color: #dcfce7; color: #166534; }
+    .stok-tipis { background-color: #fef9c3; color: #854d0e; }
+    .stok-habis { background-color: #fee2e2; color: #991b1b; }
 
-    .btn-back {
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        font-size: 0.9rem;
-        line-height: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+    /* Button Star */
+    .btn-fav-active {
+        border: none;
+        background: none;
+        color: var(--highlight);
+        font-size: 1.2rem;
+        transition: transform 0.2s;
     }
+    .btn-fav-active:hover { transform: scale(1.2); }
 
-    @media (min-width: 768px) {
-        .favorit-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .btn-back {
-            width: 28px;
-            height: 28px;
-            font-size: 0.85rem;
-        }
+    /* RESPONSIVE LOGIC */
+    @media (max-width: 768px) {
+        .table-container { display: none; }
+        .mobile-card { display: block; }
     }
 </style>
 
-<div class="pt-4 pb-5 min-vh-100" style="background: linear-gradient(to bottom right, #e0f2f1, #ffffff);">
+<div class="pt-4 pb-5 min-vh-100">
     <div class="container">
 
-        {{-- Tombol Back --}}
-        <div class="mb-3">
-            <a href="{{ route('user.dashboard') }}" class="btn btn-outline-secondary btn-back shadow-sm" title="Kembali">
-                <i class="fas fa-arrow-left"></i>
+        {{-- Tombol Kembali --}}
+        <div class="mb-4">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-outline-secondary px-3 rounded-pill shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Kembali
             </a>
         </div>
 
-        {{-- Judul --}}
-        <div class="text-center mb-4 animate__animated animate__fadeInDown">
-            <h2 class="fw-bold text-dark judul-section">
-                <i class="fas fa-star me-2 text-warning"></i>Barang Favorit
-            </h2>
-            <p class="text-muted mt-2">Barang yang kamu tandai sebagai favorit tampil di sini.</p>
+        <div class="mb-4 animate__animated animate__fadeIn">
+            <h2 class="judul-section">Barang Favorit</h2>
+            <p class="text-muted small mt-2">Daftar perlengkapan yang sering Anda gunakan.</p>
         </div>
 
-        {{-- Alert --}}
+        {{-- Alert Success --}}
         @if(session('success'))
-            <div class="alert alert-success text-center w-75 mx-auto animate__animated animate__fadeIn">
-                {{ session('success') }}
+            <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4 animate__animated animate__flipInX" role="alert">
+                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
-        {{-- Grid List --}}
-        <div class="favorit-grid animate__animated animate__fadeInUp">
-            @forelse($favoritBarangs as $barang)
-                <div class="favorit-card">
-                    <div class="favorit-title">{{ $barang->nama_barang }}</div>
-                    <div class="favorit-info">Jenis: {{ $barang->jenis_barang }}</div>
-                    <div class="favorit-info">Stok: {{ $barang->stok }}</div>
-                    <div class="favorit-info">Seri: {{ $barang->seri }}</div>
-                    <div class="favorit-info">Keterangan: {{ $barang->keterangan }}</div>
-                    <div class="favorit-actions">
+        {{-- TAMPILAN PC (TABEL) --}}
+        <div class="table-container animate__animated animate__fadeInUp">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th width="60" class="text-center">Hapus</th>
+                        <th>Nama Barang</th>
+                        <th>Jenis</th>
+                        <th>Nomor Seri</th>
+                        <th class="text-center">Stok</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($favoritBarangs as $barang)
+                        <tr>
+                            <td class="text-center">
+                                <form action="{{ route('user.favorit.toggle', $barang->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn-fav-active" title="Hapus dari Favorit">
+                                        <i class="fas fa-star"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="fw-bold text-dark">{{ $barang->nama_barang }}</td>
+                            <td><span class="badge bg-light text-secondary border">{{ $barang->jenis_barang }}</span></td>
+                            <td><code class="text-primary">{{ $barang->seri ?? '-' }}</code></td>
+                            <td class="text-center">
+                                <span class="badge-stok {{ $barang->stok > 5 ? 'stok-aman' : ($barang->stok > 0 ? 'stok-tipis' : 'stok-habis') }}">
+                                    {{ $barang->stok }} Unit
+                                </span>
+                            </td>
+                            <td class="small text-muted">{{ $barang->keterangan ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6" class="text-center py-5 text-muted">Belum ada barang favorit.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- TAMPILAN HP (KARTU) --}}
+        <div class="animate__animated animate__fadeInUp">
+            @foreach ($favoritBarangs as $barang)
+                <div class="mobile-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 1.1rem;">{{ $barang->nama_barang }}</div>
+                            <div class="text-muted small mb-2">{{ $barang->jenis_barang }}</div>
+                        </div>
                         <form action="{{ route('user.favorit.toggle', $barang->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-sm btn-warning">&#9733; Hapus</button>
+                            <button type="submit" class="btn-fav-active">
+                                <i class="fas fa-star"></i>
+                            </button>
                         </form>
                     </div>
+                    
+                    <div class="row g-2 mt-1">
+                        <div class="col-6">
+                            <small class="text-muted d-block small text-uppercase" style="font-size: 0.65rem;">No. Seri:</small>
+                            <code class="text-primary">{{ $barang->seri ?? '-' }}</code>
+                        </div>
+                        <div class="col-6 text-end">
+                            <small class="text-muted d-block small text-uppercase" style="font-size: 0.65rem;">Stok:</small>
+                            <span class="fw-bold {{ $barang->stok <= 0 ? 'text-danger' : 'text-success' }}">
+                                {{ $barang->stok }} Unit
+                            </span>
+                        </div>
+                    </div>
+
+                    @if($barang->keterangan)
+                        <div class="mt-2 pt-2 border-top small text-muted">
+                            <i class="fas fa-info-circle me-1"></i> {{ $barang->keterangan }}
+                        </div>
+                    @endif
                 </div>
-            @empty
-                <div class="text-center text-muted py-4 w-100">
-                    <i class="fas fa-star fa-2x mb-2 text-secondary"></i><br>
-                    Belum ada barang yang kamu tandai sebagai favorit.
+            @endforeach
+            
+            @if($favoritBarangs->isEmpty())
+                <div class="text-center py-5 d-md-none animate__animated animate__fadeIn">
+                    <i class="far fa-star fa-3x mb-3 text-light"></i>
+                    <p class="text-muted">Belum ada barang favorit.</p>
                 </div>
-            @endforelse
+            @endif
         </div>
 
     </div>

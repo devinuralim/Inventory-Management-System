@@ -90,7 +90,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
     // Riwayat Peminjaman
     Route::get('/riwayat', [UserPeminjamanController::class, 'riwayat'])->name('peminjaman.riwayat');
-    
+    Route::get('/riwayat/export-pdf', [PeminjamanController::class, 'exportPdf'])->name('riwayat.export.pdf');
+    Route::get('/riwayat/export-csv', [PeminjamanController::class, 'exportCSV'])->name('riwayat.export.csv');
 
     // Favorit Barang (Wishlist)
     Route::get('/favorit', [FavoritBarangController::class, 'index'])->name('favorit.index');

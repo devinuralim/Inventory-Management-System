@@ -3,17 +3,26 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Aplikasi Inventory</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+        <title>K2NET | Login Inventory</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
         <style>
+            :root {
+                --primary-navy: #1d3557;
+                /* GANTI DISINI: Dari Orange ke Biru Aksen Logo */
+                --highlight-blue: #00b4d8; 
+                --highlight-hover: #0096c7;
+                --text-slate: #cbd5e1;
+            }
+
             * {
                 box-sizing: border-box;
             }
+
             body {
-                font-family: 'Inter', sans-serif;
-                background: linear-gradient(to right, #e0f2fe, #fff);
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -21,137 +30,161 @@
                 margin: 0;
                 padding: 20px;
             }
+
             .container {
-                background-color: #1e293b;
-                border-radius: 16px;
-                padding: 40px 30px;
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+                background-color: var(--primary-navy);
+                border-radius: 20px;
+                padding: 45px 35px;
+                box-shadow: 0 20px 40px rgba(29, 53, 87, 0.25);
                 width: 100%;
-                max-width: 420px;
+                max-width: 400px;
                 text-align: center;
-                animation: slide-in 0.6s ease-out;
+                position: relative;
+                overflow: hidden;
+                animation: slide-in 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
+
+            /* Aksen garis biru di atas card */
+            .container::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                background: var(--highlight-blue);
+            }
+
             @keyframes slide-in {
-                from {
-                    transform: translateY(30px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
+                from { transform: translateY(40px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
             }
+
             .logo {
-                width: 80px;
-                margin: 0 auto 18px;
+                width: 90px;
+                margin: 0 auto 20px;
+                filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
             }
+
             .logo img {
                 width: 100%;
             }
+
             h1 {
-                font-size: 22px;
-                margin-bottom: 10px;
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 8px;
                 color: #ffffff;
+                letter-spacing: 0.5px;
             }
+
             p.subtitle {
-                font-size: 14px;
-                color: #cbd5e1;
-                margin-bottom: 20px;
+                font-size: 13px;
+                color: var(--text-slate);
+                margin-bottom: 30px;
             }
+
             form {
                 text-align: left;
             }
+
             .form-group {
                 position: relative;
-                margin-bottom: 18px;
+                margin-bottom: 22px;
             }
+
             .form-group input {
                 width: 100%;
-                padding: 13px 14px;
-                border-radius: 10px;
-                border: 1px solid #94a3b8;
+                padding: 14px 16px;
+                border-radius: 12px;
+                border: 1px solid rgba(203, 213, 225, 0.2);
                 font-size: 14px;
-                background-color: #ffffff;
-                transition: border-color 0.2s;
-                color: #1e293b;
+                background-color: rgba(255, 255, 255, 0.05);
+                transition: all 0.3s ease;
+                color: #ffffff;
             }
+
+            /* Saat input fokus */
             .form-group input:focus {
-                border-color: #38bdf8;
+                border-color: var(--highlight-blue);
+                background-color: rgba(255, 255, 255, 0.1);
                 outline: none;
+                box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.15);
             }
+
             .form-group label {
                 position: absolute;
                 top: 14px;
                 left: 16px;
-                color: #64748b;
-                background-color: transparent;
-                padding: 0 6px;
+                color: #94a3b8;
+                padding: 0 5px;
                 font-size: 14px;
-                transition: 0.2s;
+                transition: 0.3s;
                 pointer-events: none;
             }
+
             .form-group input:focus + label,
             .form-group input:not(:placeholder-shown) + label {
-                top: -9px;
+                top: -10px;
                 left: 12px;
                 font-size: 11px;
-                color: #38bdf8;
-                background-color: #1e293b;
+                color: var(--highlight-blue);
+                background-color: var(--primary-navy);
+                font-weight: 600;
             }
+
             .toggle-password {
                 position: absolute;
-                right: 14px;
-                top: 14px;
+                right: 16px;
+                top: 15px;
                 font-size: 16px;
                 cursor: pointer;
-                color: #64748b;
+                color: #94a3b8;
+                z-index: 10;
             }
-            .toggle-password:hover {
-                color: #38bdf8;
-            }
+
             button {
                 width: 100%;
-                padding: 12px;
-                background: linear-gradient(to right, #38bdf8, #0ea5e9);
-                color: white;
+                padding: 14px;
+                background: var(--highlight-blue);
+                color: #ffffff; /* Teks tombol jadi putih biar kontras sama biru */
                 border: none;
-                border-radius: 10px;
-                font-weight: 600;
+                border-radius: 12px;
+                font-weight: 700;
                 font-size: 15px;
                 cursor: pointer;
-                transition: background 0.3s;
+                transition: all 0.3s;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 10px;
             }
+
             button:hover {
-                background: linear-gradient(to right, #0ea5e9, #0284c7);
+                background: var(--highlight-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 180, 216, 0.3);
             }
+
             .footer-text {
-                font-size: 13px;
-                color: #cbd5e1;
-                margin-top: 25px;
+                font-size: 12px;
+                color: #64748b;
+                margin-top: 30px;
+                font-weight: 500;
             }
+
             .error-message {
+                background: rgba(248, 113, 113, 0.1);
+                border-left: 3px solid #f87171;
                 color: #f87171;
-                font-size: 14px;
-                margin-bottom: 16px;
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 13px;
+                margin-bottom: 20px;
+                text-align: left;
             }
+
             @media (max-width: 480px) {
-                .container {
-                    padding: 30px 20px;
-                }
-                h1 {
-                    font-size: 20px;
-                }
-                .logo {
-                    width: 70px;
-                }
-                .form-group input {
-                    padding: 12px;
-                    font-size: 13px;
-                }
-                button {
-                    font-size: 14px;
-                    padding: 11px;
-                }
+                .container { padding: 35px 25px; }
             }
         </style>
     </head>
@@ -161,18 +194,20 @@
                 <img src="{{ asset('k2net.png') }}" alt="K2Net Logo" />
             </div>
 
-            <h1>Welcome to Inventory System</h1>
-            <p class="subtitle">Please login to continue.</p>
+            <h1>Inventory System</h1>
+            <p class="subtitle">Enter your credentials to access the dashboard</p>
 
             @if (session('status'))
-                <div class="error-message">{{ session('status') }}</div>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle me-2"></i> {{ session('status') }}
+                </div>
             @endif
 
             @if ($errors->any())
                 <div class="error-message">
                     <ul style="list-style: none; padding: 0; margin: 0">
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <li><i class="fas fa-times-circle me-2"></i> {{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -181,7 +216,7 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group">
-                    <input type="text" name="id_pegawai" id="id_pegawai" placeholder=" " required autofocus />
+                    <input type="text" name="id_pegawai" id="id_pegawai" placeholder=" " required autofocus autocomplete="off" />
                     <label for="id_pegawai">ID Pegawai</label>
                 </div>
 
@@ -191,21 +226,24 @@
                     <i class="fas fa-eye toggle-password" onclick="togglePassword()" id="toggleIcon"></i>
                 </div>
 
-                <button type="submit">Login</button>
+                <button type="submit">Log In Now</button>
             </form>
 
-            <div class="footer-text">© 2025 K2Net</div>
+            <div class="footer-text">© {{ date('Y') }} K2NET Team</div>
         </div>
 
         <script>
             function togglePassword() {
                 const passwordInput = document.getElementById('password');
                 const icon = document.getElementById('toggleIcon');
-                const isPassword = passwordInput.type === 'password';
-
-                passwordInput.type = isPassword ? 'text' : 'password';
-                icon.classList.toggle('fa-eye');
-                icon.classList.toggle('fa-eye-slash');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
             }
         </script>
     </body>
