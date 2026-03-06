@@ -12,6 +12,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\User\BarangController as UserBarangController;
 use App\Http\Controllers\User\PeminjamanController as UserPeminjamanController;
 use App\Http\Controllers\User\FavoritBarangController;
+use App\Http\Controllers\User\LaporanController as UserLaporanController;
 
 // Jalankan migrate via route (opsional untuk development)
 Route::get('/run-migrate', function () {
@@ -52,14 +53,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/peminjaman/{id}/konfirmasi', [PeminjamanController::class, 'konfirmasiPengembalian'])->name('peminjaman.konfirmasi');
     Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.delete');
 
-    // Reporting
-    Route::get('/reporting/history', [LaporanController::class, 'history'])->name('reporting.history');
-    Route::get('/reporting/bulanan', [LaporanController::class, 'bulanan'])->name('reporting.bulanan');
-    Route::get('/reporting/rusak', [LaporanController::class, 'rusak'])->name('reporting.rusak');
-    Route::post('/reporting/rusak/store', [LaporanController::class, 'storeRusak'])->name('reporting.rusak.store');
-
-    Route::post('/reporting/rusak/update/{id}', [LaporanController::class, 'updateStatus'])->name('reporting.rusak.update');
-
+    // Laporan
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::post('/laporan/{id}/selesai', [LaporanController::class, 'selesaikan'])->name('laporan.selesai');
+   
     // Profile
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -93,22 +90,15 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/favorit', [FavoritBarangController::class, 'index'])->name('favorit.index');
     Route::post('/favorit/toggle/{barang}', [FavoritBarangController::class, 'toggle'])->name('favorit.toggle');
 
+    // Laporan
+    Route::get('/laporan', [UserLaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/create', [UserLaporanController::class, 'create'])->name('laporan.create');
+    Route::post('/laporan', [UserLaporanController::class, 'store'])->name('laporan.store');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'userProfile'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // ================= LAPORAN (PERBAIKAN) =================
-        Route::prefix('laporan')->name('laporan.')->group(function () {
-        Route::get('/', [LaporanController::class, 'index'])
-            ->name('index'); // Ini akan menjadi 'user.laporan.index'
-
-        Route::get('/create', [LaporanController::class, 'create'])
-            ->name('create'); // Ini akan menjadi 'user.laporan.create'
-
-        Route::post('/', [LaporanController::class, 'storeRusak'])
-            ->name('store');
-    });
 });
 
 // ================= REDIRECT OTOMATIS LOGIN =================
@@ -131,15 +121,3 @@ Route::get('/admin/barangs/export/csv', [BarangController::class, 'exportExcel']
 // Export Karyawan
 Route::get('/admin/karyawans/export/pdf', [KaryawanController::class, 'exportPdf'])->name('admin.karyawans.export.pdf');
 Route::get('/admin/karyawans/export/csv', [KaryawanController::class, 'exportExcel'])->name('admin.karyawans.export.csv');
-
-// Export history
-Route::get('/report/history', [LaporanController::class, 'history'])->name('report.history');
-Route::get('/report/history/pdf', [LaporanController::class, 'pdf'])->name('report.history.pdf');
-Route::get('/report/history/excel', [LaporanController::class, 'excel'])->name('report.history.excel');
-
-// Export Riwayat (user)
-Route::get('/riwayat/export/pdf', [UserPeminjamanController::class, 'exportPdf'])->name('user.riwayat.export.pdf');
-Route::get('/riwayat/export/csv', [UserPeminjamanController::class, 'exportCsv'])->name('user.riwayat.export.csv');
-
-Route::post('/reporting/rusak/store', [LaporanController::class, 'storeRusak'])
-    ->name('reporting.rusak.store');

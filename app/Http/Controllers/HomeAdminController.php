@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Karyawan;
 use App\Models\Peminjaman;
+use App\Models\LaporanBarang;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -35,7 +36,9 @@ class HomeAdminController extends Controller
 
 
         $notifikasiCount = Peminjaman::where('status', 'menunggu konfirmasi')->count();
+        $notifikasiLaporan = LaporanBarang::where('status', 'menunggu')->count();
 
+        
         return view('admin.dashboard', compact(
             'barangs',
             'barangCount',
@@ -44,7 +47,8 @@ class HomeAdminController extends Controller
             'peminjamans',
             'barangTerbanyak',
             'peminjamanPerBulan',
-            'notifikasiCount'
+            'notifikasiCount',
+            'notifikasiLaporan'
         ));
     }
 }
