@@ -32,20 +32,16 @@
             .sidebar.hidden {
                 transform: translateX(-100%);
             }
-
             .sidebar-menu-wrapper {
-                overflow-y: auto; 
+                overflow-y: auto;
                 padding: 20px 18px;
                 min-height: 0;
             }
-
             .sidebar-footer-fixed {
                 flex-shrink: 0;
                 padding: 15px 18px;
                 border-top: 1px solid rgba(255, 255, 255, 0.05);
-                background: #0f172a;
             }
-
             .sidebar .nav-link {
                 color: #94a3b8;
                 margin-bottom: 4px;
@@ -65,7 +61,6 @@
                 background-color: #3b82f6;
                 color: #fff;
             }
-
             .main-content {
                 margin-left: 260px;
                 padding: 25px;
@@ -74,7 +69,6 @@
             .main-content.full-width {
                 margin-left: 0;
             }
-
             .toggle-btn {
                 position: fixed;
                 top: 15px;
@@ -87,7 +81,6 @@
                 cursor: pointer;
                 z-index: 1101;
             }
-
             @media (max-width: 768px) {
                 .sidebar {
                     transform: translateX(-100%);
@@ -129,13 +122,18 @@
                         <i class="fas fa-users"></i>
                         Data Karyawan
                     </a>
+
                     <a
                         href="{{ route('admin.peminjaman.index') }}"
                         class="nav-link {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
                         <i class="fas fa-handshake"></i>
                         Data Peminjam
+                        @if (isset($notifikasiCount) && $notifikasiCount > 0)
+                            <span class="badge bg-danger ms-auto">{{ $notifikasiCount }}</span>
+                        @endif
                     </a>
 
+                    {{-- Menu Reporting --}}
                     <a
                         class="nav-link d-flex justify-content-between align-items-center"
                         data-bs-toggle="collapse"
@@ -147,12 +145,21 @@
                         <i class="fas fa-chevron-down"></i>
                     </a>
 
-                    <div class="collapse {{ request()->routeIs('admin.laporan.*') ? 'show' : '' }}" id="laporanMenu">
-                        <a href="{{ route('admin.laporan.index') }}" class="nav-link ps-4">
+                    <div
+                        class="collapse {{ request()->routeIs('admin.laporan.*', 'admin.riwayat.*') ? 'show' : '' }}"
+                        id="laporanMenu">
+                        <a
+                            href="{{ route('admin.laporan.index') }}"
+                            class="nav-link ps-4 {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
                             <i class="fas fa-triangle-exclamation me-2"></i>
                             Kondisi Barang
+                            @if (isset($notifikasiLaporan) && $notifikasiLaporan > 0)
+                                <span class="badge bg-warning text-dark ms-auto">{{ $notifikasiLaporan }}</span>
+                            @endif
                         </a>
-                        <a href="{{ route('admin.riwayat.index') }}" class="nav-link ps-4">
+                        <a
+                            href="{{ route('admin.riwayat.index') }}"
+                            class="nav-link ps-4 {{ request()->routeIs('admin.riwayat.*') ? 'active' : '' }}">
                             <i class="fas fa-history me-2"></i>
                             Riwayat Peminjaman
                         </a>

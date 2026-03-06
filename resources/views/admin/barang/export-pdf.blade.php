@@ -2,78 +2,81 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Data Barang</title>
+    <title>Laporan Data Barang - PT. K2NET</title>
 
     <style>
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Helvetica', 'Arial', sans-serif;
             font-size: 12px;
-            color: #333;
+            color: #2d3436;
+            line-height: 1.5;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .header h2 {
-            margin: 0;
-            font-size: 18px;
+            margin: 5px 0;
+            font-size: 20px;
+            letter-spacing: 1px;
         }
 
-        .header small {
-            font-size: 12px;
-            color: #666;
+        .header p {
+            margin: 0;
+            font-size: 11px;
+            color: #636e72;
+            text-transform: uppercase;
         }
 
         .divider {
-            border-top: 2px solid #000;
-            margin: 10px 0 20px 0;
+            border-top: 2px solid #2d3436;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
 
         th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-            text-transform: uppercase;
+            background-color: #f1f2f6;
+            font-weight: 700;
+            text-align: left;
+            padding: 10px 8px;
+            border: 1px solid #dfe6e9;
             font-size: 11px;
-        }
-
-        th, td {
-            border: 1px solid #bbb;
-            padding: 6px 8px;
+            text-transform: uppercase;
         }
 
         td {
+            border: 1px solid #dfe6e9;
+            padding: 8px;
             font-size: 11px;
+            vertical-align: top;
         }
 
-        td:nth-child(1),
-        td:nth-child(4) {
-            text-align: center;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
+        /* Perataan khusus */
+        .text-center { text-align: center; }
+        
+        tr:nth-child(even) { background-color: #f9f9f9; }
 
         .footer {
-            margin-top: 30px;
-            text-align: right;
-            font-size: 11px;
-            color: #666;
+            margin-top: 40px;
+            font-size: 10px;
+            color: #b2bec3;
+            border-top: 1px solid #dfe6e9;
+            padding-top: 5px;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>DATA BARANG</h2>
-        <small>PT. K2NET - Inventory Management System</small>
+        <h2>LAPORAN DATA BARANG</h2>
+        <p>PT. K2NET - Inventory Management System</p>
     </div>
 
     <div class="divider"></div>
@@ -81,30 +84,31 @@
     <table>
         <thead>
             <tr>
-                <th width="5%">No</th>
-                <th width="20%">Nama</th>
+                <th class="text-center" width="5%">No</th>
+                <th width="20%">Nama Barang</th>
                 <th width="15%">Jenis</th>
-                <th width="10%">Stok</th>
-                <th width="15%">Seri</th>
-                <th width="35%">Keterangan</th>
+                <th class="text-center" width="8%">Stok</th>
+                <th width="15%">Seri/Model</th>
+                <th width="37%">Keterangan</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($barangs as $index => $barang)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
+                    <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $barang->nama_barang }}</td>
                     <td>{{ $barang->jenis_barang }}</td>
-                    <td>{{ $barang->stok }}</td>
+                    <td class="text-center">{{ $barang->stok }}</td>
                     <td>{{ $barang->seri }}</td>
-                    <td>{{ $barang->keterangan }}</td>
+                    <td>{{ $barang->keterangan ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="footer">
-        Dicetak pada: {{ date('d-m-Y') }}
+        Dicetak otomatis oleh sistem pada: {{ date('d/m/Y H:i') }} WIB
     </div>
+
 </body>
 </html>

@@ -165,14 +165,14 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('user.laporan.*') ? 'active' : '' }}"
-              href="{{ route('user.laporan.index') }}">
-              <i class="fas fa-flag me-1"></i> Laporan
+            <a class="nav-link {{ request()->routeIs('user.profile') ? 'active' : '' }}" href="{{ route('user.profile') }}">
+              <i class="fas fa-user me-1"></i> Profil
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('user.profile') ? 'active' : '' }}" href="{{ route('user.profile') }}">
-              <i class="fas fa-user me-1"></i> Profil
+            <a class="nav-link {{ request()->routeIs('user.laporan.index') ? 'active' : '' }}"
+              href="{{ route('user.laporan.index') }}">
+              <i class="fas fa-flag me-1"></i> Laporan
             </a>
           </li>
           <li class="nav-item">

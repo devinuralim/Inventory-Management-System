@@ -3,65 +3,47 @@
 @section('content')
 
 <style>
-.page-title {
-    font-weight: 600;
-    font-size: 1.4rem;
-}
-
-.form-wrapper {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.form-label {
-    font-weight: 500;
-}
-
-.form-control {
-    border-radius: 12px;
-}
-
-.btn-primary {
-    background-color: #0d6efd;
-    border: none;
-}
-
-.btn-primary:hover {
-    background-color: #0b5ed7;
-}
-
-@media (max-width: 768px) {
+    .page-title { font-weight: 700; font-size: 1.6rem; color: #0f172a; }
+    
     .form-wrapper {
-        padding: 18px;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
 
-    .btn-group-flex {
-        flex-direction: column;
-        gap: 10px;
+    .form-label { font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
+    .form-control { 
+        border: 1px solid #cbd5e1;
+        border-radius: 12px; 
+        padding: 0.75rem 1rem;
+        transition: all 0.2s;
     }
+    .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+    
+    .btn-primary { background-color: #3b82f6; border: none; padding: 0.6rem 2rem; font-weight: 600; }
+    .btn-primary:hover { background-color: #2563eb; }
 
-    .btn-group-flex a,
-    .btn-group-flex button {
-        width: 100%;
-        justify-content: center;
+    @media (max-width: 768px) {
+        .form-wrapper { padding: 20px; }
+        .btn-group-flex { flex-direction: column; gap: 10px; }
+        .btn-group-flex a, .btn-group-flex button { width: 100%; justify-content: center; }
     }
-}
 </style>
 
-<div class="container pt-2 pb-4">
+<div class="container pt-3 pb-5">
 
     {{-- Header --}}
     <div class="mb-4">
         <div class="page-title">Buat Akun Karyawan</div>
-        <small class="text-muted">Tambahkan akun baru untuk karyawan</small>
+        <p class="text-muted small">Tambahkan data karyawan baru ke dalam sistem</p>
     </div>
 
     {{-- Error --}}
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
+        <div class="alert alert-danger border-0 shadow-sm rounded-3">
+            <ul class="mb-0 ps-3">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -76,77 +58,58 @@
 
             <div class="col-md-6">
                 <label class="form-label">ID Pegawai</label>
-                <input type="text" name="id_pegawai"
-                    class="form-control"
-                    value="{{ old('id_pegawai') }}" required>
+                <input type="text" name="id_pegawai" class="form-control" value="{{ old('id_pegawai') }}" placeholder="Contoh: K2-001" required>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Nama Lengkap</label>
-                <input type="text" name="name"
-                    class="form-control"
-                    value="{{ old('name') }}" required>
+                <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="Nama sesuai KTP" required>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Password Akun</label>
                 <div class="input-group">
-                    <input type="password" name="password"
-                        id="password"
-                        class="form-control"
-                        required>
-                    <button class="btn btn-outline-secondary toggle-password" type="button">
-                        Lihat
+                    <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <button class="btn btn-outline-secondary toggle-password" type="button" style="border-radius: 0 12px 12px 0;">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Tanggal Bergabung</label>
-                <input type="date" name="tanggal_bergabung"
-                    class="form-control"
-                    value="{{ old('tanggal_bergabung') }}" required>
+                <input type="date" name="tanggal_bergabung" class="form-control" value="{{ old('tanggal_bergabung') }}" required>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-12">
                 <label class="form-label">Jabatan</label>
-                <input type="text" name="jabatan"
-                    class="form-control"
-                    value="{{ old('jabatan') }}" required>
+                <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}" placeholder="Contoh: Staff IT" required>
             </div>
 
-            <div class="d-flex justify-content-between btn-group-flex mt-4">
-                <a href="{{ route('admin.karyawans.index') }}"
-                   class="btn btn-outline-secondary rounded-pill">
-                    Kembali
+            <div class="d-flex justify-content-between btn-group-flex mt-4 pt-2">
+                <a href="{{ route('admin.karyawans.index') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="fas fa-arrow-left me-1"></i> Kembali
                 </a>
-
-                <button type="submit"
-                        class="btn btn-primary rounded-pill px-4">
-                    Simpan
+                <button type="submit" class="btn btn-primary rounded-pill">
+                    <i class="fas fa-save me-1"></i> Simpan Akun
                 </button>
             </div>
-
         </form>
     </div>
 </div>
 
-{{-- Toggle Password --}}
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const toggleBtn = document.querySelector(".toggle-password");
-    const passwordInput = document.getElementById("password");
-
-    toggleBtn.addEventListener("click", function () {
+    document.querySelector(".toggle-password").addEventListener("click", function () {
+        const passwordInput = document.getElementById("password");
+        const icon = this.querySelector("i");
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            toggleBtn.textContent = "Sembunyikan";
+            icon.className = "fas fa-eye-slash";
         } else {
             passwordInput.type = "password";
-            toggleBtn.textContent = "Lihat";
+            icon.className = "fas fa-eye";
         }
     });
-});
 </script>
 
 @endsection

@@ -1,149 +1,91 @@
 @extends('layouts.admin')
-{{-- Pastikan nama layout utama Anda benar --}}
-
 @section('content')
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fw-bold text-dark">Riwayat Peminjaman</h2>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item">Reporting</li>
-                        <li class="breadcrumb-item active">Riwayat</li>
-                    </ol>
-                </nav>
-            </div>
+<div class="container-fluid">
+    <h3 class="fw-bold mb-4">Riwayat Peminjaman</h3>
+
+    <form action="{{ route('admin.riwayat.index') }}" method="GET" class="row g-3 mb-4 align-items-end bg-white p-3 rounded shadow-sm">
+        <div class="col-md-2">
+            <label class="form-label">Bulan</label>
+            <select name="bulan" class="form-select">
+                <option value="">Semua Bulan</option>
+                @foreach(range(1, 12) as $m)
+                    <option value="{{ $m }}" {{ request('bulan') == $m ? 'selected' : '' }}>
+                        {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Tahun</label>
+            <select name="tahun" class="form-select">
+                <option value="">Semua Tahun</option>
+                @foreach(range(date('Y'), date('Y') - 5) as $y)
+                    <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                @endforeach
+            </select>
         </div>
 
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.riwayat.pdf', ['search' => request('search')]) }}" class="btn btn-danger">
-                <i class="fas fa-file-pdf me-2"></i>
-                PDF
-            </a>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filter</button>
+        </div>
+        <div class="col-md-2">
+            <a href="{{ route('admin.riwayat.index') }}" class="btn btn-secondary w-100">Reset</a>
+        </div>
 
-            <a href="{{ route('admin.riwayat.csv', ['search' => request('search')]) }}" class="btn btn-success">
-                <i class="fas fa-file-csv me-2"></i>
-                CSV
-            </a>
-
-            <button class="btn btn-outline-primary" onclick="window.print()">
-                <i class="fas fa-print me-2"></i>
-                Print
+        <div class="col-md-4 d-flex gap-2 justify-content-end align-items-end ms-auto">
+            <button type="button" onclick="window.print()" class="btn btn-warning text-white" title="Print">
+                <i class="fas fa-print"></i>
             </button>
+            <a href="{{ route('admin.riwayat.pdf', request()->all()) }}" class="btn btn-danger" title="Download PDF">
+                <i class="fas fa-file-pdf"></i>
+            </a>
+            <a href="{{ route('admin.riwayat.csv', request()->all()) }}" class="btn btn-success" title="Download CSV">
+                <i class="fas fa-file-csv"></i>
+            </a>
         </div>
+    </form>
 
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body">
-                <form action="{{ route('admin.riwayat.index') }}" method="GET" class="row g-3">
-                    <div class="col-md-10">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input
-                                type="text"
-                                name="search"
-                                class="form-control border-start-0 ps-0"
-                                placeholder="Cari nama peminjam atau nama barang..."
-                                value="{{ request('search') }}" />
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Filter</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
-                <h6 class="m-0 fw-bold text-primary">Daftar Pengembalian Selesai</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="ps-3">No</th>
-                                <th>Peminjam</th>
-                                <th>Barang</th>
-                                <th class="text-center">Jumlah</th>
-                                <th>Tgl Pinjam</th>
-                                <th>Tgl Kembali</th>
-                                <th>Status</th>
-                                <th>Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($riwayat as $index => $item)
-                                <tr>
-                                    <td class="ps-3 text-muted">{{ $index + 1 }}</td>
-                                    <td>
-                                        <div class="fw-bold">{{ $item->nama_peminjam }}</div>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-light text-dark border">
-                                            <i class="fas fa-box me-1"></i>
-                                            {{ $item->nama_barang }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">{{ $item->jumlah }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d/m/Y') }}</td>
-                                    <td>
-                                        <span class="text-success">
-                                            {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d/m/Y') }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-success-subtle text-success border border-success px-3">
-                                            Selesai
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">{{ $item->keterangan ?? '-' }}</small>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-5">
-                                        <img
-                                            src="https://illustrations.popsy.co/gray/data-report.svg"
-                                            alt="no-data"
-                                            style="width: 150px"
-                                            class="mb-3" />
-                                        <p class="text-muted">Tidak ada riwayat peminjaman yang ditemukan.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Peminjam</th>
+                    <th>Barang</th>
+                    <th>Tgl Pinjam</th>
+                    <th>Tgl Kembali</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($riwayat as $key => $item)
+                <tr>
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $item->nama_peminjam }}</td>
+                    <td>{{ $item->nama_barang }}</td>
+                    <td>{{ $item->tanggal_pinjam }}</td>
+                    <td>{{ $item->tanggal_kembali }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+</div>
 
-    <style>
-        /* Styling khusus agar senada dengan sidebar Anda */
-        .btn-primary {
-            background-color: #457b9d;
-            border-color: #457b9d;
-        }
-        .btn-primary:hover {
-            background-color: #1d3557;
-            border-color: #1d3557;
-        }
-        .text-primary {
-            color: #1d3557 !important;
-        }
-        .breadcrumb-item a {
-            color: #457b9d;
-            text-decoration: none;
-        }
-        .table thead th {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-    </style>
+<style>
+    /* Styling tombol agar icon center dan ukuran sama */
+    .btn-warning, .btn-danger, .btn-success {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    @media print {
+        .sidebar, .toggle-btn, form, .btn, .nav, .sidebar-footer-fixed { display: none !important; }
+        .main-content, .container-fluid { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+        .table { border: 1px solid #000; width: 100%; }
+        h3 { text-align: center; }
+    }
+</style>
 @endsection
