@@ -10,151 +10,93 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
         <style>
-            <style > body {
+            body {
                 font-family: 'Poppins', sans-serif;
                 background-color: #f4f6f9;
                 margin: 0;
-                padding: 0;
             }
-
-            /* ================= SIDEBAR ================= */
             .sidebar {
                 height: 100vh;
-                background: linear-gradient(to bottom, #1d3557, #0d1b2a);
+                background: #0f172a;
                 color: #fff;
-                padding: 20px 18px;
                 position: fixed;
-                width: 300px;
+                width: 260px;
                 left: 0;
                 top: 0;
                 transition: transform 0.3s ease;
                 z-index: 1000;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+                display: grid;
+                grid-template-rows: 1fr auto;
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
             }
-
             .sidebar.hidden {
                 transform: translateX(-100%);
             }
 
+            .sidebar-menu-wrapper {
+                overflow-y: auto; 
+                padding: 20px 18px;
+                min-height: 0;
+            }
+
+            .sidebar-footer-fixed {
+                flex-shrink: 0;
+                padding: 15px 18px;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
+                background: #0f172a;
+            }
+
             .sidebar .nav-link {
-                color: #e0e0e0;
+                color: #94a3b8;
                 margin-bottom: 4px;
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                font-size: 0.92rem;
-                padding: 8px 12px;
-                border-radius: 6px;
-                transition: all 0.2s ease;
+                gap: 12px;
+                font-size: 0.9rem;
+                padding: 10px 12px;
+                border-radius: 8px;
+                transition: 0.2s;
             }
-
             .sidebar .nav-link:hover {
-                background-color: rgba(255, 255, 255, 0.08);
+                background-color: rgba(255, 255, 255, 0.05);
+                color: #fff;
             }
-
             .sidebar .nav-link.active {
-                background-color: #457b9d;
+                background-color: #3b82f6;
                 color: #fff;
             }
 
-            .sidebar-footer {
-                font-size: 0.8rem;
-                color: #bbb;
-                text-align: center;
-                padding-top: 15px;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            /* ================= SUBMENU ================= */
-            .collapse .nav-link {
-                font-size: 0.85rem;
-                padding: 6px 12px;
-                margin-bottom: 2px;
-                opacity: 0.9;
-            }
-
-            .collapse .nav-link:hover {
-                background-color: rgba(255, 255, 255, 0.06);
-            }
-
-            /* ================= MAIN CONTENT ================= */
             .main-content {
-                margin-left: 300px; 
+                margin-left: 260px;
                 padding: 25px;
                 transition: margin-left 0.3s ease;
             }
-
             .main-content.full-width {
                 margin-left: 0;
             }
 
-            /* ================= TOGGLE BUTTON ================= */
             .toggle-btn {
                 position: fixed;
-                top: 20px;
+                top: 15px;
                 left: 15px;
-                background-color: #457b9d;
+                background-color: #3b82f6;
                 color: #fff;
                 border: none;
-                padding: 6px 10px;
+                padding: 8px 12px;
                 border-radius: 8px;
                 cursor: pointer;
                 z-index: 1101;
-                font-size: 1.1rem;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             }
 
-            .toggle-btn:hover {
-                background-color: #1d3557;
-            }
-
-            .sidebar .nav-bottom {
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                padding-top: 10px;
-            }
-
-            .sidebar .nav-bottom form,
-            .sidebar .nav-bottom .nav-link {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                font-size: 0.9rem;
-                margin-bottom: 6px;
-                color: #fff;
-            }
-
-            .sidebar .nav-bottom button {
-                background: none;
-                border: none;
-                color: #fff;
-                padding: 8px 12px;
-                width: 100%;
-                text-align: left;
-            }
-
-            /* ================= RESPONSIVE ================= */
             @media (max-width: 768px) {
                 .sidebar {
                     transform: translateX(-100%);
-                    width: 220px;
-                    padding: 60px 15px 20px;
                 }
-
                 .sidebar.show {
                     transform: translateX(0);
                 }
-
                 .main-content {
                     margin-left: 0 !important;
-                    padding: 20px;
-                }
-
-                .toggle-btn {
-                    top: 15px;
-                    left: 10px;
                 }
             }
         </style>
@@ -162,16 +104,10 @@
     <body>
         <button class="toggle-btn" id="toggleSidebarBtn">&#9776;</button>
 
-        <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
-            <div>
+            <div class="sidebar-menu-wrapper">
                 <div class="text-center mb-4">
-                    <img src="{{ asset('k2net.png') }}" alt="K2NET Logo" style="height: 50px" />
-                </div>
-
-                <div class="mb-3">
-                    <p class="mb-1 small text-light opacity-75">Selamat datang, Admin</p>
-                    <strong class="d-block mb-3">{{ Auth::user()->name }}</strong>
+                    <img src="{{ asset('k2net.png') }}" alt="Logo" style="height: 40px" />
                 </div>
 
                 <nav class="nav flex-column">
@@ -181,32 +117,25 @@
                         <i class="fas fa-home"></i>
                         Dashboard
                     </a>
-
                     <a
                         href="{{ route('admin.barangs') }}"
                         class="nav-link {{ request()->routeIs('admin.barangs') ? 'active' : '' }}">
                         <i class="fas fa-box-open"></i>
                         Data Barang
                     </a>
-
                     <a
                         href="{{ route('admin.karyawans.index') }}"
                         class="nav-link {{ request()->routeIs('admin.karyawans.*') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
                         Data Karyawan
                     </a>
-
                     <a
                         href="{{ route('admin.peminjaman.index') }}"
                         class="nav-link {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
                         <i class="fas fa-handshake"></i>
                         Data Peminjam
-                        @if (isset($notifikasiCount) && $notifikasiCount > 0)
-                            <span class="badge bg-danger ms-auto">{{ $notifikasiCount }}</span>
-                        @endif
                     </a>
 
-                    <!-- REPORTING -->
                     <a
                         class="nav-link d-flex justify-content-between align-items-center"
                         data-bs-toggle="collapse"
@@ -215,24 +144,15 @@
                             <i class="fas fa-chart-line me-2"></i>
                             Reporting
                         </span>
-
                         <i class="fas fa-chevron-down"></i>
                     </a>
 
                     <div class="collapse {{ request()->routeIs('admin.laporan.*') ? 'show' : '' }}" id="laporanMenu">
-                        <a
-                            href="{{ route('admin.laporan.index') }}"
-                            class="nav-link ps-4 {{ request()->routeIs('admin.laporan.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.laporan.index') }}" class="nav-link ps-4">
                             <i class="fas fa-triangle-exclamation me-2"></i>
                             Kondisi Barang
-
-                            @if (isset($notifikasiLaporan) && $notifikasiLaporan > 0)
-                                <span class="badge bg-danger ms-auto">{{ $notifikasiLaporan }}</span>
-                            @endif
                         </a>
-                        <a
-                            href="{{ route('admin.riwayat.index') }}"
-                            class="nav-link ps-4 {{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.riwayat.index') }}" class="nav-link ps-4">
                             <i class="fas fa-history me-2"></i>
                             Riwayat Peminjaman
                         </a>
@@ -240,21 +160,24 @@
                 </nav>
             </div>
 
-            <div class="nav-bottom">
+            <div class="sidebar-footer-fixed">
                 <a href="{{ route('admin.profile') }}" class="nav-link">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user-circle"></i>
                     Profile
                 </a>
-
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit">
+                    <button
+                        type="submit"
+                        class="nav-link w-100"
+                        style="background: none; border: none; cursor: pointer; color: #f87171">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </button>
                 </form>
-
-                <div class="sidebar-footer">© 2025 K2NET</div>
+                <div style="font-size: 0.7rem; color: #64748b; text-align: center; margin-top: 10px">
+                    &copy; {{ date('Y') }} K2NET
+                </div>
             </div>
         </div>
 
@@ -263,21 +186,18 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const toggleBtn = document.getElementById('toggleSidebarBtn');
-                const sidebar = document.getElementById('sidebar');
-                const mainContent = document.getElementById('mainContent');
+            const btn = document.getElementById('toggleSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('mainContent');
 
-                toggleBtn.addEventListener('click', function () {
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.toggle('show');
-                    } else {
-                        sidebar.classList.toggle('hidden');
-                        mainContent.classList.toggle('full-width');
-                    }
-                });
+            btn.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('show');
+                } else {
+                    sidebar.classList.toggle('hidden');
+                    main.classList.toggle('full-width');
+                }
             });
         </script>
     </body>
